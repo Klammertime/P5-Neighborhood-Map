@@ -29,7 +29,7 @@ $(function () {
 
     load = function() {
       $.each(my.filmData.data.Scenes, function(i, p) {
-        my.vm.scenes.push(new Scene()
+        scenes.push(new Scene()
                 .filmLocation(p.film_location)
                 .filmTitle(p.film_title)
                 .year(p.release_year)
@@ -37,7 +37,7 @@ $(function () {
                 .productionCompany(p.production_company)
                 .writer(p.writer)
                 );
-        my.vm.allTitles.push(p.film_title);
+        allTitles.push(p.film_title);
       });
     },
     uniqueTitles = ko.computed(function() {
