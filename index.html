@@ -13,7 +13,7 @@
     </style>
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <!-- change to minified for production -->
-    <script type="text/javascript" src="js/knockout-3.4.0.debug.js"></script>
+    <script type="text/javascript" src="js/knockout-3.4.0.js"></script>
     <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
     <script type="text/javascript" src="js/data.js"></script>
@@ -30,13 +30,13 @@
                     <div class="panel-body">
                         <select data-bind="options: scenes, selectedOptions: my.vm.selectedScenes, optionsText: 'filmLocation'">
                         </select>
-                        <select data-bind="options: uniqueTitles, selectedOptions: my.vm.selectedFilm">
+                        <select data-bind="options: uniqueTitles, selectedOptions: my.vm.singleFilm">
                         </select>
                         <p>
                         <span data-bind="text: scenes().length"></span>
                         </p>
 
-                        <button type="button" class="btn btn-default">Load Scenes
+                        <button type="button" class="btn btn-default" data-bind="click: codeAddress">Single Film
                         </button>
                     </div>
                 </div>

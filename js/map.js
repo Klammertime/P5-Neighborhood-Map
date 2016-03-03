@@ -1,4 +1,8 @@
 $(function () {
+  var googleMap,
+      geocoder,
+      map,
+      marker;
 
   // Location construction
   var Scene = function() {
@@ -8,9 +12,7 @@ $(function () {
       this.director = ko.observable();
       this.productionCompany = ko.observable();
       this.writer = ko.observable();
-      // this.latLng = ko.computed(function() {
-      //   return geocode(this.location());
-      // }, this);
+      this.latLng = null;
       this.latLng = null;
       this.description = null;
       this.wikipedia = null;
@@ -19,7 +21,7 @@ $(function () {
       this.review = null;
   };
 
-   ko.bindingHandlers.googleMap = {
+  ko.bindingHandlers.googleMap = {
         init: function(element, valueAccessor) {
             var myLatLng = new google.maps.LatLng(37.734883, -122.363663);
             var mapOptions = {
@@ -36,9 +38,7 @@ $(function () {
             };
             var initialCenter = mapOptions.center;
             var initialZoom = mapOptions.zoom;
-            var map = new google.maps.Map(element, mapOptions);
-            var geocoder = new google.maps.Geocoder();
-
+            map = new google.maps.Map(element, mapOptions);
 
             addGoToInitialExtent(map, initialCenter, initialZoom);
 
@@ -55,11 +55,9 @@ $(function () {
             }
         },
         update: function(element, valueAccessor, allBindings) {
-            var value = valueAccessor;
             window.addEventListener('resize', (function() {
                 map.setCenter(center);
             }), false);
-
             google.maps.event.addDomListener(map, 'click', function() {
                 center = map.getCenter();
             });
@@ -73,11 +71,14 @@ $(function () {
     favoritedScenes = ko.observableArray([]),
     allTitles = ko.observableArray([]),
     selectedFilm = ko.observableArray([]),
+    singleFilm = ko.observable('180'),
+    newFilm = ko.observable(true),
+    markers = ko.observableArray([]),
 
     load = function() {
       $.each(my.filmData.data.Scenes, function(i, p) {
         scenes.push(new Scene()
-                .filmLocation(p.film_location)
+                .filmLocation(p.film_location + ", San Francisco, CA")
                 .filmTitle(p.film_title)
                 .year(p.release_year)
                 .director(p.director)
@@ -91,20 +92,47 @@ $(function () {
       return ko.utils.arrayGetDistinctValues(allTitles().sort());
     });
 
-  return {
-    scenes: scenes,
-    selectedScenes: selectedScenes,
-    load: load,
-    uniqueTitles: uniqueTitles,
-    allTitles: allTitles,
-    selectedFilm:selectedFilm
-  };
-} ();
+  function codeAddress() {
+    var address;
+    markers = ko.observableArray([]);
+    geocoder = new google.maps.Geocoder();
+    for(var i = 0; i < this.scenes().length; i++){
+      console.log("i in codeAddress >>", i);
+      if(singleFilm()[0] == my.vm.scenes()[i].filmTitle()){
+          address = my.vm.scenes()[i].filmLocation();
+          console.log("address in codeAddress >>", address);
+          geocoder.geocode( { 'address': address}, function(results, status) {
+            if(status == google.maps.GeocoderStatus.OK) {
+              map.setCenter(results[0].geometry.location);
+              marker = new google.maps.Marker({
+                map: map,
+                position: results[0].geometry.location
+              });
+              markers.push(marker);
+              console.log("markers()", markers());
+            } else {
+              console.log("Geocode was not successful for the following reason: " + status);
+            }
+          });
+      }
+    }
+  }
 
+    return {
+      scenes: scenes,
+      selectedScenes: selectedScenes,
+      load: load,
+      uniqueTitles: uniqueTitles,
+      allTitles: allTitles,
+      selectedFilm: selectedFilm,
+      singleFilm: singleFilm,
+      newFilm: newFilm,
+      codeAddress: codeAddress
+    };
+  }();
 
   my.vm.load();
   ko.applyBindings(my.vm);
-  ko.applyBindings(googleMap);
 
 });
 
