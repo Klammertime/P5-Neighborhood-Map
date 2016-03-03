@@ -11,8 +11,7 @@
         height: 400px;
     }
     </style>
-    <script type="text/javascript" src="js/jquery.min.js"></script>
-    <!-- change to minified for production -->
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>    <!-- change to minified for production -->
     <script type="text/javascript" src="js/knockout-3.4.0.js"></script>
     <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
@@ -26,17 +25,14 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Address</div>
+                    <div class="panel-heading">Films</div>
                     <div class="panel-body">
-                        <select data-bind="options: scenes, selectedOptions: my.vm.selectedScenes, optionsText: 'filmLocation'">
-                        </select>
+<!--                         <select data-bind="options: scenes, selectedOptions: my.vm.selectedScenes, optionsText: 'filmLocation'">
+                        </select> -->
                         <select data-bind="options: uniqueTitles, selectedOptions: my.vm.singleFilm">
                         </select>
-                        <p>
-                        <span data-bind="text: scenes().length"></span>
-                        </p>
 
-                        <button type="button" class="btn btn-default" data-bind="click: codeAddress">Single Film
+                        <button type="button" class="btn btn-default" data-bind="click: codeAddress">Submit Film
                         </button>
                     </div>
                 </div>
@@ -46,11 +42,22 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Scene Info</div>
+                    <div class="panel-heading">Film Locations</div>
                         <div class="panel-body">
                         <div class="col-md-12">
-                            <strong>Film Location: </strong>
-                            <span data-bind="text: my.vm.selectedFilm()"> </span>
+                            <strong>Current Scenes Length: </strong>
+                            <span data-bind="text: my.vm.currentScenes().length"> </span>
+                        </div>
+                        <div class="col-md-12">
+                            <strong>Current Marker Length: </strong>
+                            <span data-bind="text: my.vm.markers().length"> </span>
+                        </div>
+<!--                         <div class="col-md-12">
+                            <strong>Current Scenes Length: </strong>
+                            <span data-bind="text: my.vm.currentScenes().length"> </span>
+                        </div> -->
+                        <div class="col-md-12">
+                            <span data-bind="text: my.vm.currentScenes()[0]"> </span>
                         </div>
                     </div>
                 </div>
