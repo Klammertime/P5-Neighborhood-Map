@@ -23,10 +23,10 @@ $(function() {
 
     ko.bindingHandlers.googleMap = {
         init: function(element, valueAccessor) {
-            var myLatLng = new google.maps.LatLng(37.734883, -122.363663);
+            var myLatLng = new google.maps.LatLng(37.77493, -122.419416);
             var mapOptions = {
                 center: myLatLng,
-                zoom: 11,
+                zoom: 12,
                 disableDefaultUI: true,
                 zoomControl: true,
                 panControl: true,
@@ -96,13 +96,19 @@ $(function() {
         function codeAddress() {
             var address;
             geocoder = new google.maps.Geocoder();
+
             for (var i = 0; i < this.scenes().length; i++) {
                 if (singleFilm()[0] == my.vm.scenes()[i].filmTitle()) {
                     address = my.vm.scenes()[i].filmLocation();
                     currentScenes.push(address);
                     //TODO: Don't make functions within a loop.
-
-                    geocoder.geocode({ 'address': address }, function(results, status) {
+                    var geocodeOptions = {
+                        address: address,
+                        componentRestrictions: {
+                           country: 'US'
+                        }
+                    };
+                    geocoder.geocode(geocodeOptions, function(results, status) {
                         if (status == google.maps.GeocoderStatus.OK) {
                             map.setCenter(results[0].geometry.location);
                             marker = new google.maps.Marker({
@@ -117,8 +123,8 @@ $(function() {
                                 content: '<div id="content"><p>' + results[0].formatted_address + '</p></div>',
                                 disableAutoPan: false,
                                 maxWidth: 300,
-                                position: results[0].geometry.location //TODO: fix all markers
-                                // are ending up in the same spot
+                                position: results[0].geometry.location
+                                //TODO: all markers are ending up in the same spot
                             });
 
                             google.maps.event.addListener(marker, 'click', function() {
