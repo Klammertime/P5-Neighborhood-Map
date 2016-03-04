@@ -27,8 +27,6 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Films</div>
                     <div class="panel-body">
-<!--                         <select data-bind="options: scenes, selectedOptions: my.vm.selectedScenes, optionsText: 'filmLocation'">
-                        </select> -->
                         <select data-bind="options: uniqueTitles, selectedOptions: my.vm.singleFilm">
                         </select>
 
@@ -45,19 +43,39 @@
                     <div class="panel-heading">Film Locations</div>
                         <div class="panel-body">
                         <div class="col-md-12">
+                            <label for="Scenes">Scenes:</label>
+                            <input id="filmList"
+                                    type="text"
+                                    data-bind="value: my.vm.singleFilm"
+                                    list="filmSceneList" />
+                            <datalist id="filmSceneList" data-bind="foreach: uniqueTitles">
+                                <option data-bind="value: $data"></option>
+                            </datalist>
+
+                            <div data-bind="visible: my.vm.singleFilm">
+                                <hr>
+                                <!-- Display selected country: -->
+                                <label for="Scenes">Selected:</label>
+                                <b><span data-bind="text: my.vm.singleFilm"></span></b>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-12">
                             <strong>Current Scenes Length: </strong>
                             <span data-bind="text: my.vm.currentScenes().length"> </span>
                         </div>
                         <div class="col-md-12">
                             <strong>Current Marker Length: </strong>
-                            <span data-bind="text: my.vm.markers().length"> </span>
+                        <!--     <span data-bind="text: my.vm.markers.length"> </span> -->
                         </div>
 <!--                         <div class="col-md-12">
                             <strong>Current Scenes Length: </strong>
                             <span data-bind="text: my.vm.currentScenes().length"> </span>
                         </div> -->
-                        <div class="col-md-12">
-                            <span data-bind="text: my.vm.currentScenes()[0]"> </span>
+
+                        <div class="col-md-12" data-bind="foreach: my.vm.currentScenes">
+                            <p data-bind="text: $data"> </p>
                         </div>
                     </div>
                 </div>

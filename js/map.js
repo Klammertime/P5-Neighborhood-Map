@@ -72,8 +72,8 @@ $(function() {
             allTitles = ko.observableArray([]),
             selectedFilm = ko.observableArray([]),
             singleFilm = ko.observable('180'),
-            newFilm = ko.observable(true),
-            markers = ko.observableArray([]),
+            newFilm = ko.observable(true);
+            var markers = [],
 
             load = function() {
                 $.each(my.filmData.data.Scenes, function(i, p) {
@@ -88,27 +88,28 @@ $(function() {
                     allTitles.push(p.film_title);
                 });
             },
+
             uniqueTitles = ko.computed(function() {
                 return ko.utils.arrayGetDistinctValues(allTitles().sort());
             });
 
-        function codeAddress() {
-            var address,
-                geocoder = new google.maps.Geocoder(),
-                prev_infowindow = false;
+        function checkReset(){
+          if(markers.length > 0){
+            for(var j = 0; j < markers.length; j++){
+              my.vm.markers[j].setMap(null);
+            }
+            my.vm.currentScenes([]);
+          }
+        }
 
-            for (var i = 0; i < this.scenes().length; i++) {
-                if (singleFilm()[0] == my.vm.scenes()[i].filmTitle()) {
-                    address = my.vm.scenes()[i].filmLocation();
-                    currentScenes.push(address);
-                    //TODO: Don't make functions within a loop.
-                    var geocodeOptions = {
-                        address: address,
-                        componentRestrictions: {
-                            country: 'US'
-                        }
-                    };
-                    geocoder.geocode(geocodeOptions, function(results, status) {
+        function codeAddress() {
+            checkReset();
+            var address;
+            var geocoder = new google.maps.Geocoder();
+            var prev_infowindow = false;
+
+            function masterGeocoder(geocodeOptions1){
+               geocoder.geocode(geocodeOptions1, function(results, status) {
                         if (status == google.maps.GeocoderStatus.OK) {
                             map.setCenter(results[0].geometry.location);
 
@@ -117,10 +118,11 @@ $(function() {
 
                             var infowindow = new google.maps.InfoWindow({
                                 content: contentString,
-                                // disableAutoPan: false,
                                 maxWidth: 400
                             });
 
+                            // this adds a marker to the map
+                            // you could wrap it in a function
                             var marker = new google.maps.Marker({
                                 map: map,
                                 position: results[0].geometry.location,
@@ -128,7 +130,6 @@ $(function() {
                                 animation: google.maps.Animation.DROP
                             });
 
-                            markers.push(marker);
 
                             marker.addListener('click', function() {
                                 if (prev_infowindow) {
@@ -136,14 +137,29 @@ $(function() {
                                 }
 
                                 prev_infowindow = infowindow;
-
                                 infowindow.open(map, marker);
                             });
+
+                            markers.push(marker);
+
 
                         } else {
                             console.log("Geocode was not successful for the following reason: " + status);
                         }
                     });
+            }
+
+            for (var i = 0; i < this.scenes().length; i++) {
+                if (singleFilm()[0] == my.vm.scenes()[i].filmTitle()) {
+                    address = my.vm.scenes()[i].filmLocation();
+                    currentScenes.push(address);
+                    var geocodeOptions = {
+                        address: address,
+                        componentRestrictions: {
+                            country: 'US'
+                        }
+                    };
+                    masterGeocoder(geocodeOptions);
                 }
             }
         }
@@ -159,7 +175,8 @@ $(function() {
             newFilm: newFilm,
             codeAddress: codeAddress,
             currentScenes: currentScenes,
-            markers: markers
+            markers: markers,
+            checkReset: checkReset
         };
     }();
 
