@@ -1,8 +1,7 @@
 $(function() {
     var googleMap,
         geocoder,
-        map,
-        marker;
+        map;
 
     // Location construction
     var Scene = function() {
@@ -26,7 +25,7 @@ $(function() {
             var myLatLng = new google.maps.LatLng(37.77493, -122.419416);
             var mapOptions = {
                 center: myLatLng,
-                zoom: 12,
+                zoom: 13,
                 disableDefaultUI: true,
                 zoomControl: true,
                 panControl: true,
@@ -94,8 +93,9 @@ $(function() {
             });
 
         function codeAddress() {
-            var address;
-            geocoder = new google.maps.Geocoder();
+            var address,
+                geocoder = new google.maps.Geocoder(),
+                prev_infowindow = false;
 
             for (var i = 0; i < this.scenes().length; i++) {
                 if (singleFilm()[0] == my.vm.scenes()[i].filmTitle()) {
@@ -105,13 +105,23 @@ $(function() {
                     var geocodeOptions = {
                         address: address,
                         componentRestrictions: {
-                           country: 'US'
+                            country: 'US'
                         }
                     };
                     geocoder.geocode(geocodeOptions, function(results, status) {
                         if (status == google.maps.GeocoderStatus.OK) {
                             map.setCenter(results[0].geometry.location);
-                            marker = new google.maps.Marker({
+
+                            var contentString = '<div id="content"><p>' +
+                                results[0].formatted_address + '</p></div>';
+
+                            var infowindow = new google.maps.InfoWindow({
+                                content: contentString,
+                                // disableAutoPan: false,
+                                maxWidth: 400
+                            });
+
+                            var marker = new google.maps.Marker({
                                 map: map,
                                 position: results[0].geometry.location,
                                 title: results[0].formatted_address,
@@ -119,15 +129,14 @@ $(function() {
                             });
 
                             markers.push(marker);
-                            var infowindow = new google.maps.InfoWindow({
-                                content: '<div id="content"><p>' + results[0].formatted_address + '</p></div>',
-                                disableAutoPan: false,
-                                maxWidth: 300,
-                                position: results[0].geometry.location
-                                //TODO: all markers are ending up in the same spot
-                            });
 
-                            google.maps.event.addListener(marker, 'click', function() {
+                            marker.addListener('click', function() {
+                                if (prev_infowindow) {
+                                    prev_infowindow.close();
+                                }
+
+                                prev_infowindow = infowindow;
+
                                 infowindow.open(map, marker);
                             });
 
