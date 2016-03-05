@@ -1,4 +1,4 @@
-﻿// ajaxService
+// ajaxService
 // John Papa http://johnpapa.net
 // Depends on scripts:
 //                         jQuery

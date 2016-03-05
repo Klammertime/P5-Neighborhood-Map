@@ -1,4 +1,4 @@
-﻿// shoppingDataService
+// shoppingDataService
 // John Papa http://johnpapa.net
 // Depends on scripts:
 //                         ajaxservice.js
