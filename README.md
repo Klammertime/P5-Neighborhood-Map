@@ -4,8 +4,6 @@
 
 ###Resources
 
-I used the following resources:
-
 * Removing markers
 
 https://developers.google.com/maps/documentation/javascript/examples/marker-remove
