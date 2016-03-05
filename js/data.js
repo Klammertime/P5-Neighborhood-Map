@@ -211,7 +211,7 @@ my.filmData = (function (my) {
     "film_location": "Grace Cathedral Episcopal Church (1100 California Street)",
     "production_company": "Paramount Pictures",
     "release_year": "1997",
-    "film_title": "A Smile Like Yours ",
+    "film_title": "A Smile Like Yours",
     "writer": "Keith Samples & Kevin Meyer"
   },
   {
@@ -223,7 +223,7 @@ my.filmData = (function (my) {
     "film_location": "Hills Brothers Plaza (Embarcadero at Harrison Street)",
     "production_company": "Paramount Pictures",
     "release_year": "1997",
-    "film_title": "A Smile Like Yours ",
+    "film_title": "A Smile Like Yours",
     "writer": "Keith Samples & Kevin Meyer"
   },
   {
@@ -236,7 +236,7 @@ my.filmData = (function (my) {
     "film_location": "San Francisco International Airport",
     "production_company": "Paramount Pictures",
     "release_year": "1997",
-    "film_title": "A Smile Like Yours ",
+    "film_title": "A Smile Like Yours",
     "writer": "Keith Samples & Kevin Meyer"
   },
   {

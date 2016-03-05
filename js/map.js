@@ -6,6 +6,7 @@ $(function() {
     // Location construction
     var Scene = function() {
         this.filmLocation = ko.observable();
+        this.displayLocation = ko.observableArray();
         this.filmTitle = ko.observable();
         this.year = ko.observable();
         this.director = ko.observable();
@@ -71,13 +72,14 @@ $(function() {
             favoritedScenes = ko.observableArray([]),
             allTitles = ko.observableArray([]),
             selectedFilm = ko.observableArray([]),
-            singleFilm = ko.observable('180'),
+            singleFilm = ko.observable(),
             newFilm = ko.observable(true);
-            var markers = [],
+        var markers = [],
 
             load = function() {
                 $.each(my.filmData.data.Scenes, function(i, p) {
                     scenes.push(new Scene()
+                        .displayLocation(p.film_location)
                         .filmLocation(p.film_location + ", San Francisco, CA")
                         .filmTitle(p.film_title)
                         .year(p.release_year)
@@ -93,26 +95,23 @@ $(function() {
                 return ko.utils.arrayGetDistinctValues(allTitles().sort());
             }),
 
-          checkReset = function(){
-            console.log("checkReset is running from codeAddress");
-            if(markers.length > 0){
-              for(var j = 0; j < markers.length; j++){
-                my.vm.markers[j].setMap(null);
-              }
-              my.vm.currentScenes([]);
-            }
-          },
+            checkReset = function() {
+                if (markers.length > 0) {
+                    for (var j = 0; j < markers.length; j++) {
+                        my.vm.markers[j].setMap(null);
+                    }
+                    my.vm.currentScenes([]);
+                }
+            },
 
-          codeAddress = function() {
-            console.log("I'm running!!");
-            this.checkReset();
-            var address;
-            console.log("address in codeAddress", address);
-            var geocoder = new google.maps.Geocoder();
-            var prev_infowindow = false;
+            codeAddress = function() {
+                this.checkReset();
+                var address;
+                var geocoder = new google.maps.Geocoder();
+                var prev_infowindow = false;
 
-            function masterGeocoder(geocodeOptions1){
-               geocoder.geocode(geocodeOptions1, function(results, status) {
+                function masterGeocoder(geocodeOptions1) {
+                    geocoder.geocode(geocodeOptions1, function(results, status) {
                         if (status == google.maps.GeocoderStatus.OK) {
                             map.setCenter(results[0].geometry.location);
 
@@ -148,26 +147,22 @@ $(function() {
                             console.log("Geocode was not successful for the following reason: " + status);
                         }
                     });
-            }
-
-            for (var i = 0; i < this.scenes().length; i++) {
-              console.log("value of singleFilm() from for loop inside codeAddress", singleFilm());
-                if (singleFilm() == my.vm.scenes()[i].filmTitle()) {
-                    address = my.vm.scenes()[i].filmLocation();
-                    currentScenes.push(address);
-                    var geocodeOptions = {
-                        address: address,
-                        componentRestrictions: {
-                            country: 'US'
-                        }
-                    };
-                    masterGeocoder(geocodeOptions);
                 }
-            }
-          };
 
-
-
+                for (var i = 0; i < this.scenes().length; i++) {
+                    if (singleFilm() == my.vm.scenes()[i].filmTitle()) {
+                        address = my.vm.scenes()[i].filmLocation();
+                        currentScenes.push(address);
+                        var geocodeOptions = {
+                            address: address,
+                            componentRestrictions: {
+                                country: 'US'
+                            }
+                        };
+                        masterGeocoder(geocodeOptions);
+                    }
+                }
+            };
 
         return {
             scenes: scenes,
@@ -185,13 +180,11 @@ $(function() {
         };
     }();
 
-
     my.vm.load();
 
-
-          // my.vm.singleFilm.subscribe(function() {
-          //   my.vm.codeAddress();
-          // }, my.vm);
+    // my.vm.singleFilm.subscribe(function() {
+    //   my.vm.codeAddress();
+    // }, my.vm);
 
 
     ko.applyBindings(my.vm);

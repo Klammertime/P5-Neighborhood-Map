@@ -6,12 +6,35 @@
     <title>Maps</title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <style>
+    html,
+    body,
     .map-canvas {
         width: 100%;
-        height: 400px;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .form-control {
+        display: inline-block;
+        width: 75%;
+    }
+
+    .searchbar {
+        position: absolute;
+        top: 25px;
+        left: 10px;
+        background-color: rgba(255, 255, 255, 0.9);
+        width: 100%;
+        z-index: 2;
+    }
+
+    .btn {
+        width: 22.5%;
     }
     </style>
-    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>    <!-- change to minified for production -->
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <!-- change to minified for production -->
     <script type="text/javascript" src="js/knockout-3.4.0.js"></script>
     <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
@@ -21,75 +44,32 @@
 
 <body>
     <div class="container">
-
         <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-default">
+            <div class="col-md-4 col-lg-4 col-sm-4">
+                <div class="panel panel-default searchbar">
                     <div class="panel-heading">Films</div>
                     <div class="panel-body">
-                        <select data-bind="options: uniqueTitles, selectedOptions: my.vm.singleFilm">
-                        </select>
-
-                        <button type="button" class="btn btn-default" data-bind="click: codeAddress">Submit Film
-                        </button>
+                        <!-- You must have the list attribute for some reason, connects to id: filmSceneList -->
+                        <input id="filmList" data-bind="value: my.vm.singleFilm" list="filmSceneList" type="text" class="form-control" placeholder="Search for a film..." />
+                        <datalist id="filmSceneList" data-bind="foreach: uniqueTitles">
+                            <option data-bind="value: $data"></option>
+                        </datalist>
+                        <button class="btn btn-info pull-right" type="button" data-bind="click: codeAddress">Go!</button>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-          <div class="col-lg-6">
-            <div class="input-group">
-                <!-- You must have the list attribute for some reason, connects to id: filmSceneList -->
-                      <input id="filmList"
-                                    data-bind="value: my.vm.singleFilm"
-                                    list="filmSceneList"
-                                    type="text"
-                                    class="form-control"
-                                    placeholder="Search for..."/>
-
-                            <datalist id="filmSceneList" data-bind="foreach: uniqueTitles">
-                                <option data-bind="value: $data"></option>
-                            </datalist>
-                                                    <button type="button" class="btn btn-default" data-bind="click: codeAddress">Submit Film
-                        </button>
-             </div><!-- /input-group -->
-          </div><!-- /.col-lg-6 -->
-        </div><!-- /.row -->
-
-
-
-        <div class="row">
-            <div class="col-md-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Film Locations</div>
-                        <div class="panel-body">
-                        <div class="col-md-12">
-                            <div data-bind="visible: my.vm.singleFilm">
-                                <label for="Scenes">Selected:</label>
-                                <b><span data-bind="text: my.vm.singleFilm"></span></b>
-                            </div>
+                    <div class="panel-body">
+                        <div data-bind="visible: my.vm.markers.length">
+                            <label for="Scenes">Markers & Locations:</label>
+                            <b><span data-bind="text: my.vm.markers.length"></span></b>
                         </div>
-
-                        <div class="col-md-12" data-bind="foreach: my.vm.currentScenes">
+                        <div data-bind="foreach: my.vm.currentScenes">
                             <p data-bind="text: $data"> </p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Map</div>
-                    <div class="panel-body">
-                        <div data-bind="googleMap" class="map-canvas"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
+    <div data-bind="googleMap" class="map-canvas"></div>
 </body>
 
 </html>
