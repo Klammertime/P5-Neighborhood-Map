@@ -91,20 +91,23 @@ $(function() {
 
             uniqueTitles = ko.computed(function() {
                 return ko.utils.arrayGetDistinctValues(allTitles().sort());
-            });
+            }),
 
-        function checkReset(){
-          if(markers.length > 0){
-            for(var j = 0; j < markers.length; j++){
-              my.vm.markers[j].setMap(null);
+          checkReset = function(){
+            console.log("checkReset is running from codeAddress");
+            if(markers.length > 0){
+              for(var j = 0; j < markers.length; j++){
+                my.vm.markers[j].setMap(null);
+              }
+              my.vm.currentScenes([]);
             }
-            my.vm.currentScenes([]);
-          }
-        }
+          },
 
-        function codeAddress() {
-            checkReset();
+          codeAddress = function() {
+            console.log("I'm running!!");
+            this.checkReset();
             var address;
+            console.log("address in codeAddress", address);
             var geocoder = new google.maps.Geocoder();
             var prev_infowindow = false;
 
@@ -122,7 +125,6 @@ $(function() {
                             });
 
                             // this adds a marker to the map
-                            // you could wrap it in a function
                             var marker = new google.maps.Marker({
                                 map: map,
                                 position: results[0].geometry.location,
@@ -142,7 +144,6 @@ $(function() {
 
                             markers.push(marker);
 
-
                         } else {
                             console.log("Geocode was not successful for the following reason: " + status);
                         }
@@ -150,7 +151,8 @@ $(function() {
             }
 
             for (var i = 0; i < this.scenes().length; i++) {
-                if (singleFilm()[0] == my.vm.scenes()[i].filmTitle()) {
+              console.log("value of singleFilm() from for loop inside codeAddress", singleFilm());
+                if (singleFilm() == my.vm.scenes()[i].filmTitle()) {
                     address = my.vm.scenes()[i].filmLocation();
                     currentScenes.push(address);
                     var geocodeOptions = {
@@ -162,7 +164,10 @@ $(function() {
                     masterGeocoder(geocodeOptions);
                 }
             }
-        }
+          };
+
+
+
 
         return {
             scenes: scenes,
@@ -180,7 +185,15 @@ $(function() {
         };
     }();
 
+
     my.vm.load();
+
+
+          // my.vm.singleFilm.subscribe(function() {
+          //   my.vm.codeAddress();
+          // }, my.vm);
+
+
     ko.applyBindings(my.vm);
 
 });

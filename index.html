@@ -38,41 +38,38 @@
         </div>
 
         <div class="row">
+          <div class="col-lg-6">
+            <div class="input-group">
+                <!-- You must have the list attribute for some reason, connects to id: filmSceneList -->
+                      <input id="filmList"
+                                    data-bind="value: my.vm.singleFilm"
+                                    list="filmSceneList"
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Search for..."/>
+
+                            <datalist id="filmSceneList" data-bind="foreach: uniqueTitles">
+                                <option data-bind="value: $data"></option>
+                            </datalist>
+                                                    <button type="button" class="btn btn-default" data-bind="click: codeAddress">Submit Film
+                        </button>
+             </div><!-- /input-group -->
+          </div><!-- /.col-lg-6 -->
+        </div><!-- /.row -->
+
+
+
+        <div class="row">
             <div class="col-md-4">
                 <div class="panel panel-default">
                     <div class="panel-heading">Film Locations</div>
                         <div class="panel-body">
                         <div class="col-md-12">
-                            <label for="Scenes">Scenes:</label>
-                            <input id="filmList"
-                                    type="text"
-                                    data-bind="value: my.vm.singleFilm"
-                                    list="filmSceneList" />
-                            <datalist id="filmSceneList" data-bind="foreach: uniqueTitles">
-                                <option data-bind="value: $data"></option>
-                            </datalist>
-
                             <div data-bind="visible: my.vm.singleFilm">
-                                <hr>
-                                <!-- Display selected country: -->
                                 <label for="Scenes">Selected:</label>
                                 <b><span data-bind="text: my.vm.singleFilm"></span></b>
                             </div>
                         </div>
-
-
-                        <div class="col-md-12">
-                            <strong>Current Scenes Length: </strong>
-                            <span data-bind="text: my.vm.currentScenes().length"> </span>
-                        </div>
-                        <div class="col-md-12">
-                            <strong>Current Marker Length: </strong>
-                        <!--     <span data-bind="text: my.vm.markers.length"> </span> -->
-                        </div>
-<!--                         <div class="col-md-12">
-                            <strong>Current Scenes Length: </strong>
-                            <span data-bind="text: my.vm.currentScenes().length"> </span>
-                        </div> -->
 
                         <div class="col-md-12" data-bind="foreach: my.vm.currentScenes">
                             <p data-bind="text: $data"> </p>
@@ -81,6 +78,7 @@
                 </div>
             </div>
         </div>
+
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-default">
@@ -91,114 +89,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
-
-
-
-
-
-
-
-<!--         <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Address</div>
-                    <div class="panel-body">
-                        <div id="addressFromFields" class="form-group">
-                            <label for="autocompleteFromAddress">From address</label>
-                            <input id="autocompleteFromAddress" class="form-control" data-bind="addressAutoComplete: MapsApplication.mapsModel.fromAddress" placeholder="Enter your from address" type="text"></input>
-                        </div>
-                        <div id="addressToFields" class="form-group">
-                            <label for="autocompleteToAddress">To address</label>
-                            <input id="autocompleteToAddress" class="form-control" data-bind="addressAutoComplete: MapsApplication.mapsModel.toAddress" placeholder="Enter your to address" type="text"></input>
-                        </div>
-                        <button type="button" class="btn btn-default" data-bind="enable: MapsApplication.mapsModel.fromAddress && MapsApplication.mapsModel.toAddress, click: MapsApplication.getDirections">Get Directions
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">From address</div>
-                    <div class="panel-body" data-bind="with: MapsApplication.mapsModel.fromAddress">
-                        <div class="col-md-12" data-bind="visible: streetNumber">
-                            <strong>Street number: </strong>
-                            <span data-bind="text: streetNumber"> </span>
-                        </div>
-                        <div class="col-md-12" data-bind="visible: streetName">
-                            <strong>Street Name: </strong>
-                            <span data-bind="text: streetName"> </span>
-                        </div>
-                        <div class="col-md-12" data-bind="visible: city">
-                            <strong>City: </strong>
-                            <span data-bind="text: city"> </span>
-                        </div>
-                        <div class="col-md-12" data-bind="visible: postCode"> <strong>Post code: </strong>
-                            <span data-bind="text: postCode"> </span>
-                        </div>
-                        <div class="col-md-12" data-bind="visible: country"> <strong>Country: </strong>
-                            <span data-bind="text: country"> </span>
-                        </div>
-                        <div class="col-md-12" data-bind="visible: location()">
-                            <strong>Latitude: </strong>
-                            <span data-bind="text: location().lat()"> </span>
-                        </div>
-                        <div class="col-md-12" data-bind="visible: location()">
-                            <strong>Longitude: </strong>
-                            <span data-bind="text: location().lng()"> </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">From address</div>
-                    <div class="panel-body" data-bind="with: MapsApplication.mapsModel.toAddress">
-                        <div class="col-md-12" data-bind="visible: streetNumber">
-                            <strong>Street number: </strong>
-                            <span data-bind="text: streetNumber"> </span>
-                        </div>
-                        <div class="col-md-12" data-bind="visible: streetName">
-                            <strong>Street Name: </strong>
-                            <span data-bind="text: streetName"> </span>
-                        </div>
-                        <div class="col-md-12" data-bind="visible: city">
-                            <strong>City: </strong>
-                            <span data-bind="text: city"> </span>
-                        </div>
-                        <div class="col-md-12" data-bind="visible: postCode"> <strong>Post code: </strong>
-                            <span data-bind="text: postCode"> </span>
-                        </div>
-                        <div class="col-md-12" data-bind="visible: country"> <strong>Country: </strong>
-                            <span data-bind="text: country"> </span>
-                        </div>
-                        <div class="col-md-12" data-bind="visible: location()">
-                            <strong>Latitude: </strong>
-                            <span data-bind="text: location().lat()"> </span>
-                        </div>
-                        <div class="col-md-12" data-bind="visible: location()">
-                            <strong>Longitude: </strong>
-                            <span data-bind="text: location().lng()"> </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Map</div>
-                    <div class="panel-body">
-                        <div data-bind="mapPanel" class="map-canvas"></div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
     </div>
 </body>
 
