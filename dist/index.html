@@ -2,14 +2,14 @@
 <html>
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <title>Maps</title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <style>
     html,
     body,
     .map-canvas {
-        width: 100%;
+        min-width: 100%;
         height: 100%;
         margin: 0;
         padding: 0;
@@ -22,54 +22,99 @@
 
     .searchbar {
         position: absolute;
-        top: 25px;
-        left: 10px;
+      /*  top: 25px;
+        left: 10px;*/
         background-color: rgba(255, 255, 255, 0.9);
         width: 100%;
         z-index: 2;
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+
+    .icon-group {
+        display: inline;
     }
 
     .btn {
         width: 22.5%;
     }
+
+    .panel {
+        margin-bottom: 20px;
+     /*   height: 100%;
+        height: 100%;*/
+/*        position: absolute;
+        position-x: 0;
+       top: 0;
+        left: 0;
+        z-index: 1;*/
+    }
+
+    .mapType {
+        max-width: 30px;
+    }
+
+    .panel-body {
+        padding: 15px;
+        max-height: 580px;
+        overflow: auto;
+    }
+
+    .scenes {
+        padding-top: 15px;
+    }
+
     </style>
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <!-- change to minified for production -->
-    <script type="text/javascript" src="js/knockout-3.4.0.js"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/knockout-3.4.0.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
-    <script type="text/javascript" src="js/data.js"></script>
-    <script type="text/javascript" src="js/map.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/map.js"></script>
 </head>
 
 <body>
-    <div class="container">
+    <!-- <div class="container"> -->
         <div class="row">
-            <div class="col-md-4 col-lg-4 col-sm-4">
+            <div class="col-md-3 col-lg-3 col-sm-4">
                 <div class="panel panel-default searchbar">
-                    <div class="panel-heading">Films</div>
+                    <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                        <div class="btn-group" role="group">
+                            <button id="btnRoad" type="button" class="btn btn-default"><img src="img/roadmap1.svg" alt="roadmap" class="mapType"></button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button id="btnSat" type="button" class="btn btn-default"><img src="img/satellite1.svg" alt="satellite" class="mapType"></button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button id="btnTer" type="button" class="btn btn-default"><img src="img/terrain1.svg" alt="terrain" class="mapType"></button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button id="btnHyb" type="button" class="btn btn-default"><img src="img/hybrid1.svg" alt="hybrid" class="mapType"></button>
+                        </div>
+                    </div>
                     <div class="panel-body">
-                        <!-- You must have the list attribute for some reason, connects to id: filmSceneList -->
+                        <!-- Must have list attribute, connects to id: filmSceneList -->
                         <input id="filmList" data-bind="value: my.vm.singleFilm" list="filmSceneList" type="text" class="form-control" placeholder="Search for a film..." />
                         <datalist id="filmSceneList" data-bind="foreach: uniqueTitles">
                             <option data-bind="value: $data"></option>
                         </datalist>
                         <button class="btn btn-info pull-right" type="button" data-bind="click: codeAddress">Go!</button>
-                    </div>
-                    <div class="panel-body">
+                        <!-- </div>
+                    <div class="panel-body"> -->
                         <div data-bind="visible: my.vm.markers.length">
                             <label for="Scenes">Markers & Locations:</label>
                             <b><span data-bind="text: my.vm.markers.length"></span></b>
                         </div>
-                        <div data-bind="foreach: my.vm.currentScenes">
+                        <div class="scenes" data-bind="foreach: my.vm.currentScenes">
                             <p data-bind="text: $data"> </p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div data-bind="googleMap" class="map-canvas"></div>
+<!--     </div>
+ -->    <div data-bind="googleMap" class="map-canvas"></div>
 </body>
 
 </html>

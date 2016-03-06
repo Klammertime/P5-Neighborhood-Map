@@ -1,7 +1,7 @@
 $(function() {
-    var googleMap,
-        geocoder,
-        map;
+    var googleMap;
+    var geocoder;
+    var map;
 
     // Location construction
     var Scene = function() {
@@ -12,13 +12,6 @@ $(function() {
         this.director = ko.observable();
         this.productionCompany = ko.observable();
         this.writer = ko.observable();
-        this.latLng = null;
-        this.latLng = null;
-        this.description = null;
-        this.wikipedia = null;
-        this.flickr = null;
-        this.nyTimes = null;
-        this.review = null;
     };
 
     ko.bindingHandlers.googleMap = {
@@ -34,6 +27,7 @@ $(function() {
                 streetViewControl: true,
                 rotateControl: true,
                 overviewMapControl: true,
+                scrollwheel: false , // prevents mousing down from triggering zoom
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
             var initialCenter = mapOptions.center;
@@ -53,6 +47,23 @@ $(function() {
                     map.setZoom(initialZoom);
                 });
             }
+
+            function startButtonEvents () {
+    document.getElementById('btnRoad' ).addEventListener('click', function(){
+        map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
+    });
+    document.getElementById('btnSat' ).addEventListener('click', function(){
+        map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
+    });
+    document.getElementById('btnHyb' ).addEventListener('click', function(){
+        map.setMapTypeId(google.maps.MapTypeId.HYBRID);
+    });
+    document.getElementById('btnTer' ).addEventListener('click', function(){
+        map.setMapTypeId(google.maps.MapTypeId.TERRAIN);
+    });
+}
+
+startButtonEvents();
         },
         update: function(element, valueAccessor, allBindings) {
             window.addEventListener('resize', (function() {
@@ -65,21 +76,19 @@ $(function() {
     };
 
     my.vm = function() {
-        var metadata = {},
-            scenes = ko.observableArray([]),
-            currentScenes = ko.observableArray([]), //put current selected film locs
-            selectedScenes = ko.observableArray([]),
-            favoritedScenes = ko.observableArray([]),
-            allTitles = ko.observableArray([]),
-            selectedFilm = ko.observableArray([]),
-            singleFilm = ko.observable(),
-            newFilm = ko.observable(true);
-        var markers = [],
+        var scenes = ko.observableArray([]);
+        var currentScenes = ko.observableArray([]); //put current selected film locs
+        var selectedScenes = ko.observableArray([]);
+        var favoritedScenes = ko.observableArray([]);
+        var allTitles = ko.observableArray([]);
+        var selectedFilm = ko.observableArray([]);
+        var singleFilm = ko.observable();
+        var newFilm = ko.observable(true);
+        var markers = [];
 
-            load = function() {
+        var load = function() {
                 $.each(my.filmData.data.Scenes, function(i, p) {
                     scenes.push(new Scene()
-                        .displayLocation(p.film_location)
                         .filmLocation(p.film_location + ", San Francisco, CA")
                         .filmTitle(p.film_title)
                         .year(p.release_year)
@@ -111,10 +120,11 @@ $(function() {
                 var prev_infowindow = false;
 
                 function masterGeocoder(geocodeOptions1) {
+                    console.log("running");
+
                     geocoder.geocode(geocodeOptions1, function(results, status) {
                         if (status == google.maps.GeocoderStatus.OK) {
                             map.setCenter(results[0].geometry.location);
-
                             var contentString = '<div id="content"><p>' +
                                 results[0].formatted_address + '</p></div>';
 
@@ -181,11 +191,6 @@ $(function() {
     }();
 
     my.vm.load();
-
-    // my.vm.singleFilm.subscribe(function() {
-    //   my.vm.codeAddress();
-    // }, my.vm);
-
 
     ko.applyBindings(my.vm);
 

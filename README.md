@@ -4,6 +4,9 @@
 
 ###Resources
 
+Google Maps JavaScript API Cookbook
+https://www.safaribooksonline.com/library/view/google-maps-javascript/9781849698825/
+
 * Removing markers
 
 https://developers.google.com/maps/documentation/javascript/examples/marker-remove
