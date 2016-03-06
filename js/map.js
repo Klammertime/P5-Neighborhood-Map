@@ -27,7 +27,7 @@ $(function() {
                 streetViewControl: true,
                 rotateControl: true,
                 overviewMapControl: true,
-                scrollwheel: false , // prevents mousing down from triggering zoom
+                scrollwheel: false, // prevents mousing down from triggering zoom
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
             var initialCenter = mapOptions.center;
@@ -48,22 +48,22 @@ $(function() {
                 });
             }
 
-            function startButtonEvents () {
-    document.getElementById('btnRoad' ).addEventListener('click', function(){
-        map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
-    });
-    document.getElementById('btnSat' ).addEventListener('click', function(){
-        map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
-    });
-    document.getElementById('btnHyb' ).addEventListener('click', function(){
-        map.setMapTypeId(google.maps.MapTypeId.HYBRID);
-    });
-    document.getElementById('btnTer' ).addEventListener('click', function(){
-        map.setMapTypeId(google.maps.MapTypeId.TERRAIN);
-    });
-}
+            function startButtonEvents() {
+                document.getElementById('btnRoad').addEventListener('click', function() {
+                    map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
+                });
+                document.getElementById('btnSat').addEventListener('click', function() {
+                    map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
+                });
+                document.getElementById('btnHyb').addEventListener('click', function() {
+                    map.setMapTypeId(google.maps.MapTypeId.HYBRID);
+                });
+                document.getElementById('btnTer').addEventListener('click', function() {
+                    map.setMapTypeId(google.maps.MapTypeId.TERRAIN);
+                });
+            }
 
-startButtonEvents();
+            startButtonEvents();
         },
         update: function(element, valueAccessor, allBindings) {
             window.addEventListener('resize', (function() {
@@ -88,15 +88,19 @@ startButtonEvents();
 
         var load = function() {
                 $.each(my.filmData.data.Scenes, function(i, p) {
-                    scenes.push(new Scene()
-                        .filmLocation(p.film_location + ", San Francisco, CA")
-                        .filmTitle(p.film_title)
-                        .year(p.release_year)
-                        .director(p.director)
-                        .productionCompany(p.production_company)
-                        .writer(p.writer)
-                    );
-                    allTitles.push(p.film_title);
+                    if (p.film_location !== undefined) { //TODO: Can also push SF, CA as
+                        // film_location just to get it on list as having been taped
+                        // in SF. Or not. Decide later.
+                        scenes.push(new Scene()
+                            .filmLocation(p.film_location + ", San Francisco, CA")
+                            .filmTitle(p.film_title)
+                            .year(p.release_year)
+                            .director(p.director)
+                            .productionCompany(p.production_company)
+                            .writer(p.writer)
+                        );
+                        allTitles.push(p.film_title);
+                    }
                 });
             },
 
@@ -120,8 +124,6 @@ startButtonEvents();
                 var prev_infowindow = false;
 
                 function masterGeocoder(geocodeOptions1) {
-                    console.log("running");
-
                     geocoder.geocode(geocodeOptions1, function(results, status) {
                         if (status == google.maps.GeocoderStatus.OK) {
                             map.setCenter(results[0].geometry.location);
@@ -140,7 +142,6 @@ startButtonEvents();
                                 title: results[0].formatted_address,
                                 animation: google.maps.Animation.DROP
                             });
-
 
                             marker.addListener('click', function() {
                                 if (prev_infowindow) {
@@ -162,14 +163,17 @@ startButtonEvents();
                 for (var i = 0; i < this.scenes().length; i++) {
                     if (singleFilm() == my.vm.scenes()[i].filmTitle()) {
                         address = my.vm.scenes()[i].filmLocation();
-                        currentScenes.push(address);
-                        var geocodeOptions = {
-                            address: address,
-                            componentRestrictions: {
-                                country: 'US'
-                            }
-                        };
-                        masterGeocoder(geocodeOptions);
+                        console.log("address", address);
+                        if (address !== 'undefined, San Francisco, CA') {
+                            currentScenes.push(address);
+                            var geocodeOptions = {
+                                address: address,
+                                componentRestrictions: {
+                                    country: 'US'
+                                }
+                            };
+                            masterGeocoder(geocodeOptions);
+                        }
                     }
                 }
             };
