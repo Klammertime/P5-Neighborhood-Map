@@ -5,7 +5,9 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <title>Maps</title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Raleway:600,700,300, 400' rel='stylesheet' type='text/css'>
     <style>
+
     html,
     body,
     .map-canvas {
@@ -15,6 +17,29 @@
         padding: 0;
     }
 
+    body {
+        font-family: 'Raleway', sans-serif;
+        font-weight: 300;
+        color: #999999;
+    }
+
+    p {
+        font-weight: 400;
+        line-height: 22px;
+        color: #999999;
+    }
+
+    .title {
+        color: #454545;
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: 13px;
+        letter-spacing: 2px;
+        text-align: left;
+        line-height: 34px;
+        margin-bottom: 0px;
+    }
+
     .form-control {
         display: inline-block;
         width: 75%;
@@ -22,15 +47,16 @@
 
     .searchbar {
         position: absolute;
-      /*  top: 25px;
-        left: 10px;*/
-        background-color: rgba(255, 255, 255, 0.9);
-        width: 100%;
+    /*  background-color: rgba(255, 255, 255, 0.9);
+    */  width: 100%;
         z-index: 2;
-        margin-top: 10px;
-        margin-left: 10px;
+        margin-top: 6px;
     }
 
+    .row {
+        margin-right: 0;
+        margin-left: 0;
+    }
     .icon-group {
         display: inline;
     }
@@ -41,29 +67,39 @@
 
     .panel {
         margin-bottom: 20px;
-     /*   height: 100%;
-        height: 100%;*/
-/*        position: absolute;
-        position-x: 0;
-       top: 0;
-        left: 0;
-        z-index: 1;*/
+        margin-right: 0;
+        margin-left: -5px;
     }
 
     .mapType {
-        max-width: 30px;
+        max-height: 25px;
     }
-
     .panel-body {
-        padding: 15px;
-        max-height: 580px;
+        padding: 15px 15px 0 15px;
+    }
+    .panel-body-results {
+        max-height: 550px;
         overflow: auto;
     }
 
+    .panel {
+        margin-bottom: 0;
+    }
     .scenes {
         padding-top: 15px;
     }
 
+    input {
+        font-family: inherit;
+    }
+
+    .btn-default {
+        border: none;
+    }
+
+    .btn-group {
+        padding-top: 10px;
+    }
     </style>
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <!-- change to minified for production -->
@@ -75,24 +111,10 @@
 </head>
 
 <body>
-    <!-- <div class="container"> -->
-        <div class="row">
-            <div class="col-md-3 col-lg-3 col-sm-4">
-                <div class="panel panel-default searchbar">
-                    <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                        <div class="btn-group" role="group">
-                            <button id="btnRoad" type="button" class="btn btn-default"><img src="img/roadmap1.svg" alt="roadmap" class="mapType"></button>
-                        </div>
-                        <div class="btn-group" role="group">
-                            <button id="btnSat" type="button" class="btn btn-default"><img src="img/satellite1.svg" alt="satellite" class="mapType"></button>
-                        </div>
-                        <div class="btn-group" role="group">
-                            <button id="btnTer" type="button" class="btn btn-default"><img src="img/terrain1.svg" alt="terrain" class="mapType"></button>
-                        </div>
-                        <div class="btn-group" role="group">
-                            <button id="btnHyb" type="button" class="btn btn-default"><img src="img/hybrid1.svg" alt="hybrid" class="mapType"></button>
-                        </div>
-                    </div>
+    <div class="row">
+        <div class="col-md-3 col-lg-3 col-sm-4">
+            <div class="panel panel-default searchbar">
+                <div class="panel-heading">Panel heading</div>
                     <div class="panel-body">
                         <!-- Must have list attribute, connects to id: filmSceneList -->
                         <input id="filmList" data-bind="value: my.vm.singleFilm" list="filmSceneList" type="text" class="form-control" placeholder="Search for a film..." />
@@ -100,21 +122,26 @@
                             <option data-bind="value: $data"></option>
                         </datalist>
                         <button class="btn btn-info pull-right" type="button" data-bind="click: codeAddress">Go!</button>
-                        <!-- </div>
-                    <div class="panel-body"> -->
-                        <div data-bind="visible: my.vm.markers.length">
-                            <label for="Scenes">Markers & Locations:</label>
-                            <b><span data-bind="text: my.vm.markers.length"></span></b>
-                        </div>
-                        <div class="scenes" data-bind="foreach: my.vm.currentScenes">
-                            <p data-bind="text: $data"> </p>
+
+
+                        <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
+                                <a href="#" id="btnRoad" class="btn btn-default" roll="button"><img src="img/roadmap1.svg" alt="roadmap" class="mapType"></a>
+                                <a href="#" id="btnSat" class="btn btn-default" roll="button"><img src="img/satellite1.svg" alt="satellite" class="mapType"></a>
+                                <a href="#" id="btnTer" class="btn btn-default" roll="button"><img src="img/terrain1.svg" alt="terrain" class="mapType"></a>
+                                <a href="#" id="btnHyb" class="btn btn-default" roll="button"><img src="img/hybrid1.svg" alt="hybrid" class="mapType"></a>
                         </div>
                     </div>
-                </div>
+                      <!-- List group -->
+                      <ul class="list-group panel-body-results">
+                        <div class="scenes" data-bind="foreach: my.vm.currentScenes">
+                            <li class="list-group-item" data-bind="text: $data"></li>
+                        </div>
+                      </ul>
             </div>
         </div>
-<!--     </div>
- -->    <div data-bind="googleMap" class="map-canvas"></div>
+    </div>
+
+    <div data-bind="googleMap" class="map-canvas"></div>
 </body>
 
 </html>
