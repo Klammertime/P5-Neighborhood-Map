@@ -153,7 +153,8 @@ $(function() {
                             var contentString = '<div class="media"><div class="media-left"><a href="#">' +
                                                 streetViewImage + '</a></div><div class="media-body"><p class="media-heading">' +
                                                 results[0].formatted_address +
-                                                '</p><span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
+                                                '</p><span class="glyphicon glyphicon-heart" aria-hidden="true"></span>' +
+                                                '<span class="glyphicon glyphicon-scale" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="See how much the yellow man weighs, place him on the scale."></span></div></div>';
 
                             var infowindow = new google.maps.InfoWindow({
                                 content: contentString
