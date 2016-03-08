@@ -2,6 +2,9 @@ $(function() {
     var googleMap;
     var geocoder;
     var map;
+    var infowindow;
+    var prev_infowindow = false;
+
 
     // Location construction
     var Scene = function() {
@@ -19,15 +22,23 @@ $(function() {
             var myLatLng = new google.maps.LatLng(37.77493, -122.419416);
             var mapOptions = {
                 center: myLatLng,
-                zoom: 13,
+                zoom: 12,
                 disableDefaultUI: true,
                 zoomControl: true,
                 panControl: true,
+                mapTypeControl: true,
+                mapTypeControlOptions: {
+                    style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+                    position: google.maps.ControlPosition.RIGHT_BOTTOM
+                },
                 scaleControl: true,
                 streetViewControl: true,
+                streetViewControlOptions: {
+                    position: google.maps.ControlPosition.RIGHT_BOTTOM
+                },
                 rotateControl: true,
                 overviewMapControl: true,
-                scrollwheel: false , // prevents mousing down from triggering zoom
+                scrollwheel: false, // prevents mousing down from triggering zoom
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
             var initialCenter = mapOptions.center;
@@ -47,23 +58,6 @@ $(function() {
                     map.setZoom(initialZoom);
                 });
             }
-
-            function startButtonEvents () {
-    document.getElementById('btnRoad' ).addEventListener('click', function(){
-        map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
-    });
-    document.getElementById('btnSat' ).addEventListener('click', function(){
-        map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
-    });
-    document.getElementById('btnHyb' ).addEventListener('click', function(){
-        map.setMapTypeId(google.maps.MapTypeId.HYBRID);
-    });
-    document.getElementById('btnTer' ).addEventListener('click', function(){
-        map.setMapTypeId(google.maps.MapTypeId.TERRAIN);
-    });
-}
-
-startButtonEvents();
         },
         update: function(element, valueAccessor, allBindings) {
             window.addEventListener('resize', (function() {
@@ -84,19 +78,25 @@ startButtonEvents();
         var selectedFilm = ko.observableArray([]);
         var singleFilm = ko.observable();
         var newFilm = ko.observable(true);
-        var markers = [];
+        var markers = ko.observableArray([]);
+        var filmInfoBox = ko.observableArray();
 
         var load = function() {
                 $.each(my.filmData.data.Scenes, function(i, p) {
-                    scenes.push(new Scene()
-                        .filmLocation(p.film_location + ", San Francisco, CA")
-                        .filmTitle(p.film_title)
-                        .year(p.release_year)
-                        .director(p.director)
-                        .productionCompany(p.production_company)
-                        .writer(p.writer)
-                    );
-                    allTitles.push(p.film_title);
+                    if (p.film_location !== undefined) { //TODO: Can also push SF, CA as
+                        // film_location just to get it on list as having been taped
+                        // in SF. Or not. Decide later.
+                        console.log("p.film_location", p.film_location);
+                        scenes.push(new Scene()
+                            .filmLocation(p.film_location + ", San Francisco, CA")
+                            .filmTitle(p.film_title)
+                            .year(p.release_year)
+                            .director(p.director)
+                            .productionCompany(p.production_company)
+                            .writer(p.writer)
+                        );
+                        allTitles.push(p.film_title);
+                    }
                 });
             },
 
@@ -105,42 +105,67 @@ startButtonEvents();
             }),
 
             checkReset = function() {
-                if (markers.length > 0) {
-                    for (var j = 0; j < markers.length; j++) {
-                        my.vm.markers[j].setMap(null);
+                if (markers().length > 0) {
+                    for (var j = 0; j < markers().length; j++) {
+                        my.vm.markers()[j].marker.setMap(null);
                     }
-                    my.vm.currentScenes([]);
+                    my.vm.markers([]);
                 }
+            },
+
+            loadFilmInfoBox = function(requestedFilm) {
+
+
+
+            },
+
+
+            // The current item will be passed as the first parameter
+            panToMarker = function(clickedLocation) {
+                if (prev_infowindow) {
+                    prev_infowindow.close();
+                }
+
+                prev_infowindow = clickedLocation.infowindow;
+                map.panTo(clickedLocation.marker.getPosition());
+                clickedLocation.infowindow.open(map, clickedLocation.marker);
             },
 
             codeAddress = function() {
                 this.checkReset();
+                // this.loadFilmInfoBox(singleFilm());
                 var address;
                 var geocoder = new google.maps.Geocoder();
-                var prev_infowindow = false;
 
-                function masterGeocoder(geocodeOptions1) {
-                    console.log("running");
-
-                    geocoder.geocode(geocodeOptions1, function(results, status) {
+                function masterGeocoder(myGeocodeOptions) {
+                    geocoder.geocode(myGeocodeOptions, function(results, status) {
                         if (status == google.maps.GeocoderStatus.OK) {
                             map.setCenter(results[0].geometry.location);
-                            var contentString = '<div id="content"><p>' +
-                                results[0].formatted_address + '</p></div>';
+                            // results[0].formatted_address is actual address on marker
+                            // TODO: the movie scenes are not getting mapped to the right loc
+                            // on the map due to the poor formatting of the data from sfdata
+
+                            var streetViewURL = 'https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
+                                                results[0].geometry.location;
+                            var streetViewImage = '<img class="streetView media-object" src="' + streetViewURL +
+                                                  '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetView">';
+
+                            var contentString = '<div class="media"><div class="media-left"><a href="#">' +
+                                                streetViewImage + '</a></div><div class="media-body"><p class="media-heading">' +
+                                                results[0].formatted_address +
+                                                '</p><span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
 
                             var infowindow = new google.maps.InfoWindow({
-                                content: contentString,
-                                maxWidth: 400
+                                content: contentString
                             });
 
                             // this adds a marker to the map
                             var marker = new google.maps.Marker({
                                 map: map,
                                 position: results[0].geometry.location,
-                                title: results[0].formatted_address,
+                                title: myGeocodeOptions.address, // intended address
                                 animation: google.maps.Animation.DROP
                             });
-
 
                             marker.addListener('click', function() {
                                 if (prev_infowindow) {
@@ -148,10 +173,13 @@ startButtonEvents();
                                 }
 
                                 prev_infowindow = infowindow;
+                                map.panTo(marker.getPosition());
+
                                 infowindow.open(map, marker);
                             });
 
-                            markers.push(marker);
+                            markers.push({ marker: marker, infowindow: infowindow });
+
 
                         } else {
                             console.log("Geocode was not successful for the following reason: " + status);
@@ -162,14 +190,17 @@ startButtonEvents();
                 for (var i = 0; i < this.scenes().length; i++) {
                     if (singleFilm() == my.vm.scenes()[i].filmTitle()) {
                         address = my.vm.scenes()[i].filmLocation();
-                        currentScenes.push(address);
-                        var geocodeOptions = {
-                            address: address,
-                            componentRestrictions: {
-                                country: 'US'
-                            }
-                        };
-                        masterGeocoder(geocodeOptions);
+                        if (address !== 'undefined, San Francisco, CA') {
+                            currentScenes.push(my.vm.scenes()[i]);
+                            var geocodeOptions = {
+                                address: address,
+                                componentRestrictions: {
+                                    country: 'US'
+                                }
+                            };
+
+                            masterGeocoder(geocodeOptions);
+                        }
                     }
                 }
             };
@@ -186,7 +217,10 @@ startButtonEvents();
             codeAddress: codeAddress,
             currentScenes: currentScenes,
             markers: markers,
-            checkReset: checkReset
+            checkReset: checkReset,
+            loadFilmInfoBox: loadFilmInfoBox,
+            panToMarker: panToMarker,
+            filmInfoBox: filmInfoBox
         };
     }();
 

@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link href='https://fonts.googleapis.com/css?family=Raleway:600,700,300, 400' rel='stylesheet' type='text/css'>
     <style>
-
     html,
     body,
     .map-canvas {
@@ -47,8 +46,9 @@
 
     .searchbar {
         position: absolute;
-    /*  background-color: rgba(255, 255, 255, 0.9);
-    */  width: 100%;
+        /*  background-color: rgba(255, 255, 255, 0.9);
+    */
+        width: 100%;
         z-index: 2;
         margin-top: 6px;
     }
@@ -57,6 +57,7 @@
         margin-right: 0;
         margin-left: 0;
     }
+
     .icon-group {
         display: inline;
     }
@@ -74,9 +75,11 @@
     .mapType {
         max-height: 25px;
     }
+
     .panel-body {
         padding: 15px 15px 0 15px;
     }
+
     .panel-body-results {
         max-height: 550px;
         overflow: auto;
@@ -85,9 +88,10 @@
     .panel {
         margin-bottom: 0;
     }
+
     .scenes {
-        padding-top: 15px;
-    }
+/*        padding-top: 15px;
+*/    }
 
     input {
         font-family: inherit;
@@ -100,6 +104,16 @@
     .btn-group {
         padding-top: 10px;
     }
+
+    .streetView {
+        max-width: 75px;
+        max-height: 75px;
+    }
+
+    .media-body {
+        width: 150px;
+    }
+
     </style>
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <!-- change to minified for production -->
@@ -113,34 +127,55 @@
 <body>
     <div class="row">
         <div class="col-md-3 col-lg-3 col-sm-4">
-            <div class="panel panel-default searchbar">
+<!--             <div class="panel panel-default searchbar">
                 <div class="panel-heading">Panel heading</div>
+                <div class="panel-body">
+                    <input id="filmList" data-bind="value: my.vm.singleFilm" list="filmSceneList" type="text" class="form-control" placeholder="Search for a film..." />
+                    <datalist id="filmSceneList" data-bind="foreach: uniqueTitles">
+                        <option data-bind="value: $data"></option>
+                    </datalist>
+                    <button class="btn btn-info pull-right" type="button" data-bind="click: codeAddress">Go!</button>
+                </div> -->
+            <div class="panel panel-default searchbar">
+                <div class="panel-heading">SF Film Locations Map</div>
                     <div class="panel-body">
-                        <!-- Must have list attribute, connects to id: filmSceneList -->
                         <input id="filmList" data-bind="value: my.vm.singleFilm" list="filmSceneList" type="text" class="form-control" placeholder="Search for a film..." />
                         <datalist id="filmSceneList" data-bind="foreach: uniqueTitles">
                             <option data-bind="value: $data"></option>
                         </datalist>
                         <button class="btn btn-info pull-right" type="button" data-bind="click: codeAddress">Go!</button>
-
-
-                        <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
-                                <a href="#" id="btnRoad" class="btn btn-default" roll="button"><img src="img/roadmap1.svg" alt="roadmap" class="mapType"></a>
-                                <a href="#" id="btnSat" class="btn btn-default" roll="button"><img src="img/satellite1.svg" alt="satellite" class="mapType"></a>
-                                <a href="#" id="btnTer" class="btn btn-default" roll="button"><img src="img/terrain1.svg" alt="terrain" class="mapType"></a>
-                                <a href="#" id="btnHyb" class="btn btn-default" roll="button"><img src="img/hybrid1.svg" alt="hybrid" class="mapType"></a>
-                        </div>
                     </div>
-                      <!-- List group -->
-                      <ul class="list-group panel-body-results">
-                        <div class="scenes" data-bind="foreach: my.vm.currentScenes">
-                            <li class="list-group-item" data-bind="text: $data"></li>
-                        </div>
-                      </ul>
-            </div>
+                  <table class="table">
+                    <th>
+                        <td data-bind="text: my.vm.singleFilm"></td>
+                    </th>
+                    <tbody data-bind="foreach: my.vm.markers">
+                        <tr>
+                            <td>
+                                <span class="glyphicon glyphicon-map-marker" aria-hidden="true" data-bind="click: $parent.panToMarker"></span>
+                            </td>
+                            <td>
+                                <p data-bind="text: $data.marker.title"></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- <ul class="list-group panel-body-results">
+                    <h4 class="list-group-item" data-bind="text: my.vm.singleFilm"></h4>
+                    <div class="scenes" data-bind="foreach: my.vm.markers">
+                        <li class="list-group-item" data-bind="click: $parent.panToMarker">
+                              <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
+
+                            <p data-bind="text: $data.marker.title"></p>
+                        </li>
+
+                    </div>
+                </ul>
+            </div>-->
         </div>
     </div>
-
     <div data-bind="googleMap" class="map-canvas"></div>
 </body>
 
