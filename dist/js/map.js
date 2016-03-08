@@ -114,10 +114,46 @@ $(function() {
             },
 
             loadFilmInfoBox = function(requestedFilm) {
+                console.log("requestedFilm", requestedFilm);
+                var theFilm = requestedFilm;
+                var nytKey = '70f203863d9c8555f9b345f32ec442e8:10:59953537';
+                var nyTimesMovieAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
+                    theFilm + "'&api-key=" + nytKey;
 
+                $.ajax({
+                    type: "GET",
+                    url: nyTimesMovieAPI,
+                    timeout: 2000,
+                    beforeSend: function(){
+                    },
+                    complete: function() {
+                    },
+                    success: function(data) {
+                        console.log("data", data);
+                        $.each(data.results, function(i, item) {
+                            var byline = item.byline;
+                            console.log("byline", byline);
+                            var headline = item.headline;
+                            console.log("headline", headline);
+                            var summaryShort = item.summary_short;
+                            console.log("summaryShort", summaryShort);
+                            var reviewURL = item.link.url;
+                            console.log("item.link.url", item.link.url);
 
+                            var pubDate = item.publication_date;
+                            console.log("item.publication_date", item.publication_date);
+                            var rating = item.mpaa_rating;
 
+                            var trailerURL =  item.related_urls[4].url;
+                        })
+                    },
+                    fail: function(jqxhr, textStatus, error) {
+                        console.log("New York Times Article Could Not Be Loaded: ", error);
+                    }
+                });
             },
+
+
 
 
             // The current item will be passed as the first parameter
@@ -133,7 +169,7 @@ $(function() {
 
             codeAddress = function() {
                 this.checkReset();
-                // this.loadFilmInfoBox(singleFilm());
+                this.loadFilmInfoBox(singleFilm());
                 var address;
                 var geocoder = new google.maps.Geocoder();
 
