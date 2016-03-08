@@ -176,21 +176,19 @@
     }
 
     .glyphicon {
-     margin-top: 5px;
-    margin-bottom: 0px;
-    margin-right: 5px;
-    margin-left: 5px;
-
+        margin-top: 5px;
+        margin-bottom: 0px;
+        margin-right: 5px;
+        margin-left: 5px;
         font-size: 16px;
         color: #999999;
-
     }
 
-    .glyphicon:hover, .locationLink:hover {
-       color: #FF5A5F;
-       cursor: pointer;
+    .glyphicon:hover,
+    .locationLink:hover {
+        color: #FF5A5F;
+        cursor: pointer;
     }
-
     </style>
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <!-- change to minified for production -->
@@ -229,26 +227,32 @@
                 </table>
             </div>
         </div>
-
-
         <div class="col-md-3 col-lg-3 col-sm-4 pull-right">
             <div class="panel panel-default filmInfoBox" data-bind="foreach: my.vm.filmInfoBox">
                 <div class="media">
-                  <div class="media-left media-middle">
-                    <a href="#">
-                      <img class="media-object" src="..." alt="...">
-                    </a>
-                  </div>
-                  <div class="media-body">
-                    <h4 class="media-heading" data-bind="text: $data.title"></h4>
-                    <p data-bind="text: $data.year"></p>
-                    <p data-bind="text: $data.director"></p>
-                    <p data-bind="text: $data.productionCompany"></p>
-                  </div>
+                    <div class="media-left media-middle">
+                        <a href="#">
+                            <img class="media-object" src="..." alt="...">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading" data-bind="text: $data.title"></h4>
+                        <p data-bind="text: $data.year"></p>
+                        <p data-bind="text: $data.director"></p>
+                        <p data-bind="text: $data.productionCompany"></p>
+                        <p data-bind="text: $data.nytHeadline"></p>
+                        <p data-bind="text: $data.nytByline"></p>
+                        <p data-bind="text: $data.nytSummaryShort"></p>
+                        <p data-bind="text: $data.nytReviewURL"></p>
+                        <p data-bind="text: $data.nytPubDate"></p>
+                        <p data-bind="text: $data.nytRating"></p>
+                        <p data-bind="text: $data.nytLinkType"></p>
+                        <p data-bind="text: $data.nytSuggestedLinkText"></p>
+                        <p data-bind="text: $data.nytTrailerURL"></p>
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
     <div data-bind="googleMap" class="map-canvas"></div>
 </body>

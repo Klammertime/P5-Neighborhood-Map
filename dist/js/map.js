@@ -115,6 +115,15 @@ $(function() {
 
             loadFilmInfoBox = function(requestedFilm) {
                 var theFilm = requestedFilm;
+                var nytByline;
+                var nytHeadline;
+                var nytSummaryShort;
+                var nytReviewURL;
+                var nytPubDate;
+                var nytRating;
+                var nytLinkType; // 'trailer'
+                var nytSuggestedLinkText;
+                var nytTrailerURL;
                 var nytKey = '70f203863d9c8555f9b345f32ec442e8:10:59953537';
                 var nyTimesMovieAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
                     theFilm + "'&api-key=" + nytKey;
@@ -123,27 +132,33 @@ $(function() {
                     type: "GET",
                     url: nyTimesMovieAPI,
                     timeout: 2000,
+                    dataType: "json",
                     beforeSend: function() {},
                     complete: function() {},
                     success: function(data) {
                         console.log("data", data);
                         $.each(data.results, function(i, item) {
-                            var byline = item.byline;
-                            console.log("byline", byline);
-                            var headline = item.headline;
-                            console.log("headline", headline);
-                            var summaryShort = item.summary_short;
-                            console.log("summaryShort", summaryShort);
-                            var reviewURL = item.link.url;
-                            console.log("item.link.url", item.link.url);
-
-                            var pubDate = item.publication_date;
-                            console.log("item.publication_date", item.publication_date);
-                            var rating = item.mpaa_rating;
-                            var trailerLinkType = item.related_urls[4].type;
-                            var suggestedLinkText = item.related_urls[4].type
-                            var trailerURL = item.related_urls[4].suggested_link_text;
-                        })
+                            nytHeadline = item.headline;
+                            nytByline = item.byline;
+                            nytSummaryShort = item.summary_short;
+                            nytReviewURL = item.link.url;
+                            nytPubDate = item.publication_date;
+                            nytRating = item.mpaa_rating;
+                            nytLinkType = item.related_urls[4].type;
+                            nytSuggestedLinkText = item.related_urls[4].suggested_link_text;
+                            nytTrailerURL = item.related_urls[4].url;
+                        });
+                        filmInfoBox.push({
+                            nytHeadline: nytHeadline,
+                            nytByline: nytByline,
+                            nytSummaryShort: nytSummaryShort,
+                            nytReviewURL: nytReviewURL,
+                            nytPubDate: nytPubDate,
+                            nytRating: nytRating,
+                            nytLinkType: nytLinkType,
+                            nytSuggestedLinkText: nytSuggestedLinkText,
+                            nytTrailerURL: nytTrailerURL
+                        });
                     },
                     fail: function(jqxhr, textStatus, error) {
                         console.log("New York Times Article Could Not Be Loaded: ", error);
@@ -156,6 +171,8 @@ $(function() {
                     director: my.vm.currentScenes()[0].director(),
                     productionCompany: my.vm.currentScenes()[0].productionCompany(),
                     writer: my.vm.currentScenes()[0].writer()
+                    // TODO: clean this up later, make it an array of objects?
+
                 });
             },
 
