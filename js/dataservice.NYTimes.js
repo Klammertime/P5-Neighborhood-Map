@@ -4,9 +4,9 @@
 //                         ajaxservice.js
 (function (my) {
     "use strict";
-    my.shoppingDataService = {
-        getSaleItems : function (callback) {
-            my.ajaxService.ajaxGetJson("GetSaleItems", null, callback);
+    my.reviewDataService = {
+        getReviewItems : function (callback) {
+            my.ajaxService.ajaxGetJson("GetReviews", null, callback);
         },
 
         placeOrder: function (shoppingCart, callback) {
