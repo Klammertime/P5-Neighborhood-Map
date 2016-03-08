@@ -114,7 +114,6 @@ $(function() {
             },
 
             loadFilmInfoBox = function(requestedFilm) {
-                console.log("requestedFilm", requestedFilm);
                 var theFilm = requestedFilm;
                 var nytKey = '70f203863d9c8555f9b345f32ec442e8:10:59953537';
                 var nyTimesMovieAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
@@ -124,10 +123,8 @@ $(function() {
                     type: "GET",
                     url: nyTimesMovieAPI,
                     timeout: 2000,
-                    beforeSend: function(){
-                    },
-                    complete: function() {
-                    },
+                    beforeSend: function() {},
+                    complete: function() {},
                     success: function(data) {
                         console.log("data", data);
                         $.each(data.results, function(i, item) {
@@ -143,16 +140,24 @@ $(function() {
                             var pubDate = item.publication_date;
                             console.log("item.publication_date", item.publication_date);
                             var rating = item.mpaa_rating;
-
-                            var trailerURL =  item.related_urls[4].url;
+                            var trailerLinkType = item.related_urls[4].type;
+                            var suggestedLinkText = item.related_urls[4].type
+                            var trailerURL = item.related_urls[4].suggested_link_text;
                         })
                     },
                     fail: function(jqxhr, textStatus, error) {
                         console.log("New York Times Article Could Not Be Loaded: ", error);
                     }
                 });
-            },
 
+                filmInfoBox.push({
+                    title: my.vm.currentScenes()[0].filmTitle(),
+                    year: my.vm.currentScenes()[0].year(),
+                    director: my.vm.currentScenes()[0].director(),
+                    productionCompany: my.vm.currentScenes()[0].productionCompany(),
+                    writer: my.vm.currentScenes()[0].writer()
+                });
+            },
 
 
 
@@ -169,7 +174,6 @@ $(function() {
 
             codeAddress = function() {
                 this.checkReset();
-                this.loadFilmInfoBox(singleFilm());
                 var address;
                 var geocoder = new google.maps.Geocoder();
 
@@ -182,15 +186,15 @@ $(function() {
                             // on the map due to the poor formatting of the data from sfdata
 
                             var streetViewURL = 'https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
-                                                results[0].geometry.location;
+                                results[0].geometry.location;
                             var streetViewImage = '<img class="streetView media-object" src="' + streetViewURL +
-                                                  '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetView">';
+                                '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetView">';
 
                             var contentString = '<div class="media"><div class="media-left"><a href="#">' +
-                                                streetViewImage + '</a></div><div class="media-body"><p class="media-heading">' +
-                                                results[0].formatted_address +
-                                                '</p><span class="glyphicon glyphicon-heart" aria-hidden="true"></span>' +
-                                                '<span class="glyphicon glyphicon-scale" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="See how much the yellow man weighs, place him on the scale."></span></div></div>';
+                                streetViewImage + '</a></div><div class="media-body"><p class="media-heading">' +
+                                results[0].formatted_address +
+                                '</p><span class="glyphicon glyphicon-heart" aria-hidden="true"></span>' +
+                                '<span class="glyphicon glyphicon-scale" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="See how much the yellow man weighs, place him on the scale."></span></div></div>';
 
                             var infowindow = new google.maps.InfoWindow({
                                 content: contentString
@@ -240,6 +244,8 @@ $(function() {
                         }
                     }
                 }
+                this.loadFilmInfoBox(singleFilm());
+
             };
 
         return {
