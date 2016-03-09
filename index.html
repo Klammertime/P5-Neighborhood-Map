@@ -53,6 +53,15 @@
         margin-top: 6px;
     }
 
+    .filmInfoBox {
+        position: absolute;
+        /*  background-color: rgba(255, 255, 255, 0.9);
+    */
+        width: 100%;
+        z-index: 2;
+        margin-top: 6px;
+    }
+
     .row {
         margin-right: 0;
         margin-left: 0;
@@ -168,17 +177,18 @@
 
     .glyphicon {
         margin-top: 5px;
-        margin-bottom: 10px;
-        margin-right: 10px;
+        margin-bottom: 0px;
+        margin-right: 5px;
+        margin-left: 5px;
         font-size: 16px;
         color: #999999;
-
     }
 
-    .glyphicon:hover {
-       color: #FF5A5F;
+    .glyphicon:hover,
+    .locationLink:hover {
+        color: #FF5A5F;
+        cursor: pointer;
     }
-
     </style>
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <!-- change to minified for production -->
@@ -210,13 +220,49 @@
                                 <a class="icon"><span class="glyphicon glyphicon-map-marker" aria-hidden="true" data-bind="click: $parent.panToMarker"></span></a>
                             </td>
                             <td>
-                                <p data-bind="text: $data.marker.title"></p>
+                                <p class="locationLink" data-bind="text: $data.marker.title, click: $parent.panToMarker"></p>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+        </div>
+        <div class="col-md-3 col-lg-3 col-sm-4 pull-right">
+            <div class="panel panel-default filmInfoBox data-bind="foreach: my.vm.filmInfoBox>
+                <h4 class="media-heading"></h4>
+                <div class="media">
+                    <div class="media-left media-middle">
 
+
+                    </div>
+                    <div class="media-body">
+                        <div data-bind="foreach: my.vm.filmInfoBox">
+                            <h4 class="locationLink" data-bind = "text: $data.filmTitle"></h4>
+                            <p class="locationLink" data-bind = "text: $data.director"></p>
+                            <p class="locationLink" data-bind = "text: $data.year"></p>
+                            <p class="locationLink" data-bind = "text: $data.productionCompany"></p>
+                            <p class="locationLink" data-bind = "text: $data.writer"></p>
+
+
+                        </div>
+
+                        <!-- <p data-bind="text: $data.year"></p>
+                        <p data-bind="text: $data.director"></p>
+                        <p data-bind="text: $data.productionCompany"></p>
+                        <p data-bind="text: $data.nytHeadline"></p>
+                        <p data-bind="text: $data.nytByline"></p>
+                        <p data-bind="text: $data.nytSummaryShort"></p>
+                        <p data-bind="text: $data.nytReviewURL"></p>
+                        <p data-bind="text: $data.nytPubDate"></p>
+                        <p data-bind="text: $data.nytRating"></p>
+                        <p data-bind="text: $data.nytLinkType"></p>
+                        <p data-bind="text: $data.nytSuggestedLinkText"></p>
+                        <p data-bind="text: $data.nytTrailerURL"></p>
+                        <p data-bind="text: $data.nytCapsuleReview"></p> -->
+<!--                         <div data-bind="html: $data.youTubeiframe"></div>
+ -->                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div data-bind="googleMap" class="map-canvas"></div>
