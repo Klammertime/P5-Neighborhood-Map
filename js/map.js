@@ -72,21 +72,18 @@ $(function() {
     my.vm = function() {
         var scenes = ko.observableArray([]);
         var currentScenes = ko.observableArray([]); //put current selected film locs
-        var selectedScenes = ko.observableArray([]);
         var favoritedScenes = ko.observableArray([]);
         var allTitles = ko.observableArray([]);
-        var selectedFilm = ko.observableArray([]);
         var singleFilm = ko.observable();
-        var newFilm = ko.observable(true);
         var markers = ko.observableArray([]);
-        var filmInfoBox = ko.observableArray();
+        var filmInfoBox = ko.observableArray([]);
+        var filmPoster = ko.observable();
 
         var load = function() {
                 $.each(my.filmData.data.Scenes, function(i, p) {
                     if (p.film_location !== undefined) { //TODO: Can also push SF, CA as
                         // film_location just to get it on list as having been taped
                         // in SF. Or not. Decide later.
-                        console.log("p.film_location", p.film_location);
                         scenes.push(new Scene()
                             .filmLocation(p.film_location + ", San Francisco, CA")
                             .filmTitle(p.film_title)
@@ -113,68 +110,148 @@ $(function() {
                 }
             },
 
-            loadFilmInfoBox = function(requestedFilm) {
-                var theFilm = requestedFilm;
-                var nytByline;
-                var nytHeadline;
-                var nytSummaryShort;
-                var nytReviewURL;
-                var nytPubDate;
-                var nytRating;
-                var nytLinkType; // 'trailer'
-                var nytSuggestedLinkText;
-                var nytTrailerURL;
-                var nytKey = '70f203863d9c8555f9b345f32ec442e8:10:59953537';
-                var nyTimesMovieAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
-                    theFilm + "'&api-key=" + nytKey;
+    /** Error handler is not called for cross-domain script and cross-domain JSONP requests.
+     * We instead have to create a timeout function that is only called if success isn't
+     * called, which is where the clearTimeout is located.
+     */
+            loadWiki = function() {
+
+                var wikiRequestTimeout = setTimeout(function() {
+                    console.log('WikiPedia Could Not Be Loaded');
+                }, 8000);
+
+                var wikiURL = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + city + '&format=json&callback=wikiCallback';
 
                 $.ajax({
-                    type: "GET",
-                    url: nyTimesMovieAPI,
-                    timeout: 2000,
-                    dataType: "json",
-                    beforeSend: function() {},
-                    complete: function() {},
-                    success: function(data) {
-                        console.log("data", data);
-                        $.each(data.results, function(i, item) {
-                            nytHeadline = item.headline;
-                            nytByline = item.byline;
-                            nytSummaryShort = item.summary_short;
-                            nytReviewURL = item.link.url;
-                            nytPubDate = item.publication_date;
-                            nytRating = item.mpaa_rating;
-                            nytLinkType = item.related_urls[4].type;
-                            nytSuggestedLinkText = item.related_urls[4].suggested_link_text;
-                            nytTrailerURL = item.related_urls[4].url;
-                        });
-                        filmInfoBox.push({
-                            nytHeadline: nytHeadline,
-                            nytByline: nytByline,
-                            nytSummaryShort: nytSummaryShort,
-                            nytReviewURL: nytReviewURL,
-                            nytPubDate: nytPubDate,
-                            nytRating: nytRating,
-                            nytLinkType: nytLinkType,
-                            nytSuggestedLinkText: nytSuggestedLinkText,
-                            nytTrailerURL: nytTrailerURL
-                        });
-                    },
-                    fail: function(jqxhr, textStatus, error) {
-                        console.log("New York Times Article Could Not Be Loaded: ", error);
+                    url: wikiURL,
+                    dataType: 'jsonp',
+                    success: function(response) {
+                        var articleList = response[1];
+                        for (var i = 0; i < articleList.length; i++) {
+                            articleStr = articleList[i];
+                        }
+                        clearTimeout(wikiRequestTimeout);
                     }
                 });
 
-                filmInfoBox.push({
-                    title: my.vm.currentScenes()[0].filmTitle(),
-                    year: my.vm.currentScenes()[0].year(),
-                    director: my.vm.currentScenes()[0].director(),
-                    productionCompany: my.vm.currentScenes()[0].productionCompany(),
-                    writer: my.vm.currentScenes()[0].writer()
-                    // TODO: clean this up later, make it an array of objects?
-
-                });
             },
+
+
+            // loadFilmInfoBox = function(requestedFilm) {
+
+            //     var theFilm = requestedFilm;
+            //     var adjustedFilm = requestedFilm.replace(' ', '+');
+            //     console.log("adjustedFilm", adjustedFilm);
+            //     var theFilmYouTube = '%22' + adjustedFilm + '%22';
+            //     console.log("theFilmYouTube", theFilmYouTube);
+
+            //     var nytByline;
+            //     var nytHeadline;
+            //     var nytSummaryShort;
+            //     var nytReviewURL;
+            //     var nytPubDate;
+            //     var nytRating;
+            //     var nytLinkType; // 'trailer'
+            //     var nytSuggestedLinkText;
+            //     var nytTrailerURL;
+            //     var nytKey = '70f203863d9c8555f9b345f32ec442e8:10:59953537';
+            //     var nyTimesMovieAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
+            //         theFilm + "'&api-key=" + nytKey;
+
+            //     var youTubeId;
+            //     var youTubeDesc;
+            //     var youTubeThumbMed;
+            //     var youTubeThumbHigh;
+            //     var youTubeiframe;
+            //     var youTubeEmbedURL;
+            //     var youTubeKey = 'AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE';
+            //     var youTubeAPI = 'https://www.googleapis.com/youtube/v3/search?part=snippet&q=' +
+            //                     theFilmYouTube + '+Trailer&relevanceLanguage=en&type=video&videoDuration=short&videoEmbeddable=true&key=' + youTubeKey;
+
+
+            //     $.ajax({
+            //         type: "GET",
+            //         url: nyTimesMovieAPI,
+            //         timeout: 2000,
+            //         dataType: "json",
+            //         beforeSend: function() {},
+            //         complete: function() {},
+            //         success: function(data) {
+            //             console.log("data", data);
+            //             $.each(data.results, function(i, item) {
+            //                 nytHeadline = item.headline;
+            //                 nytByline = item.byline;
+            //                 nytSummaryShort = item.summary_short;
+            //                 nytReviewURL = item.link.url;
+            //                 nytPubDate = item.publication_date;
+            //                 nytRating = item.mpaa_rating;
+            //                 nytCapsuleReview = item.capsule_review;
+            //                 nytLinkType = item.related_urls[4].type;
+            //                 nytSuggestedLinkText = item.related_urls[4].suggested_link_text;
+            //                 nytTrailerURL = item.related_urls[4].url;
+            //             });
+            //             filmInfoBox.push({
+            //                 nytHeadline: nytHeadline,
+            //                 nytByline: nytByline,
+            //                 nytSummaryShort: nytSummaryShort,
+            //                 nytCapsuleReview: nytCapsuleReview,
+            //                 nytReviewURL: nytReviewURL,
+            //                 nytPubDate: nytPubDate,
+            //                 nytRating: nytRating,
+            //                 nytLinkType: nytLinkType,
+            //                 nytSuggestedLinkText: nytSuggestedLinkText,
+            //                 nytTrailerURL: nytTrailerURL
+            //             });
+            //         },
+            //         fail: function(jqxhr, textStatus, error) {
+            //             console.log("New York Times Article Could Not Be Loaded: ", error);
+            //         }
+            //     });
+
+            //     // $.ajax({
+            //     //     type: "GET",
+            //     //     url: youTubeAPI,
+            //     //     timeout: 2000,
+            //     //     dataType: "json",
+            //     //     beforeSend: function() {},
+            //     //     complete: function() {},
+            //     //     success: function(data) {
+            //     //         console.log("data", data);
+            //     //         $.each(data.items, function(i, item) {
+            //     //             youTubeId = item.id.videoId;
+            //     //             youTubeDesc = item.snippet.description;
+            //     //             youTubeThumbHigh = item.snippet.thumbnails.high;
+            //     //             youTubeThumbMed = item.snippet.thumbnails.medium;
+            //     //             youTubeiframe = '<iframe width="560" height="315" src="https://www.youtube.com/embed/' +
+            //     //                             youTubeId + '" frameborder="0" allowfullscreen></iframe>';
+            //     //             youTubeEmbedURL = 'https://www.youtube.com/embed/' + youTubeId;
+
+            //     //         });
+            //     //         filmInfoBox.push({
+            //     //             youTubeId: youTubeId,
+            //     //             youTubeDesc: youTubeDesc,
+            //     //             youTubeThumbMed: youTubeThumbMed,
+            //     //             youTubeThumbHigh: youTubeThumbHigh,
+            //     //             youTubeiframe: youTubeiframe,
+            //     //             youTubeEmbedURL: youTubeEmbedURL
+
+            //     //         });
+            //     //     },
+            //     //     fail: function(jqxhr, textStatus, error) {
+            //     //         console.log("YouTube Could Not Be Loaded: ", error);
+            //     //     }
+            //     // });
+
+            // //     filmInfoBox.push({
+            // //         title: my.vm.currentScenes()[0].filmTitle(),
+            // //         year: my.vm.currentScenes()[0].year(),
+            // //         director: my.vm.currentScenes()[0].director(),
+            // //         productionCompany: my.vm.currentScenes()[0].productionCompany(),
+            // //         writer: my.vm.currentScenes()[0].writer()
+            // //         // TODO: clean this up later, make it an array of objects?
+
+            // //     });
+            // // },
 
 
 
@@ -258,27 +335,30 @@ $(function() {
                             };
 
                             masterGeocoder(geocodeOptions);
+                            filmInfoBox.removeAll();
+                            filmInfoBox.push(
+                                { filmTitle: my.vm.scenes()[i].filmTitle() },
+                                { year: my.vm.scenes()[i].year() },
+                                { director: my.vm.scenes()[i].director() },
+                                { productionCompany: my.vm.scenes()[i].productionCompany() },
+                                { writer: my.vm.scenes()[i].writer() }
+                            );
+
                         }
                     }
                 }
-                this.loadFilmInfoBox(singleFilm());
-
             };
 
         return {
             scenes: scenes,
-            selectedScenes: selectedScenes,
             load: load,
             uniqueTitles: uniqueTitles,
             allTitles: allTitles,
-            selectedFilm: selectedFilm,
             singleFilm: singleFilm,
-            newFilm: newFilm,
             codeAddress: codeAddress,
             currentScenes: currentScenes,
             markers: markers,
             checkReset: checkReset,
-            loadFilmInfoBox: loadFilmInfoBox,
             panToMarker: panToMarker,
             filmInfoBox: filmInfoBox
         };

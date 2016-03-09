@@ -228,16 +228,25 @@
             </div>
         </div>
         <div class="col-md-3 col-lg-3 col-sm-4 pull-right">
-            <div class="panel panel-default filmInfoBox" data-bind="foreach: my.vm.filmInfoBox">
+            <div class="panel panel-default filmInfoBox data-bind="foreach: my.vm.filmInfoBox>
+                <h4 class="media-heading"></h4>
                 <div class="media">
                     <div class="media-left media-middle">
-                        <a href="#">
-                            <img class="media-object" src="..." alt="...">
-                        </a>
+
+
                     </div>
                     <div class="media-body">
-                        <h4 class="media-heading" data-bind="text: $data.title"></h4>
-                        <p data-bind="text: $data.year"></p>
+                        <div data-bind="foreach: my.vm.filmInfoBox">
+                            <h4 class="locationLink" data-bind = "text: $data.filmTitle"></h4>
+                            <p class="locationLink" data-bind = "text: $data.director"></p>
+                            <p class="locationLink" data-bind = "text: $data.year"></p>
+                            <p class="locationLink" data-bind = "text: $data.productionCompany"></p>
+                            <p class="locationLink" data-bind = "text: $data.writer"></p>
+
+
+                        </div>
+
+                        <!-- <p data-bind="text: $data.year"></p>
                         <p data-bind="text: $data.director"></p>
                         <p data-bind="text: $data.productionCompany"></p>
                         <p data-bind="text: $data.nytHeadline"></p>
@@ -249,7 +258,9 @@
                         <p data-bind="text: $data.nytLinkType"></p>
                         <p data-bind="text: $data.nytSuggestedLinkText"></p>
                         <p data-bind="text: $data.nytTrailerURL"></p>
-                    </div>
+                        <p data-bind="text: $data.nytCapsuleReview"></p> -->
+<!--                         <div data-bind="html: $data.youTubeiframe"></div>
+ -->                    </div>
                 </div>
             </div>
         </div>

@@ -32,7 +32,9 @@ function search() {
        relevanceLanguage: 'en',
        videoEmbeddable: true,
        type: 'video',
+       videoDuration: 'short',
         q: 'Godzilla Official Extended Trailer (2014)'
+        // q: (filmName + 'Official Extended Trailer') || (filmName + 'Official Trailer');
     });
 
     // Send the request to the API server,
