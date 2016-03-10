@@ -1,0 +1,8 @@
+    transform-origin: left top 0px;
+    transform: scale(1) translate3d(0px, 0px, 0px);
+    width: 1063px;
+    height: 598px;
+    transition: -webkit-transform 10600ms linear;
+
+
+    <img src="https://image.tmdb.org/t/p/w1280/sPnG1FDAMkhzsOYRpT9MEF8ZkUv.jpg" alt="image3" style="transform-origin: left top 0px; transform: scale(1) translate3d(0px, 0px, 0px); width: 1063px; height: 598px;transition: -webkit-transform 10600ms linear;">
