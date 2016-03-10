@@ -145,14 +145,9 @@ $(function() {
             //     var nytSummaryShort;
             //     var nytReviewURL;
             //     var nytPubDate;
-            //     var nytRating;
-            //     var nytLinkType; // 'trailer'
-            //     var nytSuggestedLinkText;
-            //     var nytTrailerURL;
             //     var nytKey = '70f203863d9c8555f9b345f32ec442e8:10:59953537';
             //     var nyTimesMovieAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
             //         theFilm + "'&api-key=" + nytKey;
-
 
             //     $.ajax({
             //         type: "GET",
@@ -186,9 +181,6 @@ $(function() {
             //     });
 
 
-
-
-
             // The current item will be passed as the first parameter
             panToMarker = function(clickedLocation) {
                 if (prev_infowindow) {
@@ -203,6 +195,9 @@ $(function() {
             codeAddress = function() {
                 this.checkReset();
                 var address;
+                var requestedFilm = singleFilm();
+                var filmEncoded = encodeURIComponent(requestedFilm);
+                console.log("filmEncoded", filmEncoded);
                 var geocoder = new google.maps.Geocoder();
 
                 function masterGeocoder(myGeocodeOptions) {
@@ -275,7 +270,7 @@ $(function() {
                         }
                     }
                 }
-                theMovieDb.search.getMovie({ "query": "Fight%20Club" },
+                theMovieDb.search.getMovie({ "query": filmEncoded },
                     (function(data) {
                         console.log("data", data);
                         theStore = JSON.parse(data);
