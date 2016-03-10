@@ -60,6 +60,7 @@ $(function() {
             }
         },
         update: function(element, valueAccessor, allBindings) {
+            //TODO: this is no longer recentering when I change window size
             window.addEventListener('resize', (function() {
                 map.setCenter(center);
             }), false);
@@ -79,6 +80,11 @@ $(function() {
         var filmInfoBox = ko.observableArray([]);
         var store = ko.observableArray([]);
         var posterImage = ko.observable();
+        var trailerVideo = ko.observable();
+        var trailerURL = ko.observable();
+        var overview = ko.observable();
+        var trailerHTML = ko.observable();
+        var capsuleReview = ko.observable();
 
         var load = function() {
                 $.each(my.filmData.data.Scenes, function(i, p) {
@@ -137,48 +143,42 @@ $(function() {
             },
 
 
-            // loadFilmInfoBox = function(requestedFilm) {
+            loadFilmInfoBox = function(requestedFilm) {
+                var theFilm = requestedFilm;
+                var nytByline;
+                var nytHeadline;
+                var nytSummaryShort;
+                var nytReviewURL;
+                var nytPubDate;
+                var nytKey = '70f203863d9c8555f9b345f32ec442e8:10:59953537';
+                var nyTimesMovieAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
+                    theFilm + "'&api-key=" + nytKey;
 
-            //     var theFilm = requestedFilm;
-            //     var nytByline;
-            //     var nytHeadline;
-            //     var nytSummaryShort;
-            //     var nytReviewURL;
-            //     var nytPubDate;
-            //     var nytKey = '70f203863d9c8555f9b345f32ec442e8:10:59953537';
-            //     var nyTimesMovieAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
-            //         theFilm + "'&api-key=" + nytKey;
+                $.ajax({
+                    type: "GET",
+                    url: nyTimesMovieAPI,
+                    timeout: 2000,
+                    dataType: "json",
+                    beforeSend: function() {},
+                    complete: function() {},
+                    success: function(data) {
+                        console.log("data", data);
+                        // $.each(data.results, function(i, item) {
+                            nytHeadline = data.results[0].headline;
+                            nytByline = data.results[0].byline;
+                            nytSummaryShort = data.results[0].summary_short;
+                            nytReviewURL = data.results[0].link.url;
+                            nytPubDate = data.results[0].publication_date;
+                            nytCapsuleReview = data.results[0].capsule_review;
+                        // });
 
-            //     $.ajax({
-            //         type: "GET",
-            //         url: nyTimesMovieAPI,
-            //         timeout: 2000,
-            //         dataType: "json",
-            //         beforeSend: function() {},
-            //         complete: function() {},
-            //         success: function(data) {
-            //             console.log("data", data);
-            //             $.each(data.results, function(i, item) {
-            //                 nytHeadline = item.headline;
-            //                 nytByline = item.byline;
-            //                 nytSummaryShort = item.summary_short;
-            //                 nytReviewURL = item.link.url;
-            //                 nytPubDate = item.publication_date;
-            //                 nytCapsuleReview = item.capsule_review;
-            //             });
-            //             filmInfoBox.push({
-            //                 nytHeadline: nytHeadline,
-            //                 nytByline: nytByline,
-            //                 nytSummaryShort: nytSummaryShort,
-            //                 nytCapsuleReview: nytCapsuleReview,
-            //                 nytReviewURL: nytReviewURL,
-            //                 nytPubDate: nytPubDate
-            //             });
-            //         },
-            //         fail: function(jqxhr, textStatus, error) {
-            //             console.log("New York Times Article Could Not Be Loaded: ", error);
-            //         }
-            //     });
+                        my.vm.capsuleReview(nytCapsuleReview);
+                    },
+                    fail: function(jqxhr, textStatus, error) {
+                        console.log("New York Times Article Could Not Be Loaded: ", error);
+                    }
+                });
+            },
 
 
             // The current item will be passed as the first parameter
@@ -267,17 +267,37 @@ $(function() {
                             filmInfoBox.removeAll();
 
                             filmInfoBox.push({ filmTitle: my.vm.scenes()[i].filmTitle() }, { year: my.vm.scenes()[i].year() }, { director: my.vm.scenes()[i].director() }, { productionCompany: my.vm.scenes()[i].productionCompany() }, { writer: my.vm.scenes()[i].writer() });
+                            loadFilmInfoBox(my.vm.scenes()[i].filmTitle());
                         }
                     }
                 }
                 theMovieDb.search.getMovie({ "query": filmEncoded },
                     (function(data) {
-                        console.log("data", data);
                         theStore = JSON.parse(data);
                         my.vm.store(theStore);
                         var posterPath = my.vm.store().results[0].poster_path;
-                        var posterHTML = '<img class="poster" src="https://image.tmdb.org/t/p/w370/' + posterPath + '" >';
+                        var posterHTML = '<img class="poster img-responsive" src="https://image.tmdb.org/t/p/w370/' + posterPath + '" >';
+
+                        var overview = my.vm.store().results[0].overview;
+
+                        var filmID = my.vm.store().results[0].id;
+
+                        theMovieDb.movies.getTrailers({ "id": filmID },
+                            (function(data) {
+                                var theTrailer = JSON.parse(data);
+                                my.vm.trailerVideo(theTrailer);
+                                var trailerIframe = '<div class="embed-responsive embed-responsive-4by3"><iframe class="embed-responsive-item" width="560" height="315" src="https://www.youtube.com/embed/' +
+                                    my.vm.trailerVideo().youtube[0].source + '?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe></div>';
+                                my.vm.trailerHTML(trailerIframe);
+
+                            }),
+                            (function() {
+                                console.log("you fail!");
+                            }));
+
                         my.vm.posterImage(posterHTML);
+                        my.vm.overview(overview);
+
                     }),
                     (function() {
                         console.log("you fail!");
@@ -297,7 +317,11 @@ $(function() {
             panToMarker: panToMarker,
             filmInfoBox: filmInfoBox,
             store: store,
-            posterImage: posterImage
+            posterImage: posterImage,
+            trailerVideo: trailerVideo,
+            overview: overview,
+            trailerHTML: trailerHTML,
+            capsuleReview: capsuleReview
         };
     }();
 

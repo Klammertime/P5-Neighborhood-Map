@@ -5,15 +5,22 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <title>Maps</title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link href='https://fonts.googleapis.com/css?family=Raleway:600,700,300, 400' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway:600,700,300,400' rel='stylesheet' type='text/css'>
     <style>
     html,
     body,
     .map-canvas {
-        min-width: 100%;
+        /*        min-width: 100%;
         height: 100%;
         margin: 0;
-        padding: 0;
+        padding: 0;*/
+        top: 0;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        overflow: hidden;
+        transform: translateZ(0px);
+        background-color: rgb(229, 227, 223);
     }
 
     body {
@@ -46,20 +53,20 @@
 
     .searchbar {
         position: absolute;
-        /*  background-color: rgba(255, 255, 255, 0.9);
-    */
+        background-color: #FFF;
         width: 100%;
         z-index: 2;
         margin-top: 6px;
     }
 
     .filmInfoBox {
-        position: absolute;
-        /*  background-color: rgba(255, 255, 255, 0.9);
-    */
-        width: 100%;
+        position: relative;
+        background-color: none;
         z-index: 2;
-        margin-top: 6px;
+        overflow: auto;
+        margin: 6px auto 0 auto;
+        padding: 15px;
+        max-height: 100vh;
     }
 
     .row {
@@ -76,9 +83,10 @@
     }
 
     .panel {
-        margin-bottom: 20px;
+        margin-bottom: 0px;
         margin-right: 0;
         margin-left: -5px;
+        background-color: none;
     }
 
     .mapType {
@@ -92,10 +100,6 @@
     .panel-body-results {
         max-height: 550px;
         overflow: auto;
-    }
-
-    .panel {
-        margin-bottom: 0;
     }
 
     input {
@@ -190,8 +194,30 @@
         cursor: pointer;
     }
 
-    .poster {
-            max-width: 145px;
+    .poster-preview:after {
+        background-color: transparent;
+        background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent 150px);
+        bottom: 0px;
+        content: '';
+        display: block;
+        left: 0px;
+        position: absolute;
+        right: 0px;
+        top: 0px;
+    }
+
+    .quote {
+        font-style: italic;
+        font-weight: 600;
+    }
+
+    .text-wrap {
+        position: absolute;
+        top: 0%;
+        width: 100%;
+        height: 100%;
+        background-image: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.65)));
+        background-image: -moz-linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.65));
     }
     </style>
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
@@ -207,46 +233,62 @@
 <body>
     <div class="row">
         <div class="col-md-3 col-lg-3 col-sm-4">
-            <div class="panel panel-default searchbar">
-                <img class="sf" src="img/sfLogo8.svg">
-                <div class="logo">
-                    <h2 class="logo-font">SF Film Locations</h2></div>
-                <div class="panel-body">
-                    <input id="filmList" data-bind="value: my.vm.singleFilm" list="filmSceneList" type="text" class="form-control" placeholder="Search for a film..." />
-                    <datalist id="filmSceneList" data-bind="foreach: uniqueTitles">
-                        <option data-bind="value: $data"></option>
-                    </datalist>
-                    <button class="btn btn-info pull-right" type="button" data-bind="click: codeAddress">Go!</button>
+            <div class="widget-pane-content-holder">
+                <div class="panel panel-default searchbar">
+                    <img class="sf" src="img/sfLogo8.svg">
+                    <div class="logo">
+                        <h2 class="logo-font">SF Film Locations</h2></div>
+                    <div class="panel-body">
+                        <input id="filmList" data-bind="value: my.vm.singleFilm" list="filmSceneList" type="text" class="form-control" placeholder="Search for a film..." />
+                        <datalist id="filmSceneList" data-bind="foreach: uniqueTitles">
+                            <option data-bind="value: $data"></option>
+                        </datalist>
+                        <button class="btn btn-info pull-right" type="button" data-bind="click: codeAddress">Go!</button>
+                    </div>
+                    <table class="table">
+                        <tbody data-bind="foreach: my.vm.markers">
+                            <tr>
+                                <td>
+                                    <a class="icon"><span class="glyphicon glyphicon-map-marker" aria-hidden="true" data-bind="click: $parent.panToMarker"></span></a>
+                                </td>
+                                <td>
+                                    <p class="locationLink" data-bind="text: $data.marker.title, click: $parent.panToMarker"></p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <table class="table">
-                    <tbody data-bind="foreach: my.vm.markers">
-                        <tr>
-                            <td>
-                                <a class="icon"><span class="glyphicon glyphicon-map-marker" aria-hidden="true" data-bind="click: $parent.panToMarker"></span></a>
-                            </td>
-                            <td>
-                                <p class="locationLink" data-bind="text: $data.marker.title, click: $parent.panToMarker"></p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
+        <!--TODO: figure out why this is so messed up on small screens, I think its the floats
+            and the absolute positioning -->
         <div class="col-md-3 col-lg-3 col-sm-4 pull-right">
             <div class="panel panel-default filmInfoBox">
-                <h4 class="media-heading"></h4>
-                <div class="media">
-                    <div class="media-left media-middle">
-                        <span data-bind = "html: my.vm.posterImage"></span>
-                    </div>
-                    <div class="media-body">
-                        <div data-bind="foreach: my.vm.filmInfoBox">
-                            <h4 class="locationLink" data-bind = "text: $data.filmTitle"></h4>
-                            <p class="locationLink" data-bind = "text: $data.director"></p>
-                            <p class="locationLink" data-bind = "text: $data.year"></p>
-                            <p class="locationLink" data-bind = "text: $data.productionCompany"></p>
-                            <p class="locationLink" data-bind = "text: $data.writer"></p>
+                <ul class="media-list">
+                    <li class="media">
+                        <div class="media-left">
+                            <a href="#">
+                                <span data-bind="html: my.vm.posterImage" class="thumbnail media-object"></span>
+                            </a>
                         </div>
+                        <div class="media-body">
+                            <h4 class="media-heading" data-bind="text: my.vm.singleFilm"></h4>
+                            <div data-bind="foreach: my.vm.filmInfoBox">
+                                <span class="locationLink" data-bind="text: $data.director"></span>
+                                <p class="locationLink" data-bind="text: $data.year"></p>
+                                <p class="locationLink" data-bind="text: $data.productionCompany"></p>
+                                <p class="locationLink" data-bind="text: $data.writer"></p>
+                            </div>
+                    <!--         <p>Actor</p>
+                            <p>Actor</p> -->
+                        </div>
+                    </li>
+                    <p class="quote" data-bind="text:my.vm.capsuleReview"></p>
+                    <p data-bind="text: my.vm.overview"></p>
+                </ul>
+                <div>
+                    <span data-bind="html: my.vm.trailerHTML"></span>
+                    <div>
                         <!--
                         <p data-bind="text: $data.nytHeadline"></p>
                         <p data-bind="text: $data.nytByline"></p>
@@ -254,7 +296,7 @@
                         <p data-bind="text: $data.nytReviewURL"></p>
                         <p data-bind="text: $data.nytPubDate"></p>
                         <p data-bind="text: $data.nytCapsuleReview"></p> -->
-                     </div>
+                    </div>
                 </div>
             </div>
         </div>
