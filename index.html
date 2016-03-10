@@ -189,12 +189,17 @@
         color: #FF5A5F;
         cursor: pointer;
     }
+
+    .poster {
+            max-width: 145px;
+    }
     </style>
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <!-- change to minified for production -->
     <script src="js/knockout-3.4.0.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
+    <script src="js/themoviedb.js"></script>
     <script src="js/data.js"></script>
     <script src="js/map.js"></script>
 </head>
@@ -228,12 +233,11 @@
             </div>
         </div>
         <div class="col-md-3 col-lg-3 col-sm-4 pull-right">
-            <div class="panel panel-default filmInfoBox data-bind="foreach: my.vm.filmInfoBox>
+            <div class="panel panel-default filmInfoBox">
                 <h4 class="media-heading"></h4>
                 <div class="media">
                     <div class="media-left media-middle">
-
-
+                        <span data-bind = "html: my.vm.posterImage"></span>
                     </div>
                     <div class="media-body">
                         <div data-bind="foreach: my.vm.filmInfoBox">
@@ -242,25 +246,15 @@
                             <p class="locationLink" data-bind = "text: $data.year"></p>
                             <p class="locationLink" data-bind = "text: $data.productionCompany"></p>
                             <p class="locationLink" data-bind = "text: $data.writer"></p>
-
-
                         </div>
-
-                        <!-- <p data-bind="text: $data.year"></p>
-                        <p data-bind="text: $data.director"></p>
-                        <p data-bind="text: $data.productionCompany"></p>
+                        <!--
                         <p data-bind="text: $data.nytHeadline"></p>
                         <p data-bind="text: $data.nytByline"></p>
                         <p data-bind="text: $data.nytSummaryShort"></p>
                         <p data-bind="text: $data.nytReviewURL"></p>
                         <p data-bind="text: $data.nytPubDate"></p>
-                        <p data-bind="text: $data.nytRating"></p>
-                        <p data-bind="text: $data.nytLinkType"></p>
-                        <p data-bind="text: $data.nytSuggestedLinkText"></p>
-                        <p data-bind="text: $data.nytTrailerURL"></p>
                         <p data-bind="text: $data.nytCapsuleReview"></p> -->
-<!--                         <div data-bind="html: $data.youTubeiframe"></div>
- -->                    </div>
+                     </div>
                 </div>
             </div>
         </div>
