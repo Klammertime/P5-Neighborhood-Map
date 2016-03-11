@@ -129,7 +129,7 @@ $(function() {
                 }, 8000);
 
                 var wikiURL = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + city + '&format=json&callback=wikiCallback';
-
+                //TODO: use this or take it out, could just include a link
                 $.ajax({
                     url: wikiURL,
                     dataType: 'jsonp',
@@ -152,6 +152,7 @@ $(function() {
                 var nytKey = '70f203863d9c8555f9b345f32ec442e8:10:59953537';
                 var nyTimesMovieAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
                     chosenFilm + "'&api-key=" + nytKey;
+                my.vm.capsuleReview(undefined);
 
                 $.ajax({
                     type: "GET",
@@ -167,13 +168,14 @@ $(function() {
                         nytSummaryShort = data.results[0].summary_short;
                         nytReviewURL = data.results[0].link.url;
                         nytPubDate = data.results[0].publication_date;
-
                         my.vm.capsuleReview(data.results[0].capsule_review);
                     },
                     fail: function(jqxhr, textStatus, error) {
+
                         console.log("New York Times Article Could Not Be Loaded: ", error);
                     }
                 });
+
             },
 
 
@@ -268,21 +270,17 @@ $(function() {
                 }
                 theMovieDb.search.getMovie({ "query": filmEncoded },
                     (function(data) {
-
+                        //TODO: why do you save it as theStore, if keep, rename
                         theStore = JSON.parse(data);
                         my.vm.store(theStore);
                         var posterPath = my.vm.store().results[0].poster_path;
                         var posterHTML = '<img class="poster img-responsive" src="https://image.tmdb.org/t/p/w370/' + posterPath + '" >';
-
                         var overview = my.vm.store().results[0].overview;
-
                         var filmID = my.vm.store().results[0].id;
 
                         theMovieDb.movies.getTrailers({ "id": filmID },
                             (function(data) {
-                                console.log("data from trailer", data);
                                 var theTrailer = JSON.parse(data);
-                                console.log("theTrailer", theTrailer);
                                 my.vm.trailerVideo(theTrailer);
                                 if (my.vm.trailerVideo().youtube.length === 0) {
                                     my.vm.trailerVideo(undefined);

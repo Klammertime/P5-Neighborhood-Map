@@ -1,0 +1,220 @@
+html,
+body,
+.map-canvas {
+    top: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    overflow: hidden;
+    transform: translateZ(0px);
+    background-color: rgb(229, 227, 223);
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    color: #999999;
+}
+
+p {
+    font-weight: 400;
+    line-height: 22px;
+    color: #999999;
+}
+
+.title {
+    color: #454545;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-align: left;
+    line-height: 34px;
+    margin-bottom: 0px;
+}
+
+.form-control {
+    display: inline-block;
+    width: 75%;
+}
+
+.searchbar {
+    /*       position: absolute;
+        background-color: #FFF;
+        width: 100%;
+        z-index: 2;
+        margin-top: 6px;*/
+    background-color: #FFF;
+    width: 100%;
+    z-index: 2;
+    margin-top: 6px;
+    position: relative;
+    background-color: none;
+    z-index: 2;
+    overflow: auto;
+    margin: 6px auto 0 auto;
+    /* padding: 15px; */
+    max-height: 100vh;
+}
+
+.filmInfoBox {
+    position: relative;
+    background-color: none;
+    background-color: #fff;
+    z-index: 2;
+    overflow: auto;
+    margin: 6px auto 0 auto;
+    padding: 15px;
+    max-height: 100vh;
+}
+
+.row {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.icon-group {
+    display: inline;
+}
+
+.btn {
+    width: 22.5%;
+}
+
+.panel {
+    margin-bottom: 0px;
+    margin-right: 0;
+    margin-left: -5px;
+    background-color: none;
+}
+
+.mapType {
+    max-height: 25px;
+}
+
+.panel-body {
+    padding: 15px 15px 15px 15px;
+}
+
+.panel-body-results {
+    max-height: 550px;
+    overflow: auto;
+}
+
+input {
+    font-family: inherit;
+}
+
+.btn-default {
+    border: none;
+}
+
+.btn-group {
+    padding-top: 10px;
+}
+
+.streetView {
+    max-width: 75px;
+    max-height: 75px;
+}
+
+.media-body {
+    width: 150px;
+}
+
+.logo {
+    color: none;
+    background-color: none;
+    border-color: none;
+    top: -6px;
+    left: 19px;
+    letter-spacing: initial;
+    position: absolute;
+}
+
+.sf {
+    opacity: 0.7;
+}
+
+.logo-font {
+    font-size: 14px;
+    margin-top: 20px;
+    color: #454545;
+    font-weight: 700;
+    line-height: 34px;
+    margin-bottom: 0px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.btn-info {
+    background-color: #999999;
+    border: 1px solid #999;
+}
+
+.btn-info:hover {
+    background-color: #FF5A5F;
+    border: #FF5A5F;
+}
+
+.streetView {
+    width: 70px;
+    height: 70px;
+    border-radius: 100%;
+}
+
+.media-heading {
+    color: #666;
+    text-transform: uppercase;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 0px;
+    text-align: left;
+    line-height: 20px;
+    margin-bottom: 0px;
+    margin-top: 0;
+    max-height: 40px;
+    overflow: hidden;
+    margin-top: 5px;
+}
+
+.glyphicon {
+    margin-top: 5px;
+    margin-bottom: 0px;
+    margin-right: 5px;
+    margin-left: 5px;
+    font-size: 16px;
+    color: #999999;
+}
+
+.glyphicon:hover,
+.locationLink:hover {
+    color: #FF5A5F;
+    cursor: pointer;
+}
+
+.poster-preview:after {
+    background-color: transparent;
+    background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent 150px);
+    bottom: 0px;
+    content: '';
+    display: block;
+    left: 0px;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+
+.quote {
+    font-style: italic;
+    font-weight: 600;
+}
+
+.text-wrap {
+    position: absolute;
+    top: 0%;
+    width: 100%;
+    height: 100%;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.65)));
+    background-image: -moz-linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.65));
+}

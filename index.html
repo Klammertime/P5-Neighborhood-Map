@@ -62,17 +62,17 @@
                         <div class="media-body">
                             <h4 class="media-heading" data-bind="text: my.vm.requestedFilm"></h4>
                             <div data-bind="foreach: my.vm.filmInfoBox">
-                                <span class="locationLink" data-bind="text: $data.director"></span>
-                                <p class="locationLink" data-bind="text: $data.year"></p>
-                                <p class="locationLink" data-bind="text: $data.productionCompany"></p>
-                                <p class="locationLink" data-bind="text: $data.writer"></p>
+                                <span class="locationLink" data-bind="visible: $data.director, text: $data.director"></span>
+                                <p class="locationLink" data-bind="visible: $data.year, text: $data.year"></p>
+                                <p class="locationLink" data-bind="visible: $data.productionCompany, text: $data.productionCompany"></p>
+                                <p class="locationLink" data-bind="visible: $data.writer, text: $data.writer"></p>
                             </div>
                             <!--         <p>Actor</p>
                             <p>Actor</p> -->
                         </div>
                     </li>
-                    <p class="quote" data-bind="text:my.vm.capsuleReview"></p>
-                    <p data-bind="text: my.vm.overview"></p>
+                    <p class="quote" data-bind="visible: my.vm.capsuleReview, text:my.vm.capsuleReview"></p>
+                    <p data-bind="visible: my.vm.overview, text: my.vm.overview"></p>
                 </ul>
                 <div>
                     <span data-bind="visible: my.vm.trailerVideo, html: my.vm.trailerHTML"></span>
