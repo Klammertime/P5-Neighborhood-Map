@@ -5,6 +5,55 @@ $(function() {
     var infowindow;
     var prev_infowindow = false;
 
+    function googleSuccess() {
+        var myLatLng = new google.maps.LatLng(37.77493, -122.419416);
+        var mapOptions = {
+            center: myLatLng,
+            zoom: 12,
+            disableDefaultUI: true,
+            zoomControl: true,
+            panControl: true,
+            mapTypeControl: true,
+            mapTypeControlOptions: {
+                style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+                position: google.maps.ControlPosition.RIGHT_BOTTOM
+            },
+            scaleControl: true,
+            streetViewControl: true,
+            streetViewControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_BOTTOM
+            },
+            rotateControl: true,
+            overviewMapControl: true,
+            scrollwheel: false, // prevents mousing down from triggering zoom
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var initialCenter = mapOptions.center;
+        var initialZoom = mapOptions.zoom;
+        map = new google.maps.Map(document.getElementById('googleMap'), mapOptions);
+
+        addGoToInitialExtent(map, initialCenter, initialZoom);
+
+        google.maps.event.addDomListener(map, 'idle', function() {
+            center = map.getCenter();
+        });
+
+        // when right click, go back to initial center
+        function addGoToInitialExtent(map, initialCenter, initialZoom) {
+            google.maps.event.addListener(map, 'rightclick', function() {
+                map.setCenter(initialCenter);
+                map.setZoom(initialZoom);
+            });
+        }
+
+        window.addEventListener('resize', (function() {
+            map.setCenter(center);
+        }), false);
+
+        google.maps.event.addDomListener(map, 'click', function() {
+            center = map.getCenter();
+        });
+    }
 
     // Location construction
     var Scene = function() {
@@ -17,65 +66,13 @@ $(function() {
         this.writer = ko.observable();
     };
 
-    ko.bindingHandlers.googleMap = {
-        init: function(element, valueAccessor) {
-            var myLatLng = new google.maps.LatLng(37.77493, -122.419416);
-            var mapOptions = {
-                center: myLatLng,
-                zoom: 12,
-                disableDefaultUI: true,
-                zoomControl: true,
-                panControl: true,
-                mapTypeControl: true,
-                mapTypeControlOptions: {
-                    style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-                    position: google.maps.ControlPosition.RIGHT_BOTTOM
-                },
-                scaleControl: true,
-                streetViewControl: true,
-                streetViewControlOptions: {
-                    position: google.maps.ControlPosition.RIGHT_BOTTOM
-                },
-                rotateControl: true,
-                overviewMapControl: true,
-                scrollwheel: false, // prevents mousing down from triggering zoom
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
-            var initialCenter = mapOptions.center;
-            var initialZoom = mapOptions.zoom;
-            map = new google.maps.Map(element, mapOptions);
-
-            addGoToInitialExtent(map, initialCenter, initialZoom);
-
-            google.maps.event.addDomListener(map, 'idle', function() {
-                center = map.getCenter();
-            });
-
-            // when right click, go back to initial center
-            function addGoToInitialExtent(map, initialCenter, initialZoom) {
-                google.maps.event.addListener(map, 'rightclick', function() {
-                    map.setCenter(initialCenter);
-                    map.setZoom(initialZoom);
-                });
-            }
-        },
-        update: function(element, valueAccessor, allBindings) {
-            //TODO: this is no longer recentering when I change window size
-            window.addEventListener('resize', (function() {
-                map.setCenter(center);
-            }), false);
-            google.maps.event.addDomListener(map, 'click', function() {
-                center = map.getCenter();
-            });
-        }
-    };
 
     my.vm = function() {
         var scenes = ko.observableArray([]);
         var currentScenes = ko.observableArray([]); //put current selected film locs
         var favoritedScenes = ko.observableArray([]);
         var allTitles = ko.observableArray([]);
-        var singleFilm = ko.observable();
+        var requestedFilm = ko.observable();
         var markers = ko.observableArray([]);
         var filmInfoBox = ko.observableArray([]);
         var store = ko.observableArray([]);
@@ -102,6 +99,10 @@ $(function() {
                         allTitles.push(p.film_title);
                     }
                 });
+            },
+
+            googleInit = function() {
+                googleSuccess();
             },
 
             uniqueTitles = ko.computed(function() {
@@ -142,9 +143,7 @@ $(function() {
                 });
             },
 
-
-            loadFilmInfoBox = function(requestedFilm) {
-                var theFilm = requestedFilm;
+            loadFilmInfoBox = function(chosenFilm) {
                 var nytByline;
                 var nytHeadline;
                 var nytSummaryShort;
@@ -152,7 +151,7 @@ $(function() {
                 var nytPubDate;
                 var nytKey = '70f203863d9c8555f9b345f32ec442e8:10:59953537';
                 var nyTimesMovieAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
-                    theFilm + "'&api-key=" + nytKey;
+                    chosenFilm + "'&api-key=" + nytKey;
 
                 $.ajax({
                     type: "GET",
@@ -163,16 +162,13 @@ $(function() {
                     complete: function() {},
                     success: function(data) {
                         console.log("data", data);
-                        // $.each(data.results, function(i, item) {
-                            nytHeadline = data.results[0].headline;
-                            nytByline = data.results[0].byline;
-                            nytSummaryShort = data.results[0].summary_short;
-                            nytReviewURL = data.results[0].link.url;
-                            nytPubDate = data.results[0].publication_date;
-                            nytCapsuleReview = data.results[0].capsule_review;
-                        // });
+                        nytHeadline = data.results[0].headline;
+                        nytByline = data.results[0].byline;
+                        nytSummaryShort = data.results[0].summary_short;
+                        nytReviewURL = data.results[0].link.url;
+                        nytPubDate = data.results[0].publication_date;
 
-                        my.vm.capsuleReview(nytCapsuleReview);
+                        my.vm.capsuleReview(data.results[0].capsule_review);
                     },
                     fail: function(jqxhr, textStatus, error) {
                         console.log("New York Times Article Could Not Be Loaded: ", error);
@@ -193,11 +189,11 @@ $(function() {
             },
 
             codeAddress = function() {
-                this.checkReset();
                 var address;
-                var requestedFilm = singleFilm();
-                var filmEncoded = encodeURIComponent(requestedFilm);
-                console.log("filmEncoded", filmEncoded);
+                this.checkReset();
+                loadFilmInfoBox(requestedFilm());
+
+                var filmEncoded = encodeURIComponent(requestedFilm());
                 var geocoder = new google.maps.Geocoder();
 
                 function masterGeocoder(myGeocodeOptions) {
@@ -251,8 +247,8 @@ $(function() {
                     });
                 }
 
-                for (var i = 0; i < this.scenes().length; i++) {
-                    if (singleFilm() == my.vm.scenes()[i].filmTitle()) {
+                for (var i = 0; i < my.vm.scenes().length; i++) {
+                    if (requestedFilm() == my.vm.scenes()[i].filmTitle()) {
                         address = my.vm.scenes()[i].filmLocation();
                         if (address !== 'undefined, San Francisco, CA') {
                             currentScenes.push(my.vm.scenes()[i]);
@@ -265,14 +261,14 @@ $(function() {
 
                             masterGeocoder(geocodeOptions);
                             filmInfoBox.removeAll();
-
                             filmInfoBox.push({ filmTitle: my.vm.scenes()[i].filmTitle() }, { year: my.vm.scenes()[i].year() }, { director: my.vm.scenes()[i].director() }, { productionCompany: my.vm.scenes()[i].productionCompany() }, { writer: my.vm.scenes()[i].writer() });
-                            loadFilmInfoBox(my.vm.scenes()[i].filmTitle());
+
                         }
                     }
                 }
                 theMovieDb.search.getMovie({ "query": filmEncoded },
                     (function(data) {
+
                         theStore = JSON.parse(data);
                         my.vm.store(theStore);
                         var posterPath = my.vm.store().results[0].poster_path;
@@ -284,11 +280,17 @@ $(function() {
 
                         theMovieDb.movies.getTrailers({ "id": filmID },
                             (function(data) {
+                                console.log("data from trailer", data);
                                 var theTrailer = JSON.parse(data);
+                                console.log("theTrailer", theTrailer);
                                 my.vm.trailerVideo(theTrailer);
-                                var trailerIframe = '<div class="embed-responsive embed-responsive-4by3"><iframe class="embed-responsive-item" width="560" height="315" src="https://www.youtube.com/embed/' +
-                                    my.vm.trailerVideo().youtube[0].source + '?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe></div>';
-                                my.vm.trailerHTML(trailerIframe);
+                                if (my.vm.trailerVideo().youtube.length === 0) {
+                                    my.vm.trailerVideo(undefined);
+                                } else {
+                                    var trailerIframe = '<div class="embed-responsive embed-responsive-4by3"><iframe class="embed-responsive-item" width="560" height="315" src="https://www.youtube.com/embed/' +
+                                        my.vm.trailerVideo().youtube[0].source + '?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe></div>';
+                                    my.vm.trailerHTML(trailerIframe);
+                                }
 
                             }),
                             (function() {
@@ -309,7 +311,7 @@ $(function() {
             load: load,
             uniqueTitles: uniqueTitles,
             allTitles: allTitles,
-            singleFilm: singleFilm,
+            requestedFilm: requestedFilm,
             codeAddress: codeAddress,
             currentScenes: currentScenes,
             markers: markers,
@@ -321,7 +323,8 @@ $(function() {
             trailerVideo: trailerVideo,
             overview: overview,
             trailerHTML: trailerHTML,
-            capsuleReview: capsuleReview
+            capsuleReview: capsuleReview,
+            googleInit: googleInit
         };
     }();
 

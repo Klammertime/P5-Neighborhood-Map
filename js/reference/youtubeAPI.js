@@ -1,7 +1,7 @@
 //The embed code for Godzilla is
 <iframe width="560" height="315" src="https://www.youtube.com/embed/I-EEqJ9HyTk" frameborder="0" allowfullscreen></iframe>
 
-
+GET https://www.googleapis.com/youtube/v3/search?part=snippet&q=Godzilla+Official+Trailer&relevanceLanguage=en&type=video&videoDuration=short&videoEmbeddable=true&key={YOUR_API_KEY}
 // Your use of the YouTube API must comply with the Terms of Service:
 // https://developers.google.com/youtube/terms
 
