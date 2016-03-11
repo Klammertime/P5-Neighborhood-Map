@@ -4,7 +4,10 @@
 //                         jQuery
 (function (my) {
     "use strict";
-    var serviceBase = '/Product/',
+    var nyTimesMovieAPI = 'http://api.nytimes.com/svc/movies/v2/reviews/search.json?query=Godzilla&page=2&sort=oldest&api-key=70f203863d9c8555f9b345f32ec442e8:10:59953537';
+    var baseURI = 'http://api.nytimes.com/svc/movies/v2/reviews';
+    var nyTimesKey = '70f203863d9c8555f9b345f32ec442e8:10:59953537';
+    var serviceBase = baseURI + '/search.json?query=' + filmName + '&page=2&sort=oldest&api-key=' + nyTimesKey;
         getSvcUrl = function (method) { return serviceBase + method; };
 
     my.ajaxService = (function () {
@@ -14,7 +17,7 @@
                 type: "GET",
                 data: ko.toJSON(jsonIn),
                 dataType: "json",
-                contentType: "application/json",
+                contentType: "json",
                 success: function (json) {
                     callback(json);
                 }

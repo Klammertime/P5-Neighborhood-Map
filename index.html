@@ -5,226 +5,14 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <title>Maps</title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link href='https://fonts.googleapis.com/css?family=Raleway:600,700,300,400' rel='stylesheet' type='text/css'>
-    <style>
-    html,
-    body,
-    .map-canvas {
-        /*        min-width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;*/
-        top: 0;
-        height: 100%;
-        width: 100%;
-        position: absolute;
-        overflow: hidden;
-        transform: translateZ(0px);
-        background-color: rgb(229, 227, 223);
-    }
-
-    body {
-        font-family: 'Raleway', sans-serif;
-        font-weight: 300;
-        color: #999999;
-    }
-
-    p {
-        font-weight: 400;
-        line-height: 22px;
-        color: #999999;
-    }
-
-    .title {
-        color: #454545;
-        text-transform: uppercase;
-        font-weight: 700;
-        font-size: 13px;
-        letter-spacing: 2px;
-        text-align: left;
-        line-height: 34px;
-        margin-bottom: 0px;
-    }
-
-    .form-control {
-        display: inline-block;
-        width: 75%;
-    }
-
-    .searchbar {
-        position: absolute;
-        background-color: #FFF;
-        width: 100%;
-        z-index: 2;
-        margin-top: 6px;
-    }
-
-    .filmInfoBox {
-        position: relative;
-        background-color: none;
-        z-index: 2;
-        overflow: auto;
-        margin: 6px auto 0 auto;
-        padding: 15px;
-        max-height: 100vh;
-    }
-
-    .row {
-        margin-right: 0;
-        margin-left: 0;
-    }
-
-    .icon-group {
-        display: inline;
-    }
-
-    .btn {
-        width: 22.5%;
-    }
-
-    .panel {
-        margin-bottom: 0px;
-        margin-right: 0;
-        margin-left: -5px;
-        background-color: none;
-    }
-
-    .mapType {
-        max-height: 25px;
-    }
-
-    .panel-body {
-        padding: 15px 15px 15px 15px;
-    }
-
-    .panel-body-results {
-        max-height: 550px;
-        overflow: auto;
-    }
-
-    input {
-        font-family: inherit;
-    }
-
-    .btn-default {
-        border: none;
-    }
-
-    .btn-group {
-        padding-top: 10px;
-    }
-
-    .streetView {
-        max-width: 75px;
-        max-height: 75px;
-    }
-
-    .media-body {
-        width: 150px;
-    }
-
-    .logo {
-        color: none;
-        background-color: none;
-        border-color: none;
-        top: -6px;
-        left: 19px;
-        letter-spacing: initial;
-        position: absolute;
-    }
-
-    .sf {
-        opacity: 0.7;
-    }
-
-    .logo-font {
-        font-size: 14px;
-        margin-top: 20px;
-        color: #454545;
-        font-weight: 700;
-        line-height: 34px;
-        margin-bottom: 0px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-    }
-
-    .btn-info {
-        background-color: #999999;
-        border: 1px solid #999;
-    }
-
-    .btn-info:hover {
-        background-color: #FF5A5F;
-        border: #FF5A5F;
-    }
-
-    .streetView {
-        width: 70px;
-        height: 70px;
-        border-radius: 100%;
-    }
-
-    .media-heading {
-        color: #666;
-        text-transform: uppercase;
-        font-weight: 800;
-        font-size: 14px;
-        letter-spacing: 0px;
-        text-align: left;
-        line-height: 20px;
-        margin-bottom: 0px;
-        margin-top: 0;
-        max-height: 40px;
-        overflow: hidden;
-        margin-top: 5px;
-    }
-
-    .glyphicon {
-        margin-top: 5px;
-        margin-bottom: 0px;
-        margin-right: 5px;
-        margin-left: 5px;
-        font-size: 16px;
-        color: #999999;
-    }
-
-    .glyphicon:hover,
-    .locationLink:hover {
-        color: #FF5A5F;
-        cursor: pointer;
-    }
-
-    .poster-preview:after {
-        background-color: transparent;
-        background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent 150px);
-        bottom: 0px;
-        content: '';
-        display: block;
-        left: 0px;
-        position: absolute;
-        right: 0px;
-        top: 0px;
-    }
-
-    .quote {
-        font-style: italic;
-        font-weight: 600;
-    }
-
-    .text-wrap {
-        position: absolute;
-        top: 0%;
-        width: 100%;
-        height: 100%;
-        background-image: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.65)));
-        background-image: -moz-linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.65));
-    }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- <link href='https://fonts.googleapis.com/css?family=Raleway:600,700,300,400' rel='stylesheet' type='text/css'>
+ -->
+    <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <!-- change to minified for production -->
     <script src="js/knockout-3.4.0.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
     <script src="js/themoviedb.js"></script>
     <script src="js/data.js"></script>
     <script src="js/map.js"></script>
@@ -239,7 +27,7 @@
                     <div class="logo">
                         <h2 class="logo-font">SF Film Locations</h2></div>
                     <div class="panel-body">
-                        <input id="filmList" data-bind="value: my.vm.singleFilm" list="filmSceneList" type="text" class="form-control" placeholder="Search for a film..." />
+                        <input id="filmList" data-bind="value: my.vm.requestedFilm" list="filmSceneList" type="text" class="form-control" placeholder="Search for a film..." />
                         <datalist id="filmSceneList" data-bind="foreach: uniqueTitles">
                             <option data-bind="value: $data"></option>
                         </datalist>
@@ -263,23 +51,23 @@
         <!--TODO: figure out why this is so messed up on small screens, I think its the floats
             and the absolute positioning -->
         <div class="col-md-3 col-lg-3 col-sm-4 pull-right">
-            <div class="panel panel-default filmInfoBox">
+            <div data-bind="visible: my.vm.requestedFilm" class="panel panel-default filmInfoBox">
                 <ul class="media-list">
                     <li class="media">
                         <div class="media-left">
-                            <a href="#">
+                            <a href="#" data-bind="visible: my.vm.posterImage">
                                 <span data-bind="html: my.vm.posterImage" class="thumbnail media-object"></span>
                             </a>
                         </div>
                         <div class="media-body">
-                            <h4 class="media-heading" data-bind="text: my.vm.singleFilm"></h4>
+                            <h4 class="media-heading" data-bind="text: my.vm.requestedFilm"></h4>
                             <div data-bind="foreach: my.vm.filmInfoBox">
                                 <span class="locationLink" data-bind="text: $data.director"></span>
                                 <p class="locationLink" data-bind="text: $data.year"></p>
                                 <p class="locationLink" data-bind="text: $data.productionCompany"></p>
                                 <p class="locationLink" data-bind="text: $data.writer"></p>
                             </div>
-                    <!--         <p>Actor</p>
+                            <!--         <p>Actor</p>
                             <p>Actor</p> -->
                         </div>
                     </li>
@@ -287,7 +75,7 @@
                     <p data-bind="text: my.vm.overview"></p>
                 </ul>
                 <div>
-                    <span data-bind="html: my.vm.trailerHTML"></span>
+                    <span data-bind="visible: my.vm.trailerVideo, html: my.vm.trailerHTML"></span>
                     <div>
                         <!--
                         <p data-bind="text: $data.nytHeadline"></p>
@@ -301,7 +89,8 @@
             </div>
         </div>
     </div>
-    <div data-bind="googleMap" class="map-canvas"></div>
+    <div id="googleMap" class="map-canvas"></div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiFWUDeNqeIgmx7njjzjJAVWwC2t9hNP0&libraries=places&callback=my.vm.googleInit" async defer></script>
 </body>
 
 </html>
