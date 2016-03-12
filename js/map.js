@@ -9,7 +9,7 @@ $(function() {
         var myLatLng = new google.maps.LatLng(37.77493, -122.419416);
         var mapOptions = {
             center: myLatLng,
-            zoom: 12,
+            zoom: 13,
             disableDefaultUI: true,
             zoomControl: true,
             panControl: true,
@@ -58,7 +58,7 @@ $(function() {
     // Location construction
     var Scene = function() {
         this.filmLocation = ko.observable();
-        this.displayLocation = ko.observableArray();
+        this.filmLocation2 = ko.observable();
         this.filmTitle = ko.observable();
         this.year = ko.observable();
         this.director = ko.observable();
@@ -83,13 +83,31 @@ $(function() {
         var trailerHTML = ko.observable();
         var capsuleReview = ko.observable();
 
+
+        function escapeRegExp(string) {
+            var regExp = /\(([^)]+)\)/;
+            var matches = regExp.exec(string);
+
+            if (matches) {
+                var str = matches[1];
+                console.log("str", str);
+
+                return str;
+
+
+            } else {
+                return undefined;
+            }
+        }
+
         var load = function() {
                 $.each(my.filmData.data.Scenes, function(i, p) {
                     if (p.film_location !== undefined) { //TODO: Can also push SF, CA as
                         // film_location just to get it on list as having been taped
                         // in SF. Or not. Decide later.
                         scenes.push(new Scene()
-                            .filmLocation(p.film_location + ", San Francisco, CA")
+                            .filmLocation(p.film_location)
+                            .filmLocation2(escapeRegExp(p.film_location))
                             .filmTitle(p.film_title)
                             .year(p.release_year)
                             .director(p.director)
@@ -202,9 +220,13 @@ $(function() {
                     geocoder.geocode(myGeocodeOptions, function(results, status) {
                         if (status == google.maps.GeocoderStatus.OK) {
                             map.setCenter(results[0].geometry.location);
+                            console.log("passed in myGeocodeOptions: ", myGeocodeOptions);
+                            console.log("results object used in current contentStrings:", results);
                             // results[0].formatted_address is actual address on marker
                             // TODO: the movie scenes are not getting mapped to the right loc
                             // on the map due to the poor formatting of the data from sfdata
+                            // Also, you aren't saving any of this, figure out how to add them to each
+                            // Scene instance
 
                             var streetViewURL = 'https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
                                 results[0].geometry.location;
@@ -250,12 +272,14 @@ $(function() {
                 }
 
                 for (var i = 0; i < my.vm.scenes().length; i++) {
+                    //TODO: issue here is that you are running through ALL scenes when you don't have to
+                    //or shouldn't have to
                     if (requestedFilm() == my.vm.scenes()[i].filmTitle()) {
                         address = my.vm.scenes()[i].filmLocation();
-                        if (address !== 'undefined, San Francisco, CA') {
+                        if (address) {
                             currentScenes.push(my.vm.scenes()[i]);
                             var geocodeOptions = {
-                                address: address,
+                                address: address + ', San Francisco, CA',
                                 componentRestrictions: {
                                     country: 'US'
                                 }
