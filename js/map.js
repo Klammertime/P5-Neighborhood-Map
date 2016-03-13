@@ -12,16 +12,19 @@ $(function() {
             zoom: 13,
             disableDefaultUI: true,
             zoomControl: true,
+            zoomControlOptions: {
+                position: google.maps.ControlPosition.TOP_RIGHT
+            },
             panControl: true,
             mapTypeControl: true,
             mapTypeControlOptions: {
-                style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-                position: google.maps.ControlPosition.RIGHT_BOTTOM
+                style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                position: google.maps.ControlPosition.TOP_RIGHT
             },
             scaleControl: true,
             streetViewControl: true,
             streetViewControlOptions: {
-                position: google.maps.ControlPosition.RIGHT_BOTTOM
+                position: google.maps.ControlPosition.TOP_RIGHT
             },
             rotateControl: true,
             overviewMapControl: true,
@@ -82,6 +85,7 @@ $(function() {
         var overview = ko.observable();
         var trailerHTML = ko.observable();
         var capsuleReview = ko.observable();
+        var director = "Director";
 
 
         function escapeRegExp(string) {
@@ -346,7 +350,8 @@ $(function() {
             overview: overview,
             trailerHTML: trailerHTML,
             capsuleReview: capsuleReview,
-            googleInit: googleInit
+            googleInit: googleInit,
+            director: director
         };
     }();
 

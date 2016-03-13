@@ -7,8 +7,7 @@
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Raleway:600,700,300,400' rel='stylesheet' type='text/css'>
-
-   <!--  <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700"> -->
+    <!--  <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700"> -->
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <!-- change to minified for production -->
     <script src="js/knockout-3.4.0.js"></script>
@@ -62,7 +61,8 @@
                         <div class="media-body">
                             <h4 class="media-heading" data-bind="text: my.vm.requestedFilm"></h4>
                             <div data-bind="foreach: my.vm.filmInfoBox">
-                                <span class="locationLink" data-bind="visible: $data.director, text: $data.director"></span>
+                                <span class="locationLink" data-bind="visible: $data.director, text: $data.director">
+                                </span>
                                 <p class="locationLink" data-bind="visible: $data.year, text: $data.year"></p>
                                 <p class="locationLink" data-bind="visible: $data.productionCompany, text: $data.productionCompany"></p>
                                 <p class="locationLink" data-bind="visible: $data.writer, text: $data.writer"></p>
