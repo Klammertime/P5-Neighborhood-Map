@@ -55,9 +55,9 @@ $(function() {
         }), false);
 
 
-            google.maps.event.addListener(map, 'click', function() {
+        google.maps.event.addListener(map, 'click', function() {
             center = map.getCenter();
-          });
+        });
     }
 
     // var FilmModel = Base.extend({
@@ -70,7 +70,7 @@ $(function() {
 
     // Location construction
     var SceneFilmModel = Base.extend({
-        constructor: function(director, studio, fullAddress, place, streetAddress, year, filmTitle, writer, favorite, actor1) {
+        constructor: function(director, studio, fullAddress, place, streetAddress, year, filmTitle, writer, favorite, actor1, actor2, actor3) {
             this.director = ko.observable(director);
             this.studio = ko.observable(studio);
             this.fullAddress = ko.observable(fullAddress);
@@ -81,6 +81,8 @@ $(function() {
             this.writer = ko.observable(writer);
             this.favorite = ko.observable(false);
             this.actor1 = ko.observable(actor1);
+            this.actor2 = ko.observable(actor2);
+            this.actor3 = ko.observable(actor3);
         }
     });
 
@@ -111,7 +113,7 @@ $(function() {
         var requestedFilm = ko.observable();
         var markers = ko.observableArray([]);
         var filmInfoBox = ko.observableArray([]);
-        var store = ko.observableArray([]);
+        var store = ko.observableArray([]); //TODO: rename to something meaningful
         var posterImage = ko.observable();
         var trailerVideo = ko.observable();
         var trailerURL = ko.observable();
@@ -121,7 +123,17 @@ $(function() {
         var currentTitle = ko.observable();
         var currentYear = ko.observable();
         var currentDirector = ko.observable();
+        var currentWriter = ko.observable();
+        var currentActor1 = ko.observable();
+        var currentActor2 = ko.observable();
+        var currentActor3 = ko.observable();
+        var currentStudio = ko.observable();
+
+        // not using right now
         var films = ko.observableArray([]);
+
+
+
 
 
         var loadSceneFM = function() {
@@ -134,7 +146,7 @@ $(function() {
                 $.each(my.filmData.data.Scenes, function(i, s) { //s stands for 'scene'
                     if (s.film_location !== undefined) { // create more false conditions
 
-                        scenes.push(new SceneFilmModel(s.director, s.production_company, s.film_location, false, escapeRegExp(s.film_location), s.release_year, s.film_title, s.writer, false, s.actor_1));
+                        scenes.push(new SceneFilmModel(s.director, s.production_company, s.film_location, false, escapeRegExp(s.film_location), s.release_year, s.film_title, s.writer, false, s.actor_1, s.actor_2, s.actor_3));
                         console.log("scenes", scenes);
                         allTitles.push(s.film_title);
                     }
@@ -167,7 +179,7 @@ $(function() {
                         marker.marker.setMap(null);
 
                     });
-                this.markers([]);
+                    this.markers([]);
                 }
             },
 
@@ -299,8 +311,6 @@ $(function() {
                 for (var i = 0; i < my.vm.scenes().length; i++) {
                     //TODO: issue here is that you are running through ALL scenes when you don't have to
                     //or shouldn't have to
-                    console.log("my.vm.scenes()[i].filmTitle()", my.vm.scenes()[i].filmTitle());
-                    console.log("requestedFilm()", requestedFilm());
                     if (requestedFilm() == my.vm.scenes()[i].filmTitle()) {
                         address = my.vm.scenes()[i].fullAddress();
                         if (address) {
@@ -318,6 +328,12 @@ $(function() {
                             my.vm.currentTitle(my.vm.scenes()[i].filmTitle());
                             my.vm.currentYear(my.vm.scenes()[i].year());
                             my.vm.currentDirector(my.vm.scenes()[i].director());
+                            my.vm.currentWriter(my.vm.scenes()[i].writer());
+                            my.vm.currentActor1(my.vm.scenes()[i].actor1());
+                            my.vm.currentActor2(my.vm.scenes()[i].actor2());
+                            my.vm.currentActor3(my.vm.scenes()[i].actor3());
+                            my.vm.currentStudio(my.vm.scenes()[i].studio());
+
 
                         }
                     }
@@ -380,8 +396,13 @@ $(function() {
             currentTitle: currentTitle,
             currentYear: currentYear,
             currentDirector: currentDirector,
+            currentWriter: currentWriter,
+            currentActor1: currentActor1,
+            currentActor2: currentActor2,
+            currentActor3: currentActor3,
+            currentStudio: currentStudio,
             films: films
-            // loadUniqueFilmModel: loadUniqueFilmModel
+                // loadUniqueFilmModel: loadUniqueFilmModel
         };
     }();
 

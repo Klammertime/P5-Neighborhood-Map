@@ -62,15 +62,17 @@
                             </a>
                         </div>
                         <div class="media-body">
-                            <h4 class="media-heading" data-bind="visible: my.vm.requestedFilm, text: my.vm.requestedFilm"></h4>
+                            <h4 class="media-heading" data-bind="visible: my.vm.requestedFilm, text: my.vm.currentTitle"></h4>
                             <p>Year: <span data-bind="text: my.vm.currentYear"></span></p>
-                            <p>Rated: <span data-bind="text: my.vm.currentYear"></span></p>
-                            <p>Production Company: <span data-bind="text: my.vm.currentYear"></span></p>
-                            <p>Genre: <span data-bind="text: my.vm.currentYear"></span></p>
-                            <p>Director: <span data-bind="text: my.vm.director"></span></p>
-                            <p>Writer: <span data-bind="text: my.vm.writer"></span></p>
-                            <p>Actors: <span data-bind="text: my.vm.currentYear"></span></p>
+                            <p>Production Company: <span data-bind="text: my.vm.currentStudio"></span></p>
+                            <p>Director: <span data-bind="text: my.vm.currentDirector"></span></p>
+                            <p>Writer: <span data-bind="text: my.vm.currentWriter"></span></p>
                     </li>
+                    <ul data-bind="visible: my.vm.currentActor1">Actors:
+                        <li data-bind="visible: my.vm.currentActor1, text: my.vm.currentActor1"></li>
+                        <li data-bind="visible: my.vm.currentActor2, text: my.vm.currentActor2"></li>
+                        <li data-bind="visible: my.vm.currentActor3, text: my.vm.currentActor3"></li>
+                    </ul>
                     <blockquote data-bind="visible: my.vm.capsuleReview">
                         <p data-bind="text:my.vm.capsuleReview"></p>
                         <footer>
