@@ -70,7 +70,7 @@ $(function() {
 
     // Location construction
     var SceneFilmModel = Base.extend({
-        constructor: function(director, studio, fullAddress, place, streetAddress, year, filmTitle, writer, favorite) {
+        constructor: function(director, studio, fullAddress, place, streetAddress, year, filmTitle, writer, favorite, actor1) {
             this.director = ko.observable(director);
             this.studio = ko.observable(studio);
             this.fullAddress = ko.observable(fullAddress);
@@ -80,6 +80,7 @@ $(function() {
             this.filmTitle = ko.observable(filmTitle);
             this.writer = ko.observable(writer);
             this.favorite = ko.observable(false);
+            this.actor1 = ko.observable(actor1);
         }
     });
 
@@ -133,7 +134,8 @@ $(function() {
                 $.each(my.filmData.data.Scenes, function(i, s) { //s stands for 'scene'
                     if (s.film_location !== undefined) { // create more false conditions
 
-                        scenes.push(new SceneFilmModel(s.director, s.production_company, s.film_location, false, escapeRegExp(s.film_location), s.release_year, s.film_title, s.writer, false));
+                        scenes.push(new SceneFilmModel(s.director, s.production_company, s.film_location, false, escapeRegExp(s.film_location), s.release_year, s.film_title, s.writer, false, s.actor_1));
+                        console.log("scenes", scenes);
                         allTitles.push(s.film_title);
                     }
                 });
