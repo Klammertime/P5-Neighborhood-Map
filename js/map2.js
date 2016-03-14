@@ -54,22 +54,53 @@ $(function() {
             map.setCenter(center);
         }), false);
 
-        google.maps.event.addDomListener(map, 'click', function() {
+
+            google.maps.event.addListener(map, 'click', function() {
             center = map.getCenter();
-        });
+          });
     }
 
-    // Location construction
-    var Scene = function() {
-        this.filmLocation = ko.observable();
-        this.filmLocation2 = ko.observable();
-        this.title = ko.observable();
-        this.year = ko.observable();
-        this.director = ko.observable();
-        this.studio = ko.observable();
-        this.writer = ko.observable();
-    };
+    // var FilmModel = Base.extend({
+    //     constructor: function(filmTitle, year) {
+    //         this.filmTitle = ko.observable(filmTitle);
+    //         this.year = ko.observable(year);
+    //         this.favorite = ko.observable(false);
+    //     }
+    // });
 
+    // Location construction
+    var SceneFilmModel = Base.extend({
+        constructor: function(director, studio, fullAddress, place, streetAddress, year, filmTitle, writer, favorite) {
+            this.director = ko.observable(director);
+            this.studio = ko.observable(studio);
+            this.fullAddress = ko.observable(fullAddress);
+            this.place = ko.observable(place);
+            this.streetAddress = ko.observable(streetAddress);
+            this.year = ko.observable(year);
+            this.filmTitle = ko.observable(filmTitle);
+            this.writer = ko.observable(writer);
+            this.favorite = ko.observable(false);
+        }
+    });
+
+
+
+    // var UniqueFilmModel = Base.extend({
+    //     constructor: function(title, year, director, studio, writer, poster, trailer, actors, overview, imdbID) {
+    //         this.title = ko.observable(title);
+    //         this.year = ko.observable(year);
+    //         this.director = ko.observable(director);
+    //         this.studio = ko.observable(studio);
+    //         this.writer = ko.observable(writer);
+    //         this.poster = ko.observable(poster);
+    //         this.trailer = ko.observable(trailer);
+    //         this.actors = ko.observable(actors);
+    //         this.overview = ko.observable(overview);
+    //         this.imdbID = ko.observable(imdbID);
+    //         this.favorite = ko.observable(false);
+    //         this.locations = ko.observableArray([]);
+    //     }
+    // });
 
     my.vm = function() {
         var scenes = ko.observableArray([]);
@@ -89,58 +120,52 @@ $(function() {
         var currentTitle = ko.observable();
         var currentYear = ko.observable();
         var currentDirector = ko.observable();
+        var films = ko.observableArray([]);
 
 
+        var loadSceneFM = function() {
+                function escapeRegExp(string) {
+                    var regExp = /\(([^)]+)\)/;
+                    var matches = regExp.exec(string);
+                    return matches ? matches[1] : undefined;
+                }
 
-        function escapeRegExp(string) {
-            var regExp = /\(([^)]+)\)/;
-            var matches = regExp.exec(string);
+                $.each(my.filmData.data.Scenes, function(i, s) { //s stands for 'scene'
+                    if (s.film_location !== undefined) { // create more false conditions
 
-            if (matches) {
-                var str = matches[1];
-                console.log("str", str);
-
-                return str;
-
-
-            } else {
-                return undefined;
-            }
-        }
-
-        var load = function() {
-                $.each(my.filmData.data.Scenes, function(i, p) {
-                    if (p.film_location !== undefined) { //TODO: Can also push SF, CA as
-                        // film_location just to get it on list as having been taped
-                        // in SF. Or not. Decide later.
-                        scenes.push(new Scene()
-                            .filmLocation(p.film_location)
-                            .filmLocation2(escapeRegExp(p.film_location))
-                            .title(p.film_title)
-                            .year(p.release_year)
-                            .director(p.director)
-                            .studio(p.production_company)
-                            .writer(p.writer)
-                        );
-                        allTitles.push(p.film_title);
+                        scenes.push(new SceneFilmModel(s.director, s.production_company, s.film_location, false, escapeRegExp(s.film_location), s.release_year, s.film_title, s.writer, false));
+                        allTitles.push(s.film_title);
                     }
                 });
-            },
-
-            googleInit = function() {
-                googleSuccess();
             },
 
             uniqueTitles = ko.computed(function() {
                 return ko.utils.arrayGetDistinctValues(allTitles().sort());
             }),
 
+            // loadUniqueFilmModel = function() {
+            //     $.each(my.vm.uniqueTitles(), function(i, filmTitle) {
+            //         films.push(new UniqueFilmModel(filmTitle));
+            //     });
+
+            //     // $.each(my.vm.scenes(), function(i, scene) {
+            //     //     if (scene.title() == my.vm.films()[i]){
+            //     //         my.vm.films()[i].locations.push(scene.fullAddress());
+            //     //     }
+            //     // });
+            // },
+
+            googleInit = function() {
+                googleSuccess();
+            },
+
             checkReset = function() {
-                if (markers().length > 0) {
-                    for (var j = 0; j < markers().length; j++) {
-                        my.vm.markers()[j].marker.setMap(null);
-                    }
-                    my.vm.markers([]);
+                if (this.markers().length > 0) {
+                    $.each(this.markers(), function(i, marker) {
+                        marker.marker.setMap(null);
+
+                    });
+                this.markers([]);
                 }
             },
 
@@ -188,12 +213,10 @@ $(function() {
                     beforeSend: function() {},
                     complete: function() {},
                     success: function(data) {
-                        console.log("data", data);
                         nytHeadline = data.results[0].headline;
                         nytByline = data.results[0].byline;
                         nytSummaryShort = data.results[0].summary_short;
                         nytReviewURL = data.results[0].link.url;
-                        nytPubDate = data.results[0].publication_date;
                         my.vm.capsuleReview(data.results[0].capsule_review);
                     },
                     fail: function(jqxhr, textStatus, error) {
@@ -228,12 +251,6 @@ $(function() {
                     geocoder.geocode(myGeocodeOptions, function(results, status) {
                         if (status == google.maps.GeocoderStatus.OK) {
                             map.setCenter(results[0].geometry.location);
-
-                            // results[0].formatted_address is actual address on marker
-                            // TODO: the movie scenes are not getting mapped to the right loc
-                            // on the map due to the poor formatting of the data from sfdata
-                            // Also, you aren't saving any of this, figure out how to add them to each
-                            // Scene instance
 
                             var streetViewURL = 'https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
                                 results[0].geometry.location;
@@ -271,7 +288,6 @@ $(function() {
 
                             markers.push({ marker: marker, infowindow: infowindow });
 
-
                         } else {
                             console.log("Geocode was not successful for the following reason: " + status);
                         }
@@ -281,8 +297,10 @@ $(function() {
                 for (var i = 0; i < my.vm.scenes().length; i++) {
                     //TODO: issue here is that you are running through ALL scenes when you don't have to
                     //or shouldn't have to
-                    if (requestedFilm() == my.vm.scenes()[i].title()) {
-                        address = my.vm.scenes()[i].filmLocation();
+                    console.log("my.vm.scenes()[i].filmTitle()", my.vm.scenes()[i].filmTitle());
+                    console.log("requestedFilm()", requestedFilm());
+                    if (requestedFilm() == my.vm.scenes()[i].filmTitle()) {
+                        address = my.vm.scenes()[i].fullAddress();
                         if (address) {
                             currentScenes.push(my.vm.scenes()[i]);
                             var geocodeOptions = {
@@ -293,16 +311,9 @@ $(function() {
                             };
 
                             masterGeocoder(geocodeOptions);
-                            filmInfoBox.removeAll();
-                            filmInfoBox.push(
-                                { title: my.vm.scenes()[i].title() },
-                                { year: my.vm.scenes()[i].year() },
-                                { director: my.vm.scenes()[i].director() },
-                                { studio: my.vm.scenes()[i].studio() },
-                                { writer: my.vm.scenes()[i].writer() }
-                            );
 
-                            my.vm.currentTitle(my.vm.scenes()[i].title());
+
+                            my.vm.currentTitle(my.vm.scenes()[i].filmTitle());
                             my.vm.currentYear(my.vm.scenes()[i].year());
                             my.vm.currentDirector(my.vm.scenes()[i].director());
 
@@ -347,7 +358,7 @@ $(function() {
 
         return {
             scenes: scenes,
-            load: load,
+            loadSceneFM: loadSceneFM,
             uniqueTitles: uniqueTitles,
             allTitles: allTitles,
             requestedFilm: requestedFilm,
@@ -366,12 +377,19 @@ $(function() {
             googleInit: googleInit,
             currentTitle: currentTitle,
             currentYear: currentYear,
-            currentDirector: currentDirector
+            currentDirector: currentDirector,
+            films: films
+            // loadUniqueFilmModel: loadUniqueFilmModel
         };
     }();
 
-    my.vm.load();
+    my.vm.loadSceneFM();
+    // my.vm.loadUniqueFilmModel();
 
     ko.applyBindings(my.vm);
+
+    ko.observable.fn.equalityComparer = function(a, b) {
+        return a === b;
+    };
 
 });

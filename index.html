@@ -9,12 +9,13 @@
     <link href='https://fonts.googleapis.com/css?family=Raleway:600,700,300,400' rel='stylesheet' type='text/css'>
     <!--  <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700"> -->
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <script src="js/base.js"></script>
     <!-- change to minified for production -->
     <script src="js/knockout-3.4.0.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <script src="js/themoviedb.js"></script>
     <script src="js/data.js"></script>
-    <script src="js/map.js"></script>
+    <script src="js/map2.js"></script>
 </head>
 
 <body>
@@ -27,7 +28,7 @@
                         <h2 class="logo-font">SF Film Locations</h2></div>
                     <div class="panel-body">
                         <input id="filmList" data-bind="value: my.vm.requestedFilm" list="filmSceneList" type="text" class="form-control" placeholder="Search for a film..." />
-                        <datalist id="filmSceneList" data-bind="foreach: uniqueTitles">
+                        <datalist id="filmSceneList" data-bind="foreach: my.vm.uniqueTitles">
                             <option data-bind="value: $data"></option>
                         </datalist>
                         <button class="btn btn-info pull-right" type="button" data-bind="click: codeAddress">Go!</button>
@@ -49,7 +50,9 @@
         </div>
         <!--TODO: figure out why this is so messed up on small screens, I think its the floats
             and the absolute positioning -->
-        <div class="col-md-3 col-lg-3 col-sm-4 pull-right">
+        <div class="col-md-6 col-lg-5 col-sm-4">
+        </div>
+        <div class="col-md-4 col-lg-4 col-sm-4">
             <div data-bind="visible: my.vm.requestedFilm" class="panel panel-default filmInfoBox">
                 <ul class="media-list">
                     <li class="media">
@@ -59,19 +62,21 @@
                             </a>
                         </div>
                         <div class="media-body">
-                            <h4 class="media-heading" data-bind="text: my.vm.requestedFilm"></h4>
-                            <div data-bind="foreach: my.vm.filmInfoBox">
-                                <span class="locationLink" data-bind="visible: $data.director, text: $data.director">
-                                </span>
-                                <p class="locationLink" data-bind="visible: $data.year, text: $data.year"></p>
-                                <p class="locationLink" data-bind="visible: $data.productionCompany, text: $data.productionCompany"></p>
-                                <p class="locationLink" data-bind="visible: $data.writer, text: $data.writer"></p>
-                            </div>
-                            <!--         <p>Actor</p>
-                            <p>Actor</p> -->
-                        </div>
+                            <h4 class="media-heading" data-bind="visible: my.vm.requestedFilm, text: my.vm.requestedFilm"></h4>
+                            <p>Year: <span data-bind="text: my.vm.currentYear"></span></p>
+                            <p>Rated: <span data-bind="text: my.vm.currentYear"></span></p>
+                            <p>Production Company: <span data-bind="text: my.vm.currentYear"></span></p>
+                            <p>Genre: <span data-bind="text: my.vm.currentYear"></span></p>
+                            <p>Director: <span data-bind="text: my.vm.director"></span></p>
+                            <p>Writer: <span data-bind="text: my.vm.writer"></span></p>
+                            <p>Actors: <span data-bind="text: my.vm.currentYear"></span></p>
                     </li>
-                    <p class="quote" data-bind="visible: my.vm.capsuleReview, text:my.vm.capsuleReview"></p>
+                    <blockquote data-bind="visible: my.vm.capsuleReview">
+                        <p data-bind="text:my.vm.capsuleReview"></p>
+                        <footer>
+                            <cite title="Source Title">New York Times</cite>
+                        </footer>
+                    </blockquote>
                     <p data-bind="visible: my.vm.overview, text: my.vm.overview"></p>
                 </ul>
                 <div>
@@ -86,11 +91,12 @@
                         <p data-bind="text: $data.nytCapsuleReview"></p> -->
                     </div>
                 </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div id="googleMap" class="map-canvas"></div>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiFWUDeNqeIgmx7njjzjJAVWwC2t9hNP0&libraries=places&callback=my.vm.googleInit" async defer></script>
+        <div class="col-md-1 col-lg-1 col-sm-1"> </div>
+        <div id="googleMap" class="map-canvas"></div>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiFWUDeNqeIgmx7njjzjJAVWwC2t9hNP0&libraries=places&callback=my.vm.googleInit" async defer></script>
 </body>
 
 </html>

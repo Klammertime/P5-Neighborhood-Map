@@ -66,6 +66,8 @@ p {
     margin: 6px auto 0 auto;
     padding: 15px;
     max-height: 100vh;
+    margin-right: 30px;
+    margin-right: 30px;
 }
 
 .row {
@@ -82,9 +84,8 @@ p {
 }
 
 .panel {
-    margin-bottom: 0px;
-    margin-right: 0;
-    margin-left: -5px;
+    margin-bottom: 0;
+    margin-left: 0;
     background-color: none;
 }
 
@@ -118,8 +119,12 @@ input {
     max-height: 75px;
 }
 
+.contentString {
+    width: 300px;
+}
+
 .media-body {
-    width: 150px;
+    width: 50%;
 }
 
 .logo {
