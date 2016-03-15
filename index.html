@@ -63,35 +63,38 @@
                         </div>
                         <div class="media-body">
                             <h4 class="media-heading" data-bind="visible: my.vm.requestedFilm, text: my.vm.currentTitle"></h4>
-                            <p>Year: <span data-bind="text: my.vm.currentYear"></span></p>
-                            <p>Production Company: <span data-bind="text: my.vm.currentStudio"></span></p>
-                            <p>Director: <span data-bind="text: my.vm.currentDirector"></span></p>
-                            <p>Writer: <span data-bind="text: my.vm.currentWriter"></span></p>
+                            <p><span class="itemHeader">Year: </span><span data-bind="text: my.vm.currentYear"></span></p>
+                             <p><span class="itemHeader">Production Company: </span><span data-bind="text: my.vm.currentStudio"></span></p>
+                             <p><span class="itemHeader">Director: </span><span data-bind="text: my.vm.currentDirector"></span></p>
+                             <p><span class="itemHeader">Writer: </span><span data-bind="text: my.vm.currentWriter"></span></p>
+                            <p><span class="itemHeader">Actors: </span>
+                                    <span data-bind="visible: my.vm.currentActor1, text: my.vm.currentActor1"></span><span>, </span><span data-bind="visible: my.vm.currentActor2, text: my.vm.currentActor2"></span><span>, </span><span data-bind="visible: my.vm.currentActor3, text: my.vm.currentActor3"></span>
+                            </p>
                     </li>
-                    <ul data-bind="visible: my.vm.currentActor1">Actors:
-                        <li data-bind="visible: my.vm.currentActor1, text: my.vm.currentActor1"></li>
-                        <li data-bind="visible: my.vm.currentActor2, text: my.vm.currentActor2"></li>
-                        <li data-bind="visible: my.vm.currentActor3, text: my.vm.currentActor3"></li>
-                    </ul>
-                    <blockquote data-bind="visible: my.vm.capsuleReview">
-                        <p data-bind="text:my.vm.capsuleReview"></p>
+
+
+
+
+                    <blockquote data-bind="visible: my.vm.nytCapsuleReview">
+                        <p data-bind="text:my.vm.nytCapsuleReview"></p>
                         <footer>
                             <cite title="Source Title">New York Times</cite>
                         </footer>
                     </blockquote>
+                    <div>
+                        <p data-bind="visible: my.vm.nytHeadline, text: my.vm.nytHeadline"></p>
+                        <p data-bind="text: my.vm.nytByline"></p>
+                        <p data-bind="text: my.vm.nytSummaryShort"></p>
+                        <p data-bind="text: my.vm.nytReviewURL"></p>
+                        <p data-bind="text: my.vm.nytPubDate"></p>
+                        <p data-bind="text: my.vm.nytThumbnail"></p>
+                    </div>
                     <p data-bind="visible: my.vm.overview, text: my.vm.overview"></p>
+
                 </ul>
                 <div>
                     <span data-bind="visible: my.vm.trailerVideo, html: my.vm.trailerHTML"></span>
-                    <div>
-                        <!--
-                        <p data-bind="text: $data.nytHeadline"></p>
-                        <p data-bind="text: $data.nytByline"></p>
-                        <p data-bind="text: $data.nytSummaryShort"></p>
-                        <p data-bind="text: $data.nytReviewURL"></p>
-                        <p data-bind="text: $data.nytPubDate"></p>
-                        <p data-bind="text: $data.nytCapsuleReview"></p> -->
-                    </div>
+
                 </div>
                 </div>
             </div>

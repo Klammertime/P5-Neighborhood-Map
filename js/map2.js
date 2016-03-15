@@ -60,14 +60,6 @@ $(function() {
         });
     }
 
-    // var FilmModel = Base.extend({
-    //     constructor: function(filmTitle, year) {
-    //         this.filmTitle = ko.observable(filmTitle);
-    //         this.year = ko.observable(year);
-    //         this.favorite = ko.observable(false);
-    //     }
-    // });
-
     // Location construction
     var SceneFilmModel = Base.extend({
         constructor: function(director, studio, fullAddress, place, streetAddress, year, filmTitle, writer, favorite, actor1, actor2, actor3) {
@@ -85,8 +77,6 @@ $(function() {
             this.actor3 = ko.observable(actor3);
         }
     });
-
-
 
     // var UniqueFilmModel = Base.extend({
     //     constructor: function(title, year, director, studio, writer, poster, trailer, actors, overview, imdbID) {
@@ -119,7 +109,6 @@ $(function() {
         var trailerURL = ko.observable();
         var overview = ko.observable();
         var trailerHTML = ko.observable();
-        var capsuleReview = ko.observable();
         var currentTitle = ko.observable();
         var currentYear = ko.observable();
         var currentDirector = ko.observable();
@@ -129,25 +118,33 @@ $(function() {
         var currentActor3 = ko.observable();
         var currentStudio = ko.observable();
 
+        var nytCapsuleReview = ko.observable();
+        var nytHeadline = ko.observable();
+        var nytByline = ko.observable();
+        var nytSummaryShort = ko.observable();
+        var nytReviewURL = ko.observable();
+        var nytPubDate = ko.observable();
+        var nytThumbnail = ko.observable();
+
         // not using right now
         var films = ko.observableArray([]);
 
-
-
-
-
         var loadSceneFM = function() {
                 function escapeRegExp(string) {
-                    var regExp = /\(([^)]+)\)/;
+                    var regExp = /^.*?(?=\s\()/;
                     var matches = regExp.exec(string);
+                    return matches ? matches[0] : undefined;
+                }
+
+                function escapeRegExp2(string) {
+                    var regExp2 = /\(([^)]+)\)/;
+                    var matches = regExp2.exec(string);
                     return matches ? matches[1] : undefined;
                 }
 
                 $.each(my.filmData.data.Scenes, function(i, s) { //s stands for 'scene'
                     if (s.film_location !== undefined) { // create more false conditions
-
-                        scenes.push(new SceneFilmModel(s.director, s.production_company, s.film_location, false, escapeRegExp(s.film_location), s.release_year, s.film_title, s.writer, false, s.actor_1, s.actor_2, s.actor_3));
-                        console.log("scenes", scenes);
+                        scenes.push(new SceneFilmModel(s.director, s.production_company, s.film_location, escapeRegExp(s.film_location), escapeRegExp2(s.film_location), s.release_year, s.film_title, s.writer, false, s.actor_1, s.actor_2, s.actor_3));
                         allTitles.push(s.film_title);
                     }
                 });
@@ -157,18 +154,6 @@ $(function() {
                 return ko.utils.arrayGetDistinctValues(allTitles().sort());
             }),
 
-            // loadUniqueFilmModel = function() {
-            //     $.each(my.vm.uniqueTitles(), function(i, filmTitle) {
-            //         films.push(new UniqueFilmModel(filmTitle));
-            //     });
-
-            //     // $.each(my.vm.scenes(), function(i, scene) {
-            //     //     if (scene.title() == my.vm.films()[i]){
-            //     //         my.vm.films()[i].locations.push(scene.fullAddress());
-            //     //     }
-            //     // });
-            // },
-
             googleInit = function() {
                 googleSuccess();
             },
@@ -177,47 +162,16 @@ $(function() {
                 if (this.markers().length > 0) {
                     $.each(this.markers(), function(i, marker) {
                         marker.marker.setMap(null);
-
                     });
                     this.markers([]);
                 }
             },
 
-            /** Error handler is not called for cross-domain script and cross-domain JSONP requests.
-             * We instead have to create a timeout function that is only called if success isn't
-             * called, which is where the clearTimeout is located.
-             */
-            loadWiki = function() {
-
-                var wikiRequestTimeout = setTimeout(function() {
-                    console.log('WikiPedia Could Not Be Loaded');
-                }, 8000);
-
-                var wikiURL = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + city + '&format=json&callback=wikiCallback';
-                //TODO: use this or take it out, could just include a link
-                $.ajax({
-                    url: wikiURL,
-                    dataType: 'jsonp',
-                    success: function(response) {
-                        var articleList = response[1];
-                        for (var i = 0; i < articleList.length; i++) {
-                            articleStr = articleList[i];
-                        }
-                        clearTimeout(wikiRequestTimeout);
-                    }
-                });
-            },
-
             loadFilmInfoBox = function(chosenFilm) {
-                var nytByline;
-                var nytHeadline;
-                var nytSummaryShort;
-                var nytReviewURL;
-                var nytPubDate;
                 var nytKey = '70f203863d9c8555f9b345f32ec442e8:10:59953537';
                 var nyTimesMovieAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
                     chosenFilm + "'&api-key=" + nytKey;
-                my.vm.capsuleReview(undefined);
+                my.vm.nytCapsuleReview(undefined);
 
                 $.ajax({
                     type: "GET",
@@ -227,20 +181,21 @@ $(function() {
                     beforeSend: function() {},
                     complete: function() {},
                     success: function(data) {
-                        nytHeadline = data.results[0].headline;
-                        nytByline = data.results[0].byline;
-                        nytSummaryShort = data.results[0].summary_short;
-                        nytReviewURL = data.results[0].link.url;
-                        my.vm.capsuleReview(data.results[0].capsule_review);
+                        console.log("data from NYTimes", data);
+                        my.vm.nytHeadline(data.results[0].headline);
+                        my.vm.nytByline(data.results[0].byline);
+                        my.vm.nytSummaryShort(data.results[0].summary_short);
+                        my.vm.nytReviewURL(data.results[0].link.url);
+                        my.vm.nytCapsuleReview(data.results[0].capsule_review);
+                        my.vm.nytThumbnail();
+                        my.vm.nytPubDate();
+
                     },
                     fail: function(jqxhr, textStatus, error) {
-
                         console.log("New York Times Article Could Not Be Loaded: ", error);
                     }
                 });
-
             },
-
 
             // The current item will be passed as the first parameter
             panToMarker = function(clickedLocation) {
@@ -257,6 +212,7 @@ $(function() {
                 var address;
                 this.checkReset();
                 loadFilmInfoBox(requestedFilm());
+
 
                 var filmEncoded = encodeURIComponent(requestedFilm());
                 var geocoder = new google.maps.Geocoder();
@@ -324,7 +280,6 @@ $(function() {
 
                             masterGeocoder(geocodeOptions);
 
-
                             my.vm.currentTitle(my.vm.scenes()[i].filmTitle());
                             my.vm.currentYear(my.vm.scenes()[i].year());
                             my.vm.currentDirector(my.vm.scenes()[i].director());
@@ -333,8 +288,6 @@ $(function() {
                             my.vm.currentActor2(my.vm.scenes()[i].actor2());
                             my.vm.currentActor3(my.vm.scenes()[i].actor3());
                             my.vm.currentStudio(my.vm.scenes()[i].studio());
-
-
                         }
                     }
                 }
@@ -391,7 +344,6 @@ $(function() {
             trailerVideo: trailerVideo,
             overview: overview,
             trailerHTML: trailerHTML,
-            capsuleReview: capsuleReview,
             googleInit: googleInit,
             currentTitle: currentTitle,
             currentYear: currentYear,
@@ -401,13 +353,17 @@ $(function() {
             currentActor2: currentActor2,
             currentActor3: currentActor3,
             currentStudio: currentStudio,
-            films: films
-                // loadUniqueFilmModel: loadUniqueFilmModel
+            films: films,
+            nytCapsuleReview: nytCapsuleReview,
+            nytHeadline: nytHeadline,
+            nytByline: nytByline,
+            nytSummaryShort: nytSummaryShort,
+            nytReviewURL: nytReviewURL,
+            nytCapsuleReview: nytCapsuleReview
         };
     }();
 
     my.vm.loadSceneFM();
-    // my.vm.loadUniqueFilmModel();
 
     ko.applyBindings(my.vm);
 
