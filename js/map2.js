@@ -210,39 +210,53 @@ $(function() {
 
             codeAddress = function() {
                 var address;
+                var place;
+                var marker;
+                var contentString;
                 this.checkReset();
-                loadFilmInfoBox(requestedFilm());
-
-
                 var filmEncoded = encodeURIComponent(requestedFilm());
                 var geocoder = new google.maps.Geocoder();
+                loadFilmInfoBox(requestedFilm());
 
-                function masterGeocoder(myGeocodeOptions) {
+                function masterGeocoder(myGeocodeOptions, place) {
                     geocoder.geocode(myGeocodeOptions, function(results, status) {
                         if (status == google.maps.GeocoderStatus.OK) {
                             map.setCenter(results[0].geometry.location);
-
                             var streetViewURL = 'https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
                                 results[0].geometry.location;
                             var streetViewImage = '<img class="streetView media-object" src="' + streetViewURL +
                                 '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetView">';
 
-                            var contentString = '<div class="media contentString"><div class="media-left"><a href="#">' +
-                                streetViewImage + '</a></div><div class="media-body"><p class="media-heading">' +
-                                results[0].formatted_address +
-                                '</p><span class="glyphicon glyphicon-heart" aria-hidden="true"></span>' +
-                                '<span class="glyphicon glyphicon-scale" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="See how much the yellow man weighs, place him on the scale."></span></div></div>';
+
+                            if (place) {
+                                contentString = '<div class="media contentString"><div class="media-left"><a href="#">' +
+                                                streetViewImage + '</a></div><div class="media-body"><p class="media-heading">' + place +
+                                                '</p><p>' + results[0].formatted_address + '</p>' +
+                                                '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
+
+                                marker = new google.maps.Marker({
+                                    map: map,
+                                    position: results[0].geometry.location,
+                                    title: place + ": " + myGeocodeOptions.address, // intended address
+                                    animation: google.maps.Animation.DROP
+                                });
+
+                            } else {
+                                contentString = '<div class="media contentString"><div class="media-left"><a href="#">' +
+                                                streetViewImage + '</a></div><div class="media-body"><p class="media-heading">' +
+                                                results[0].formatted_address + '</p>' +
+                                                '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
+
+                                marker = new google.maps.Marker({
+                                    map: map,
+                                    position: results[0].geometry.location,
+                                    title: myGeocodeOptions.address, // intended address
+                                    animation: google.maps.Animation.DROP
+                                });
+                            }
 
                             var infowindow = new google.maps.InfoWindow({
                                 content: contentString
-                            });
-
-                            // this adds a marker to the map
-                            var marker = new google.maps.Marker({
-                                map: map,
-                                position: results[0].geometry.location,
-                                title: myGeocodeOptions.address, // intended address
-                                animation: google.maps.Animation.DROP
                             });
 
                             marker.addListener('click', function() {
@@ -265,12 +279,16 @@ $(function() {
                 }
 
                 for (var i = 0; i < my.vm.scenes().length; i++) {
-                    //TODO: issue here is that you are running through ALL scenes when you don't have to
-                    //or shouldn't have to
                     if (requestedFilm() == my.vm.scenes()[i].filmTitle()) {
-                        address = my.vm.scenes()[i].fullAddress();
-                        if (address) {
+                            if (my.vm.scenes()[i].place()) {
+                                address = my.vm.scenes()[i].streetAddress();
+                                place = my.vm.scenes()[i].place();
+                            } else {
+                                address = my.vm.scenes()[i].fullAddress();
+                            }
+
                             currentScenes.push(my.vm.scenes()[i]);
+
                             var geocodeOptions = {
                                 address: address + ', San Francisco, CA',
                                 componentRestrictions: {
@@ -278,7 +296,7 @@ $(function() {
                                 }
                             };
 
-                            masterGeocoder(geocodeOptions);
+                            masterGeocoder(geocodeOptions, place);
 
                             my.vm.currentTitle(my.vm.scenes()[i].filmTitle());
                             my.vm.currentYear(my.vm.scenes()[i].year());
@@ -290,7 +308,8 @@ $(function() {
                             my.vm.currentStudio(my.vm.scenes()[i].studio());
                         }
                     }
-                }
+
+
                 theMovieDb.search.getMovie({ "query": filmEncoded },
                     (function(data) {
                         //TODO: why do you save it as theStore, if keep, rename
@@ -358,8 +377,7 @@ $(function() {
             nytHeadline: nytHeadline,
             nytByline: nytByline,
             nytSummaryShort: nytSummaryShort,
-            nytReviewURL: nytReviewURL,
-            nytCapsuleReview: nytCapsuleReview
+            nytReviewURL: nytReviewURL
         };
     }();
 
