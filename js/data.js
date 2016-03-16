@@ -6034,7 +6034,7 @@ my.filmData = (function (my) {
     "director": "Ivan Reitman",
     "distributor": "Universal Pictures",
     "fun_facts": "Designed in 1970, the Chinatown Gate (aka the Dragon Gate) is based on ceremonial gates found in Chinese villages. ",
-    "film_location": "Dragon's Gate or Chinatown Gate (Bush St & Grant Ave)",
+    "film_location": "Dragon's Gate in Chinatown (Bush St & Grant Ave)",
     "production_company": "Northern Lights Entertainment",
     "release_year": "1994",
     "film_title": "Junior",

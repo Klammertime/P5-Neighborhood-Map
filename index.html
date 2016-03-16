@@ -32,6 +32,7 @@
                             <option data-bind="value: $data"></option>
                         </datalist>
                         <button class="btn btn-info pull-right" type="button" data-bind="click: codeAddress">Go!</button>
+
                     </div>
                     <table class="table">
                         <tbody data-bind="foreach: my.vm.markers">
@@ -72,7 +73,10 @@
                             </p>
                     </li>
 
-
+<div class="marker1">
+  <div class="dot"></div>
+  <div class="pulse"></div>
+</div>
 
 
                     <blockquote data-bind="visible: my.vm.nytCapsuleReview">

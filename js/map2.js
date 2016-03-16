@@ -187,6 +187,15 @@ $(function() {
                         my.vm.nytSummaryShort(data.results[0].summary_short);
                         my.vm.nytReviewURL(data.results[0].link.url);
                         my.vm.nytCapsuleReview(data.results[0].capsule_review);
+
+                        //TODO make the observables for these
+                        my.vm.nytMpaaRating(data.results[0].mpaa_rating);
+                        my.vm.nytDisplayTitle(data.results[0].display_title);
+                        my.vm.nytMovieID(data.results[0].nyt_movie_id);
+                        my.vm.nytOpeningDate(data.results[0].opening_date);
+
+                        //End here
+
                         my.vm.nytThumbnail();
                         my.vm.nytPubDate();
 
@@ -199,20 +208,22 @@ $(function() {
 
             // The current item will be passed as the first parameter
             panToMarker = function(clickedLocation) {
+                // Makes it so when click on item in list of locations takes you to marker and opens infowindow
                 if (prev_infowindow) {
                     prev_infowindow.close();
                 }
 
                 prev_infowindow = clickedLocation.infowindow;
+                // Without this it still works but doesn't open the infowindow,
+                // it goes to it and drops the marker
                 map.panTo(clickedLocation.marker.getPosition());
+                // Without this, it doesn't work
                 clickedLocation.infowindow.open(map, clickedLocation.marker);
             },
 
             codeAddress = function() {
                 var address;
                 var place;
-                var marker;
-                var contentString;
                 this.checkReset();
                 var filmEncoded = encodeURIComponent(requestedFilm());
                 var geocoder = new google.maps.Geocoder();
@@ -229,25 +240,24 @@ $(function() {
 
 
                             if (place) {
-                                contentString = '<div class="media contentString"><div class="media-left"><a href="#">' +
+                                var contentString = '<div class="media contentString"><div class="media-left"><a href="#">' +
                                                 streetViewImage + '</a></div><div class="media-body"><p class="media-heading">' + place +
                                                 '</p><p>' + results[0].formatted_address + '</p>' +
                                                 '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
-
-                                marker = new google.maps.Marker({
+                                var marker = new google.maps.Marker({
                                     map: map,
                                     position: results[0].geometry.location,
-                                    title: place + ": " + myGeocodeOptions.address, // intended address
+                                    title: place + ", " + myGeocodeOptions.address, // intended address
                                     animation: google.maps.Animation.DROP
                                 });
 
                             } else {
                                 contentString = '<div class="media contentString"><div class="media-left"><a href="#">' +
-                                                streetViewImage + '</a></div><div class="media-body"><p class="media-heading">' +
+                                                streetViewImage + '</a></div><div class="media-body"><p>' +
                                                 results[0].formatted_address + '</p>' +
                                                 '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
 
-                                marker = new google.maps.Marker({
+                                 var marker = new google.maps.Marker({
                                     map: map,
                                     position: results[0].geometry.location,
                                     title: myGeocodeOptions.address, // intended address
@@ -285,6 +295,7 @@ $(function() {
                                 place = my.vm.scenes()[i].place();
                             } else {
                                 address = my.vm.scenes()[i].fullAddress();
+                                place = undefined;
                             }
 
                             currentScenes.push(my.vm.scenes()[i]);
