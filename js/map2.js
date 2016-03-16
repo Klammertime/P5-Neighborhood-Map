@@ -106,7 +106,6 @@ $(function() {
         var nytCapsuleReview = ko.observable();
         var nytHeadline = ko.observable();
         var nytByline = ko.observable();
-        var nytSummaryShort = ko.observable();
         var nytReviewURL = ko.observable();
         var nytTitle = ko.observable();
 
@@ -173,6 +172,16 @@ $(function() {
                 my.vm.nytCapsuleReview(undefined);
                 my.vm.nytTitle(undefined);
 
+                function fasterReviewUrl(fullUrl){
+                    var urlString = fullUrl;
+                    var myRegexp = /\.(.*)$/; // get everything after first period
+                    var match = myRegexp.exec(urlString);
+                    console.log("match", match);
+                    var urlResult = 'http://www.' + match[1]; //it works just not while on local server
+                    console.log("urlResult", urlResult);
+                    return urlResult;
+                }
+
                 $.ajax({
                     type: "GET",
                     url: nyTimesMovieAPI,
@@ -183,11 +192,11 @@ $(function() {
                     success: function(data) {
                         console.log("data from NYTimes", data);
                         if ((data.results[0].display_title).toLowerCase().trim() == chosenFilm.toLowerCase().trim() | 'the ' + (data.results[0].display_title).toLowerCase().trim() == chosenFilm.toLowerCase().trim()) {
-                            my.vm.nytHeadline(data.results[0].headline);
-                            my.vm.nytByline(data.results[0].byline);
-                            my.vm.nytSummaryShort(data.results[0].summary_short);
-                            my.vm.nytReviewURL(data.results[0].link.url);
+                            my.vm.nytByline(data.results[0].byline); // byline also wrote capsule_review
+                            // don't use summary_short, its always empty
                             my.vm.nytCapsuleReview(data.results[0].capsule_review);
+                            my.vm.nytHeadline(data.results[0].headline);
+                            my.vm.nytReviewURL(fasterReviewUrl(data.results[0].link.url));
                             my.vm.nytTitle(data.results[0].display_title);
                         }
                     },
@@ -363,7 +372,6 @@ $(function() {
             nytCapsuleReview: nytCapsuleReview,
             nytHeadline: nytHeadline,
             nytByline: nytByline,
-            nytSummaryShort: nytSummaryShort,
             nytReviewURL: nytReviewURL,
             nytTitle: nytTitle,
             funFact: funFact
