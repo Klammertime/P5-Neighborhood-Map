@@ -79,7 +79,6 @@ $(function() {
         }
     });
 
-
     my.vm = function() {
         var self = this;
         var scenes = ko.observableArray([]);
@@ -89,7 +88,7 @@ $(function() {
         var requestedFilm = ko.observable();
         var markers = ko.observableArray([]);
         var filmInfoBox = ko.observableArray([]);
-        var store = ko.observableArray([]); //TODO: rename to something meaningful
+        var movieDbData = ko.observableArray([]); //TODO: rename to something meaningful
         var posterImage = ko.observable();
         var trailerVideo = ko.observable();
         var trailerURL = ko.observable();
@@ -104,11 +103,9 @@ $(function() {
         var currentActor3 = ko.observable();
         var currentStudio = ko.observable();
         var funFact = ko.observable();
-
         var nytCapsuleReview = ko.observable();
         var nytHeadline = ko.observable();
         var nytByline = ko.observable();
-        var nytSummaryShort = ko.observable();
         var nytReviewURL = ko.observable();
         var nytTitle = ko.observable();
 
@@ -153,38 +150,6 @@ $(function() {
                 }
             },
 
-            loadFilmInfoBox = function(chosenFilm) {
-                var nytKey = '70f203863d9c8555f9b345f32ec442e8:10:59953537';
-                var nyTimesMovieAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
-                    chosenFilm + "'&api-key=" + nytKey;
-                my.vm.nytCapsuleReview(undefined);
-
-                $.ajax({
-                    type: "GET",
-                    url: nyTimesMovieAPI,
-                    timeout: 2000,
-                    dataType: "json",
-                    beforeSend: function() {},
-                    complete: function() {},
-                    success: function(data) {
-                        console.log("data from NYTimes", data);
-                        console.log("data.results[0].display_title", data.results[0].display_title, "chosenFilm", chosenFilm);
-
-                        if ((data.results[0].display_title).toLowerCase() == chosenFilm.toLowerCase() | 'the ' + (data.results[0].display_title).toLowerCase() == chosenFilm.toLowerCase()) {
-                            my.vm.nytHeadline(data.results[0].headline);
-                            my.vm.nytByline(data.results[0].byline);
-                            my.vm.nytSummaryShort(data.results[0].summary_short);
-                            my.vm.nytReviewURL(data.results[0].link.url);
-                            my.vm.nytCapsuleReview(data.results[0].capsule_review);
-                            my.vm.nytTitle(data.results[0].display_title);
-                        }
-                    },
-                    fail: function(jqxhr, textStatus, error) {
-                        console.log("New York Times Article Could Not Be Loaded: ", error);
-                    }
-                });
-            },
-
             // The current item will be passed as the first parameter
             panToMarker = function(clickedLocation) {
                 // Makes it so when click on item in list of locations takes you to marker and opens infowindow
@@ -200,119 +165,59 @@ $(function() {
                 clickedLocation.infowindow.open(map, clickedLocation.marker);
             },
 
-            codeAddress = function() {
-                var address;
-                var place;
-                this.checkReset();
-                var filmEncoded = encodeURIComponent(requestedFilm());
-                var geocoder = new google.maps.Geocoder();
-                loadFilmInfoBox(requestedFilm());
-
-                function masterGeocoder(myGeocodeOptions, place) {
-                    var contentString;
-                    var marker;
-                    geocoder.geocode(myGeocodeOptions, function(results, status) {
-                        if (status == google.maps.GeocoderStatus.OK) {
-                            map.setCenter(results[0].geometry.location);
-                            var streetViewURL = 'https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
-                                results[0].geometry.location;
-                            var streetViewImage = '<img class="streetView media-object" src="' + streetViewURL +
-                                '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetView">';
-
-                            if (place) {
-                                contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
-                                                streetViewImage + '</a></div><div class="content-body"><p class="content-heading">' + place +
-                                                '</p><p>' + results[0].formatted_address + '</p>' +
-                                                '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
-                                marker = new google.maps.Marker({
-                                    map: map,
-                                    position: results[0].geometry.location,
-                                    title: place + ", " + myGeocodeOptions.address, // intended address
-                                    animation: google.maps.Animation.DROP
-                                });
-
-                            } else {
-                                contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
-                                                streetViewImage + '</a></div><div class="content-body"><p>' +
-                                                results[0].formatted_address + '</p>' +
-                                                '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
-
-                                 marker = new google.maps.Marker({
-                                    map: map,
-                                    position: results[0].geometry.location,
-                                    title: myGeocodeOptions.address, // intended address
-                                    animation: google.maps.Animation.DROP
-                                });
-
-                            }
-
-                            var infowindow = new google.maps.InfoWindow({
-                                content: contentString
-                            });
-
-                            marker.addListener('click', function() {
-                                if (prev_infowindow) {
-                                    prev_infowindow.close();
-                                }
-
-                                prev_infowindow = infowindow;
-
-                                map.panTo(marker.getPosition());
-
-                                infowindow.open(map, marker);
-                            });
-
-                            markers.push({ marker: marker, infowindow: infowindow });
-
-                        } else {
-                            console.log("Geocode was not successful for the following reason: " + status);
-                        }
-                    });
+            loadNYTData = function(chosenFilm) {
+                var nytKey = '70f203863d9c8555f9b345f32ec442e8:10:59953537';
+                var nyTimesMovieAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
+                    chosenFilm + "'&api-key=" + nytKey;
+                my.vm.nytCapsuleReview(undefined);
+                my.vm.nytTitle(undefined);
+                //movies.nytimes.com was not loading, copying their url structure instead
+                function fasterReviewUrl(fullUrl) {
+                    var urlString = fullUrl;
+                    var myRegexp = /\.(.*)$/; // get everything after first period
+                    var match = myRegexp.exec(urlString);
+                    var urlResult = 'http://www.' + match[1]; //it works just not while on local server
+                    return urlResult;
                 }
 
-                for (var i = 0; i < my.vm.scenes().length; i++) {
-                    if (requestedFilm() == my.vm.scenes()[i].filmTitle()) {
-                            if (my.vm.scenes()[i].place()) {
-                                address = my.vm.scenes()[i].streetAddress();
-                                place = my.vm.scenes()[i].place();
-                            } else {
-                                address = my.vm.scenes()[i].fullAddress();
-                                place = undefined;
+                $.ajax({
+                    type: "GET",
+                    url: nyTimesMovieAPI,
+                    timeout: 2000,
+                    dataType: "json",
+                    beforeSend: function() {},
+                    complete: function() {},
+                    success: function(data) {
+                        console.log("data from NYTimes", data);
+                        if ((data.results[0].display_title).toLowerCase().trim() == chosenFilm.toLowerCase().trim() | 'the ' + (data.results[0].display_title).toLowerCase().trim() == chosenFilm.toLowerCase().trim()) {
+                            my.vm.nytReviewURL(fasterReviewUrl(data.results[0].link.url));
+                            my.vm.nytByline(data.results[0].byline); // byline also wrote capsule_review
+                            // don't use summary_short, its always empty
+                            if (data.results[0].capsule_review) {
+                                my.vm.nytCapsuleReview(data.results[0].capsule_review);
+                            } else if (data.results[0].headline) {
+                                my.vm.nytHeadline(data.results[0].headline);
                             }
 
-                            currentScenes.push(my.vm.scenes()[i]);
+                            // Don't think you need this
+                            // my.vm.nytTitle(data.results[0].display_title);
 
-                            var geocodeOptions = {
-                                address: address + ', San Francisco, CA',
-                                componentRestrictions: {
-                                    country: 'US'
-                                }
-                            };
-
-                            masterGeocoder(geocodeOptions, place);
-
-                            my.vm.currentTitle(my.vm.scenes()[i].filmTitle());
-                            my.vm.currentYear(my.vm.scenes()[i].year());
-                            my.vm.currentDirector(my.vm.scenes()[i].director());
-                            my.vm.currentWriter(my.vm.scenes()[i].writer());
-                            my.vm.currentActor1(my.vm.scenes()[i].actor1());
-                            my.vm.currentActor2(my.vm.scenes()[i].actor2());
-                            my.vm.currentActor3(my.vm.scenes()[i].actor3());
-                            my.vm.currentStudio(my.vm.scenes()[i].studio());
-                            my.vm.funFact(my.vm.scenes()[i].funFact());
                         }
+                    },
+                    fail: function(jqxhr, textStatus, error) {
+                        console.log("New York Times Article Could Not Be Loaded: ", error);
                     }
-
-
-                theMovieDb.search.getMovie({ "query": filmEncoded },
+                });
+            },
+            loadMovieDbData = function(encodedFilm) {
+                theMovieDb.search.getMovie({ "query": encodedFilm },
                     (function(data) {
-                        //TODO: why do you save it as theStore, if keep, rename
-                        theStore = JSON.parse(data);
-                        my.vm.store(theStore);
-                        var posterPath = my.vm.store().results[0].poster_path;
+                        dbStore = JSON.parse(data);
+                        my.vm.movieDbData(dbStore);
+                        var posterPath = my.vm.movieDbData().results[0].poster_path;
                         var posterHTML = '<img class="poster img-responsive" src="https://image.tmdb.org/t/p/w370/' + posterPath + '" >';
-                        var overview = my.vm.store().results[0].overview;
-                        var filmID = my.vm.store().results[0].id;
+                        var overview = my.vm.movieDbData().results[0].overview;
+                        var filmID = my.vm.movieDbData().results[0].id;
 
                         theMovieDb.movies.getTrailers({ "id": filmID },
                             (function(data) {
@@ -325,7 +230,6 @@ $(function() {
                                         my.vm.trailerVideo().youtube[0].source + '?rel=0&amp;showinfo=0" allowfullscreen></iframe></div>';
                                     my.vm.trailerHTML(trailerIframe);
                                 }
-
                             }),
                             (function() {
                                 console.log("you fail!");
@@ -333,12 +237,114 @@ $(function() {
 
                         my.vm.posterImage(posterHTML);
                         my.vm.overview(overview);
-
                     }),
                     (function() {
                         console.log("you fail!");
                     }));
+            },
+
+            masterGeocoder = function(myGeocodeOptions, place, geocoder) {
+                var contentString;
+                var marker;
+                geocoder.geocode(myGeocodeOptions, function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        map.setCenter(results[0].geometry.location);
+                        var streetViewURL = 'https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
+                            results[0].geometry.location;
+                        var streetViewImage = '<img class="streetView media-object" src="' + streetViewURL +
+                            '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetView">';
+
+                        if (place) {
+                            contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
+                                streetViewImage + '</a></div><div class="content-body"><p class="content-heading">' + place +
+                                '</p><p>' + results[0].formatted_address + '</p>' +
+                                '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
+                            marker = new google.maps.Marker({
+                                map: map,
+                                position: results[0].geometry.location,
+                                title: place + ", " + myGeocodeOptions.address, // intended address
+                                animation: google.maps.Animation.DROP
+                            });
+
+                        } else {
+                            contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
+                                streetViewImage + '</a></div><div class="content-body"><p>' +
+                                results[0].formatted_address + '</p>' +
+                                '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
+
+                            marker = new google.maps.Marker({
+                                map: map,
+                                position: results[0].geometry.location,
+                                title: myGeocodeOptions.address, // intended address
+                                animation: google.maps.Animation.DROP
+                            });
+                        }
+
+                        var infowindow = new google.maps.InfoWindow({
+                            content: contentString
+                        });
+
+                        marker.addListener('click', function() {
+                            if (prev_infowindow) {
+                                prev_infowindow.close();
+                            }
+
+                            prev_infowindow = infowindow;
+                            map.panTo(marker.getPosition());
+                            infowindow.open(map, marker);
+                        });
+
+                        markers.push({ marker: marker, infowindow: infowindow });
+
+                    } else {
+                        console.log("Geocode was not successful for the following reason: " + status);
+                    }
+                });
+            },
+
+            codeAddress = function() {
+                var address;
+                var place;
+                this.checkReset();
+                var filmEncoded = encodeURIComponent(requestedFilm());
+                var geocoder = new google.maps.Geocoder();
+                loadNYTData(requestedFilm());
+                loadMovieDbData(filmEncoded);
+                //TODO change to foreach
+                for (var i = 0; i < my.vm.scenes().length; i++) {
+                    if (requestedFilm() == my.vm.scenes()[i].filmTitle()) {
+                        if (my.vm.scenes()[i].place()) {
+                            address = my.vm.scenes()[i].streetAddress();
+                            place = my.vm.scenes()[i].place();
+                        } else {
+                            address = my.vm.scenes()[i].fullAddress();
+                            place = undefined;
+                        }
+
+                        currentScenes.push(my.vm.scenes()[i]);
+
+                        var geocodeOptions = {
+                            address: address + ', San Francisco, CA',
+                            componentRestrictions: {
+                                country: 'US'
+                            }
+                        };
+
+                        masterGeocoder(geocodeOptions, place, geocoder);
+
+                        my.vm.currentTitle(my.vm.scenes()[i].filmTitle());
+                        my.vm.currentYear(my.vm.scenes()[i].year());
+                        my.vm.currentDirector(my.vm.scenes()[i].director());
+                        my.vm.currentWriter(my.vm.scenes()[i].writer());
+                        my.vm.currentActor1(my.vm.scenes()[i].actor1());
+                        my.vm.currentActor2(my.vm.scenes()[i].actor2());
+                        my.vm.currentActor3(my.vm.scenes()[i].actor3());
+                        my.vm.currentStudio(my.vm.scenes()[i].studio());
+                        my.vm.funFact(my.vm.scenes()[i].funFact());
+                    } // end of master if statement
+                }
             };
+
 
         return {
             scenes: scenes,
@@ -352,7 +358,7 @@ $(function() {
             checkReset: checkReset,
             panToMarker: panToMarker,
             filmInfoBox: filmInfoBox,
-            store: store,
+            movieDbData: movieDbData,
             posterImage: posterImage,
             trailerVideo: trailerVideo,
             overview: overview,
@@ -370,7 +376,6 @@ $(function() {
             nytCapsuleReview: nytCapsuleReview,
             nytHeadline: nytHeadline,
             nytByline: nytByline,
-            nytSummaryShort: nytSummaryShort,
             nytReviewURL: nytReviewURL,
             nytTitle: nytTitle,
             funFact: funFact
