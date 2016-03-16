@@ -54,24 +54,34 @@ $(function() {
             map.setCenter(center);
         }), false);
 
-        google.maps.event.addDomListener(map, 'click', function() {
+
+        google.maps.event.addListener(map, 'click', function() {
             center = map.getCenter();
         });
     }
 
     // Location construction
-    var Scene = function() {
-        this.filmLocation = ko.observable();
-        this.filmLocation2 = ko.observable();
-        this.title = ko.observable();
-        this.year = ko.observable();
-        this.director = ko.observable();
-        this.studio = ko.observable();
-        this.writer = ko.observable();
-    };
+    var SceneFilmModel = Base.extend({
+        constructor: function(director, studio, fullAddress, place, streetAddress, year, filmTitle, writer, favorite, actor1, actor2, actor3, funFact) {
+            this.director = ko.observable(director);
+            this.studio = ko.observable(studio);
+            this.fullAddress = ko.observable(fullAddress);
+            this.place = ko.observable(place);
+            this.streetAddress = ko.observable(streetAddress);
+            this.year = ko.observable(year);
+            this.filmTitle = ko.observable(filmTitle);
+            this.writer = ko.observable(writer);
+            this.favorite = ko.observable(false);
+            this.actor1 = ko.observable(actor1);
+            this.actor2 = ko.observable(actor2);
+            this.actor3 = ko.observable(actor3);
+            this.funFact = ko.observable(funFact);
+        }
+    });
 
 
     my.vm = function() {
+        var self = this;
         var scenes = ko.observableArray([]);
         var currentScenes = ko.observableArray([]); //put current selected film locs
         var favoritedScenes = ko.observableArray([]);
@@ -79,106 +89,75 @@ $(function() {
         var requestedFilm = ko.observable();
         var markers = ko.observableArray([]);
         var filmInfoBox = ko.observableArray([]);
-        var store = ko.observableArray([]);
+        var store = ko.observableArray([]); //TODO: rename to something meaningful
         var posterImage = ko.observable();
         var trailerVideo = ko.observable();
         var trailerURL = ko.observable();
         var overview = ko.observable();
         var trailerHTML = ko.observable();
-        var capsuleReview = ko.observable();
         var currentTitle = ko.observable();
         var currentYear = ko.observable();
         var currentDirector = ko.observable();
+        var currentWriter = ko.observable();
+        var currentActor1 = ko.observable();
+        var currentActor2 = ko.observable();
+        var currentActor3 = ko.observable();
+        var currentStudio = ko.observable();
+        var funFact = ko.observable();
 
+        var nytCapsuleReview = ko.observable();
+        var nytHeadline = ko.observable();
+        var nytByline = ko.observable();
+        var nytSummaryShort = ko.observable();
+        var nytReviewURL = ko.observable();
+        var nytTitle = ko.observable();
 
+        // not using right now
+        var films = ko.observableArray([]);
 
-        function escapeRegExp(string) {
-            var regExp = /\(([^)]+)\)/;
-            var matches = regExp.exec(string);
+        var loadSceneFM = function() {
+                function escapeRegExp(string) {
+                    var regExp = /^.*?(?=\s\()/;
+                    var matches = regExp.exec(string);
+                    return matches ? matches[0] : undefined;
+                }
 
-            if (matches) {
-                var str = matches[1];
-                console.log("str", str);
+                function escapeRegExp2(string) {
+                    var regExp2 = /\(([^)]+)\)/;
+                    var matches = regExp2.exec(string);
+                    return matches ? matches[1] : undefined;
+                }
 
-                return str;
-
-
-            } else {
-                return undefined;
-            }
-        }
-
-        var load = function() {
-                $.each(my.filmData.data.Scenes, function(i, p) {
-                    if (p.film_location !== undefined) { //TODO: Can also push SF, CA as
-                        // film_location just to get it on list as having been taped
-                        // in SF. Or not. Decide later.
-                        scenes.push(new Scene()
-                            .filmLocation(p.film_location)
-                            .filmLocation2(escapeRegExp(p.film_location))
-                            .title(p.film_title)
-                            .year(p.release_year)
-                            .director(p.director)
-                            .studio(p.production_company)
-                            .writer(p.writer)
-                        );
-                        allTitles.push(p.film_title);
+                $.each(my.filmData.data.Scenes, function(i, s) { //s stands for 'scene'
+                    if (s.film_location !== undefined) { // create more false conditions
+                        scenes.push(new SceneFilmModel(s.director, s.production_company, s.film_location, escapeRegExp(s.film_location), escapeRegExp2(s.film_location), s.release_year, s.film_title, s.writer, false, s.actor_1, s.actor_2, s.actor_3, s.fun_facts));
+                        allTitles.push(s.film_title);
                     }
                 });
-            },
-
-            googleInit = function() {
-                googleSuccess();
             },
 
             uniqueTitles = ko.computed(function() {
                 return ko.utils.arrayGetDistinctValues(allTitles().sort());
             }),
 
+            googleInit = function() {
+                googleSuccess();
+            },
+
             checkReset = function() {
-                if (markers().length > 0) {
-                    for (var j = 0; j < markers().length; j++) {
-                        my.vm.markers()[j].marker.setMap(null);
-                    }
-                    my.vm.markers([]);
+                if (this.markers().length > 0) {
+                    $.each(this.markers(), function(i, marker) {
+                        marker.marker.setMap(null);
+                    });
+                    this.markers([]);
                 }
             },
 
-            /** Error handler is not called for cross-domain script and cross-domain JSONP requests.
-             * We instead have to create a timeout function that is only called if success isn't
-             * called, which is where the clearTimeout is located.
-             */
-            loadWiki = function() {
-
-                var wikiRequestTimeout = setTimeout(function() {
-                    console.log('WikiPedia Could Not Be Loaded');
-                }, 8000);
-
-                var wikiURL = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + city + '&format=json&callback=wikiCallback';
-                //TODO: use this or take it out, could just include a link
-                $.ajax({
-                    url: wikiURL,
-                    dataType: 'jsonp',
-                    success: function(response) {
-                        var articleList = response[1];
-                        for (var i = 0; i < articleList.length; i++) {
-                            articleStr = articleList[i];
-                        }
-                        clearTimeout(wikiRequestTimeout);
-                    }
-                });
-            },
-
             loadFilmInfoBox = function(chosenFilm) {
-                var nytByline;
-                var nytHeadline;
-                var nytSummaryShort;
-                var nytReviewURL;
-                var nytPubDate;
                 var nytKey = '70f203863d9c8555f9b345f32ec442e8:10:59953537';
                 var nyTimesMovieAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
                     chosenFilm + "'&api-key=" + nytKey;
-                my.vm.capsuleReview(undefined);
+                my.vm.nytCapsuleReview(undefined);
 
                 $.ajax({
                     type: "GET",
@@ -188,74 +167,87 @@ $(function() {
                     beforeSend: function() {},
                     complete: function() {},
                     success: function(data) {
-                        console.log("data", data);
-                        nytHeadline = data.results[0].headline;
-                        nytByline = data.results[0].byline;
-                        nytSummaryShort = data.results[0].summary_short;
-                        nytReviewURL = data.results[0].link.url;
-                        nytPubDate = data.results[0].publication_date;
-                        my.vm.capsuleReview(data.results[0].capsule_review);
+                        console.log("data from NYTimes", data);
+                        console.log("data.results[0].display_title", data.results[0].display_title, "chosenFilm", chosenFilm);
+
+                        if ((data.results[0].display_title).toLowerCase() == chosenFilm.toLowerCase() | 'the ' + (data.results[0].display_title).toLowerCase() == chosenFilm.toLowerCase()) {
+                            my.vm.nytHeadline(data.results[0].headline);
+                            my.vm.nytByline(data.results[0].byline);
+                            my.vm.nytSummaryShort(data.results[0].summary_short);
+                            my.vm.nytReviewURL(data.results[0].link.url);
+                            my.vm.nytCapsuleReview(data.results[0].capsule_review);
+                            my.vm.nytTitle(data.results[0].display_title);
+                        }
                     },
                     fail: function(jqxhr, textStatus, error) {
-
                         console.log("New York Times Article Could Not Be Loaded: ", error);
                     }
                 });
-
             },
-
 
             // The current item will be passed as the first parameter
             panToMarker = function(clickedLocation) {
+                // Makes it so when click on item in list of locations takes you to marker and opens infowindow
                 if (prev_infowindow) {
                     prev_infowindow.close();
                 }
 
                 prev_infowindow = clickedLocation.infowindow;
+                // Without this it still works but doesn't open the infowindow,
+                // it goes to it and drops the marker
                 map.panTo(clickedLocation.marker.getPosition());
+                // Without this, it doesn't work
                 clickedLocation.infowindow.open(map, clickedLocation.marker);
             },
 
             codeAddress = function() {
                 var address;
+                var place;
                 this.checkReset();
-                loadFilmInfoBox(requestedFilm());
-
                 var filmEncoded = encodeURIComponent(requestedFilm());
                 var geocoder = new google.maps.Geocoder();
+                loadFilmInfoBox(requestedFilm());
 
-                function masterGeocoder(myGeocodeOptions) {
+                function masterGeocoder(myGeocodeOptions, place) {
+                    var contentString;
+                    var marker;
                     geocoder.geocode(myGeocodeOptions, function(results, status) {
                         if (status == google.maps.GeocoderStatus.OK) {
                             map.setCenter(results[0].geometry.location);
-
-                            // results[0].formatted_address is actual address on marker
-                            // TODO: the movie scenes are not getting mapped to the right loc
-                            // on the map due to the poor formatting of the data from sfdata
-                            // Also, you aren't saving any of this, figure out how to add them to each
-                            // Scene instance
-
                             var streetViewURL = 'https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
                                 results[0].geometry.location;
                             var streetViewImage = '<img class="streetView media-object" src="' + streetViewURL +
                                 '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetView">';
 
-                            var contentString = '<div class="media contentString"><div class="media-left"><a href="#">' +
-                                streetViewImage + '</a></div><div class="media-body"><p class="media-heading">' +
-                                results[0].formatted_address +
-                                '</p><span class="glyphicon glyphicon-heart" aria-hidden="true"></span>' +
-                                '<span class="glyphicon glyphicon-scale" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="See how much the yellow man weighs, place him on the scale."></span></div></div>';
+                            if (place) {
+                                contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
+                                                streetViewImage + '</a></div><div class="content-body"><p class="content-heading">' + place +
+                                                '</p><p>' + results[0].formatted_address + '</p>' +
+                                                '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
+                                marker = new google.maps.Marker({
+                                    map: map,
+                                    position: results[0].geometry.location,
+                                    title: place + ", " + myGeocodeOptions.address, // intended address
+                                    animation: google.maps.Animation.DROP
+                                });
+
+                            } else {
+                                contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
+                                                streetViewImage + '</a></div><div class="content-body"><p>' +
+                                                results[0].formatted_address + '</p>' +
+                                                '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
+
+                                 marker = new google.maps.Marker({
+                                    map: map,
+                                    position: results[0].geometry.location,
+                                    title: myGeocodeOptions.address, // intended address
+                                    animation: google.maps.Animation.DROP
+                                });
+
+                            }
 
                             var infowindow = new google.maps.InfoWindow({
                                 content: contentString
-                            });
-
-                            // this adds a marker to the map
-                            var marker = new google.maps.Marker({
-                                map: map,
-                                position: results[0].geometry.location,
-                                title: myGeocodeOptions.address, // intended address
-                                animation: google.maps.Animation.DROP
                             });
 
                             marker.addListener('click', function() {
@@ -264,13 +256,13 @@ $(function() {
                                 }
 
                                 prev_infowindow = infowindow;
+
                                 map.panTo(marker.getPosition());
 
                                 infowindow.open(map, marker);
                             });
 
                             markers.push({ marker: marker, infowindow: infowindow });
-
 
                         } else {
                             console.log("Geocode was not successful for the following reason: " + status);
@@ -279,12 +271,17 @@ $(function() {
                 }
 
                 for (var i = 0; i < my.vm.scenes().length; i++) {
-                    //TODO: issue here is that you are running through ALL scenes when you don't have to
-                    //or shouldn't have to
-                    if (requestedFilm() == my.vm.scenes()[i].title()) {
-                        address = my.vm.scenes()[i].filmLocation();
-                        if (address) {
+                    if (requestedFilm() == my.vm.scenes()[i].filmTitle()) {
+                            if (my.vm.scenes()[i].place()) {
+                                address = my.vm.scenes()[i].streetAddress();
+                                place = my.vm.scenes()[i].place();
+                            } else {
+                                address = my.vm.scenes()[i].fullAddress();
+                                place = undefined;
+                            }
+
                             currentScenes.push(my.vm.scenes()[i]);
+
                             var geocodeOptions = {
                                 address: address + ', San Francisco, CA',
                                 componentRestrictions: {
@@ -292,23 +289,21 @@ $(function() {
                                 }
                             };
 
-                            masterGeocoder(geocodeOptions);
-                            filmInfoBox.removeAll();
-                            filmInfoBox.push(
-                                { title: my.vm.scenes()[i].title() },
-                                { year: my.vm.scenes()[i].year() },
-                                { director: my.vm.scenes()[i].director() },
-                                { studio: my.vm.scenes()[i].studio() },
-                                { writer: my.vm.scenes()[i].writer() }
-                            );
+                            masterGeocoder(geocodeOptions, place);
 
-                            my.vm.currentTitle(my.vm.scenes()[i].title());
+                            my.vm.currentTitle(my.vm.scenes()[i].filmTitle());
                             my.vm.currentYear(my.vm.scenes()[i].year());
                             my.vm.currentDirector(my.vm.scenes()[i].director());
-
+                            my.vm.currentWriter(my.vm.scenes()[i].writer());
+                            my.vm.currentActor1(my.vm.scenes()[i].actor1());
+                            my.vm.currentActor2(my.vm.scenes()[i].actor2());
+                            my.vm.currentActor3(my.vm.scenes()[i].actor3());
+                            my.vm.currentStudio(my.vm.scenes()[i].studio());
+                            my.vm.funFact(my.vm.scenes()[i].funFact());
                         }
                     }
-                }
+
+
                 theMovieDb.search.getMovie({ "query": filmEncoded },
                     (function(data) {
                         //TODO: why do you save it as theStore, if keep, rename
@@ -326,8 +321,8 @@ $(function() {
                                 if (my.vm.trailerVideo().youtube.length === 0) {
                                     my.vm.trailerVideo(undefined);
                                 } else {
-                                    var trailerIframe = '<div class="embed-responsive embed-responsive-4by3"><iframe class="embed-responsive-item" width="560" height="315" src="https://www.youtube.com/embed/' +
-                                        my.vm.trailerVideo().youtube[0].source + '?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe></div>';
+                                    var trailerIframe = '<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" width="1280" height="720" src="https://www.youtube.com/embed/' +
+                                        my.vm.trailerVideo().youtube[0].source + '?rel=0&amp;showinfo=0" allowfullscreen></iframe></div>';
                                     my.vm.trailerHTML(trailerIframe);
                                 }
 
@@ -347,7 +342,7 @@ $(function() {
 
         return {
             scenes: scenes,
-            load: load,
+            loadSceneFM: loadSceneFM,
             uniqueTitles: uniqueTitles,
             allTitles: allTitles,
             requestedFilm: requestedFilm,
@@ -362,16 +357,31 @@ $(function() {
             trailerVideo: trailerVideo,
             overview: overview,
             trailerHTML: trailerHTML,
-            capsuleReview: capsuleReview,
             googleInit: googleInit,
             currentTitle: currentTitle,
             currentYear: currentYear,
-            currentDirector: currentDirector
+            currentDirector: currentDirector,
+            currentWriter: currentWriter,
+            currentActor1: currentActor1,
+            currentActor2: currentActor2,
+            currentActor3: currentActor3,
+            currentStudio: currentStudio,
+            films: films,
+            nytCapsuleReview: nytCapsuleReview,
+            nytHeadline: nytHeadline,
+            nytByline: nytByline,
+            nytSummaryShort: nytSummaryShort,
+            nytReviewURL: nytReviewURL,
+            nytTitle: nytTitle,
+            funFact: funFact
         };
     }();
 
-    my.vm.load();
-
+    my.vm.loadSceneFM();
     ko.applyBindings(my.vm);
+
+    ko.observable.fn.equalityComparer = function(a, b) {
+        return a === b;
+    };
 
 });
