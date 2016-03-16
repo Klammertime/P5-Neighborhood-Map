@@ -7,6 +7,7 @@ my.filmData = (function (my) {
     "actor_2": "Nithya Menon",
     "actor_3": "Priya Anand",
     "director": "Jayendra",
+    "fun_facts": "test",
     "film_location": "Epic Roasthouse (399 Embarcadero)",
     "production_company": "SPI Cinemas",
     "release_year": "2011",
@@ -5917,7 +5918,7 @@ my.filmData = (function (my) {
     "film_location": "Hang Ah Alley - Chinatown (Stockton St and Clay St)",
     "production_company": "Hollywood Pictures",
     "release_year": "1993",
-    "film_title": "Joy Luck Club",
+    "film_title": "The Joy Luck Club",
     "writer": "Amy Tan"
   },
   {
@@ -5927,7 +5928,7 @@ my.filmData = (function (my) {
     "film_location": "Horace Mann School (3351 23rd St)",
     "production_company": "Hollywood Pictures",
     "release_year": "1993",
-    "film_title": "Joy Luck Club",
+    "film_title": "The Joy Luck Club",
     "writer": "Amy Tan"
   },
   {
@@ -5937,7 +5938,7 @@ my.filmData = (function (my) {
     "film_location": "901 Union St",
     "production_company": "Hollywood Pictures",
     "release_year": "1993",
-    "film_title": "Joy Luck Club",
+    "film_title": "The Joy Luck Club",
     "writer": "Amy Tan"
   },
   {
@@ -5947,7 +5948,7 @@ my.filmData = (function (my) {
     "film_location": "610 Rhode Island St",
     "production_company": "Hollywood Pictures",
     "release_year": "1993",
-    "film_title": "Joy Luck Club",
+    "film_title": "The Joy Luck Club",
     "writer": "Amy Tan"
   },
   {
@@ -5957,7 +5958,7 @@ my.filmData = (function (my) {
     "film_location": "375 Laguna Honda Blvd",
     "production_company": "Hollywood Pictures",
     "release_year": "1993",
-    "film_title": "Joy Luck Club",
+    "film_title": "The Joy Luck Club",
     "writer": "Amy Tan"
   },
   {
@@ -5967,7 +5968,7 @@ my.filmData = (function (my) {
     "film_location": "180 Manchester St",
     "production_company": "Hollywood Pictures",
     "release_year": "1993",
-    "film_title": "Joy Luck Club",
+    "film_title": "The Joy Luck Club",
     "writer": "Amy Tan"
   },
   {

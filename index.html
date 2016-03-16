@@ -32,7 +32,6 @@
                             <option data-bind="value: $data"></option>
                         </datalist>
                         <button class="btn btn-info pull-right" type="button" data-bind="click: codeAddress">Go!</button>
-
                     </div>
                     <table class="table">
                         <tbody data-bind="foreach: my.vm.markers">
@@ -65,20 +64,13 @@
                         <div class="media-body">
                             <h4 class="media-heading" data-bind="visible: my.vm.requestedFilm, text: my.vm.currentTitle"></h4>
                             <p><span class="itemHeader">Year: </span><span data-bind="text: my.vm.currentYear"></span></p>
-                             <p><span class="itemHeader">Production Company: </span><span data-bind="text: my.vm.currentStudio"></span></p>
-                             <p><span class="itemHeader">Director: </span><span data-bind="text: my.vm.currentDirector"></span></p>
-                             <p><span class="itemHeader">Writer: </span><span data-bind="text: my.vm.currentWriter"></span></p>
-                            <p><span class="itemHeader">Actors: </span>
-                                    <span data-bind="visible: my.vm.currentActor1, text: my.vm.currentActor1"></span><span>, </span><span data-bind="visible: my.vm.currentActor2, text: my.vm.currentActor2"></span><span>, </span><span data-bind="visible: my.vm.currentActor3, text: my.vm.currentActor3"></span>
+                            <p><span class="itemHeader">Production Company: </span><span data-bind="text: my.vm.currentStudio"></span></p>
+                            <p><span class="itemHeader">Director: </span><span data-bind="text: my.vm.currentDirector"></span></p>
+                            <p><span class="itemHeader">Writer: </span><span data-bind="text: my.vm.currentWriter"></span></p>
+                            <p><span data-bind="visible: my.vm.currentActor1" class="itemHeader">Actors: </span>
+                                <span data-bind="visible: my.vm.currentActor1, text: my.vm.currentActor1"></span><span data-bind="visible: my.vm.currentActor2">, </span><span data-bind="visible: my.vm.currentActor2, text: my.vm.currentActor2"></span><span data-bind="visible: my.vm.currentActor3">, </span><span data-bind="visible: my.vm.currentActor3, text: my.vm.currentActor3"></span>
                             </p>
                     </li>
-
-<div class="marker1">
-  <div class="dot"></div>
-  <div class="pulse"></div>
-</div>
-
-
                     <blockquote data-bind="visible: my.vm.nytCapsuleReview">
                         <p data-bind="text:my.vm.nytCapsuleReview"></p>
                         <footer>
@@ -87,18 +79,17 @@
                     </blockquote>
                     <div>
                         <p data-bind="visible: my.vm.nytHeadline, text: my.vm.nytHeadline"></p>
-                        <p data-bind="text: my.vm.nytByline"></p>
-                        <p data-bind="text: my.vm.nytSummaryShort"></p>
-                        <p data-bind="text: my.vm.nytReviewURL"></p>
-                        <p data-bind="text: my.vm.nytPubDate"></p>
-                        <p data-bind="text: my.vm.nytThumbnail"></p>
+                        <p data-bind="visible: my.vm.nytByline, text: my.vm.nytByline"></p>
+                        <p data-bind="visible: my.vm.nytSummaryShort, text: my.vm.nytSummaryShort"></p>
+                        <p data-bind="visible: my.vm.nytReviewURL, text: my.vm.nytReviewURL"></p>
+                        <p data-bind="visible: my.vm.nytTitle, text: my.vm.nytTitle"></p>
+
+                        <p data-bind="visible: my.vm.nytPubDate, text: my.vm.nytPubDate"></p>
                     </div>
                     <p data-bind="visible: my.vm.overview, text: my.vm.overview"></p>
-
                 </ul>
                 <div>
                     <span data-bind="visible: my.vm.trailerVideo, html: my.vm.trailerHTML"></span>
-
                 </div>
                 </div>
             </div>

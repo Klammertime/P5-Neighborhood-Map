@@ -47,3 +47,55 @@ https://api.themoviedb.org/3/search/movie/550?api_key=0568b9a19dbc4adda399b2d128
 
 
     http://api.nytimes.com/svc/movies/v2/reviews/search.json?query=Copycat&page=2&sort=oldest&api-key=70f203863d9c8555f9b345f32ec442e8:10:59953537
+
+
+
+
+
+
+
+// heatmap code not using but want to later
+       // function animate() {
+        //     var theData = [];
+        //     for (site = 0; site < 60; site++){
+        //         if(month == 0) {
+        //             data.push({location: new google.maps.LatLng(precipitationData[site].coords[0],
+        //                                       )})
+        //         }
+        //     }
+        // }
+
+
+        // heatmap = new google.maps.visualization.HeatmapLayer({
+        //    map: map,
+        //    data: theData,
+        //    radius: 40,
+        //    dissipate: true,
+        //    maxIntensity: 700,
+        //    opacity: 1,
+        //    gradient: [
+        //     'rgba(0, 0, 0, 0)',
+        //     'rgba(255, 255, 0, 0.50)',
+        //     'rgba(0, 0, 255, 1.0)'
+        //    ]
+        // });
+
+
+        //Film Model class not using but want to later
+
+    // var UniqueFilmModel = Base.extend({
+    //     constructor: function(title, year, director, studio, writer, poster, trailer, actors, overview, imdbID) {
+    //         this.title = ko.observable(title);
+    //         this.year = ko.observable(year);
+    //         this.director = ko.observable(director);
+    //         this.studio = ko.observable(studio);
+    //         this.writer = ko.observable(writer);
+    //         this.poster = ko.observable(poster);
+    //         this.trailer = ko.observable(trailer);
+    //         this.actors = ko.observable(actors);
+    //         this.overview = ko.observable(overview);
+    //         this.imdbID = ko.observable(imdbID);
+    //         this.favorite = ko.observable(false);
+    //         this.locations = ko.observableArray([]);
+    //     }
+    // });

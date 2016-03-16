@@ -62,7 +62,7 @@ $(function() {
 
     // Location construction
     var SceneFilmModel = Base.extend({
-        constructor: function(director, studio, fullAddress, place, streetAddress, year, filmTitle, writer, favorite, actor1, actor2, actor3) {
+        constructor: function(director, studio, fullAddress, place, streetAddress, year, filmTitle, writer, favorite, actor1, actor2, actor3, funFact) {
             this.director = ko.observable(director);
             this.studio = ko.observable(studio);
             this.fullAddress = ko.observable(fullAddress);
@@ -75,27 +75,13 @@ $(function() {
             this.actor1 = ko.observable(actor1);
             this.actor2 = ko.observable(actor2);
             this.actor3 = ko.observable(actor3);
+            this.funFact = ko.observable(funFact);
         }
     });
 
-    // var UniqueFilmModel = Base.extend({
-    //     constructor: function(title, year, director, studio, writer, poster, trailer, actors, overview, imdbID) {
-    //         this.title = ko.observable(title);
-    //         this.year = ko.observable(year);
-    //         this.director = ko.observable(director);
-    //         this.studio = ko.observable(studio);
-    //         this.writer = ko.observable(writer);
-    //         this.poster = ko.observable(poster);
-    //         this.trailer = ko.observable(trailer);
-    //         this.actors = ko.observable(actors);
-    //         this.overview = ko.observable(overview);
-    //         this.imdbID = ko.observable(imdbID);
-    //         this.favorite = ko.observable(false);
-    //         this.locations = ko.observableArray([]);
-    //     }
-    // });
 
     my.vm = function() {
+        var self = this;
         var scenes = ko.observableArray([]);
         var currentScenes = ko.observableArray([]); //put current selected film locs
         var favoritedScenes = ko.observableArray([]);
@@ -117,14 +103,14 @@ $(function() {
         var currentActor2 = ko.observable();
         var currentActor3 = ko.observable();
         var currentStudio = ko.observable();
+        var funFact = ko.observable();
 
         var nytCapsuleReview = ko.observable();
         var nytHeadline = ko.observable();
         var nytByline = ko.observable();
         var nytSummaryShort = ko.observable();
         var nytReviewURL = ko.observable();
-        var nytPubDate = ko.observable();
-        var nytThumbnail = ko.observable();
+        var nytTitle = ko.observable();
 
         // not using right now
         var films = ko.observableArray([]);
@@ -144,7 +130,7 @@ $(function() {
 
                 $.each(my.filmData.data.Scenes, function(i, s) { //s stands for 'scene'
                     if (s.film_location !== undefined) { // create more false conditions
-                        scenes.push(new SceneFilmModel(s.director, s.production_company, s.film_location, escapeRegExp(s.film_location), escapeRegExp2(s.film_location), s.release_year, s.film_title, s.writer, false, s.actor_1, s.actor_2, s.actor_3));
+                        scenes.push(new SceneFilmModel(s.director, s.production_company, s.film_location, escapeRegExp(s.film_location), escapeRegExp2(s.film_location), s.release_year, s.film_title, s.writer, false, s.actor_1, s.actor_2, s.actor_3, s.fun_facts));
                         allTitles.push(s.film_title);
                     }
                 });
@@ -182,23 +168,16 @@ $(function() {
                     complete: function() {},
                     success: function(data) {
                         console.log("data from NYTimes", data);
-                        my.vm.nytHeadline(data.results[0].headline);
-                        my.vm.nytByline(data.results[0].byline);
-                        my.vm.nytSummaryShort(data.results[0].summary_short);
-                        my.vm.nytReviewURL(data.results[0].link.url);
-                        my.vm.nytCapsuleReview(data.results[0].capsule_review);
+                        console.log("data.results[0].display_title", data.results[0].display_title, "chosenFilm", chosenFilm);
 
-                        //TODO make the observables for these
-                        my.vm.nytMpaaRating(data.results[0].mpaa_rating);
-                        my.vm.nytDisplayTitle(data.results[0].display_title);
-                        my.vm.nytMovieID(data.results[0].nyt_movie_id);
-                        my.vm.nytOpeningDate(data.results[0].opening_date);
-
-                        //End here
-
-                        my.vm.nytThumbnail();
-                        my.vm.nytPubDate();
-
+                        if ((data.results[0].display_title).toLowerCase() == chosenFilm.toLowerCase() | 'the ' + (data.results[0].display_title).toLowerCase() == chosenFilm.toLowerCase()) {
+                            my.vm.nytHeadline(data.results[0].headline);
+                            my.vm.nytByline(data.results[0].byline);
+                            my.vm.nytSummaryShort(data.results[0].summary_short);
+                            my.vm.nytReviewURL(data.results[0].link.url);
+                            my.vm.nytCapsuleReview(data.results[0].capsule_review);
+                            my.vm.nytTitle(data.results[0].display_title);
+                        }
                     },
                     fail: function(jqxhr, textStatus, error) {
                         console.log("New York Times Article Could Not Be Loaded: ", error);
@@ -230,6 +209,8 @@ $(function() {
                 loadFilmInfoBox(requestedFilm());
 
                 function masterGeocoder(myGeocodeOptions, place) {
+                    var contentString;
+                    var marker;
                     geocoder.geocode(myGeocodeOptions, function(results, status) {
                         if (status == google.maps.GeocoderStatus.OK) {
                             map.setCenter(results[0].geometry.location);
@@ -238,13 +219,12 @@ $(function() {
                             var streetViewImage = '<img class="streetView media-object" src="' + streetViewURL +
                                 '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetView">';
 
-
                             if (place) {
-                                var contentString = '<div class="media contentString"><div class="media-left"><a href="#">' +
-                                                streetViewImage + '</a></div><div class="media-body"><p class="media-heading">' + place +
+                                contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
+                                                streetViewImage + '</a></div><div class="content-body"><p class="content-heading">' + place +
                                                 '</p><p>' + results[0].formatted_address + '</p>' +
                                                 '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
-                                var marker = new google.maps.Marker({
+                                marker = new google.maps.Marker({
                                     map: map,
                                     position: results[0].geometry.location,
                                     title: place + ", " + myGeocodeOptions.address, // intended address
@@ -252,17 +232,18 @@ $(function() {
                                 });
 
                             } else {
-                                contentString = '<div class="media contentString"><div class="media-left"><a href="#">' +
-                                                streetViewImage + '</a></div><div class="media-body"><p>' +
+                                contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
+                                                streetViewImage + '</a></div><div class="content-body"><p>' +
                                                 results[0].formatted_address + '</p>' +
                                                 '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
 
-                                 var marker = new google.maps.Marker({
+                                 marker = new google.maps.Marker({
                                     map: map,
                                     position: results[0].geometry.location,
                                     title: myGeocodeOptions.address, // intended address
                                     animation: google.maps.Animation.DROP
                                 });
+
                             }
 
                             var infowindow = new google.maps.InfoWindow({
@@ -275,6 +256,7 @@ $(function() {
                                 }
 
                                 prev_infowindow = infowindow;
+
                                 map.panTo(marker.getPosition());
 
                                 infowindow.open(map, marker);
@@ -317,6 +299,7 @@ $(function() {
                             my.vm.currentActor2(my.vm.scenes()[i].actor2());
                             my.vm.currentActor3(my.vm.scenes()[i].actor3());
                             my.vm.currentStudio(my.vm.scenes()[i].studio());
+                            my.vm.funFact(my.vm.scenes()[i].funFact());
                         }
                     }
 
@@ -338,8 +321,8 @@ $(function() {
                                 if (my.vm.trailerVideo().youtube.length === 0) {
                                     my.vm.trailerVideo(undefined);
                                 } else {
-                                    var trailerIframe = '<div class="embed-responsive embed-responsive-4by3"><iframe class="embed-responsive-item" width="560" height="315" src="https://www.youtube.com/embed/' +
-                                        my.vm.trailerVideo().youtube[0].source + '?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe></div>';
+                                    var trailerIframe = '<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" width="1280" height="720" src="https://www.youtube.com/embed/' +
+                                        my.vm.trailerVideo().youtube[0].source + '?rel=0&amp;showinfo=0" allowfullscreen></iframe></div>';
                                     my.vm.trailerHTML(trailerIframe);
                                 }
 
@@ -388,12 +371,13 @@ $(function() {
             nytHeadline: nytHeadline,
             nytByline: nytByline,
             nytSummaryShort: nytSummaryShort,
-            nytReviewURL: nytReviewURL
+            nytReviewURL: nytReviewURL,
+            nytTitle: nytTitle,
+            funFact: funFact
         };
     }();
 
     my.vm.loadSceneFM();
-
     ko.applyBindings(my.vm);
 
     ko.observable.fn.equalityComparer = function(a, b) {
