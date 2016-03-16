@@ -153,7 +153,21 @@ $(function() {
                 }
             },
 
-            loadFilmInfoBox = function(chosenFilm) {
+            // The current item will be passed as the first parameter
+            panToMarker = function(clickedLocation) {
+                // Makes it so when click on item in list of locations takes you to marker and opens infowindow
+                if (prev_infowindow) {
+                    prev_infowindow.close();
+                }
+
+                prev_infowindow = clickedLocation.infowindow;
+                // Without this it still works but doesn't open the infowindow,
+                // it goes to it and drops the marker
+                map.panTo(clickedLocation.marker.getPosition());
+                // Without this, it doesn't work
+                clickedLocation.infowindow.open(map, clickedLocation.marker);
+            },
+            loadNYTData = function(chosenFilm) {
                 var nytKey = '70f203863d9c8555f9b345f32ec442e8:10:59953537';
                 var nyTimesMovieAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
                     chosenFilm + "'&api-key=" + nytKey;
@@ -170,7 +184,7 @@ $(function() {
                         console.log("data from NYTimes", data);
                         console.log("data.results[0].display_title", data.results[0].display_title, "chosenFilm", chosenFilm);
 
-                        if ((data.results[0].display_title).toLowerCase() == chosenFilm.toLowerCase() | 'the ' + (data.results[0].display_title).toLowerCase() == chosenFilm.toLowerCase()) {
+                        if ((data.results[0].display_title).toLowerCase().trim() == chosenFilm.toLowerCase().trim() | 'the ' + (data.results[0].display_title).toLowerCase().trim() == chosenFilm.toLowerCase().trim()) {
                             my.vm.nytHeadline(data.results[0].headline);
                             my.vm.nytByline(data.results[0].byline);
                             my.vm.nytSummaryShort(data.results[0].summary_short);
@@ -185,28 +199,13 @@ $(function() {
                 });
             },
 
-            // The current item will be passed as the first parameter
-            panToMarker = function(clickedLocation) {
-                // Makes it so when click on item in list of locations takes you to marker and opens infowindow
-                if (prev_infowindow) {
-                    prev_infowindow.close();
-                }
-
-                prev_infowindow = clickedLocation.infowindow;
-                // Without this it still works but doesn't open the infowindow,
-                // it goes to it and drops the marker
-                map.panTo(clickedLocation.marker.getPosition());
-                // Without this, it doesn't work
-                clickedLocation.infowindow.open(map, clickedLocation.marker);
-            },
-
             codeAddress = function() {
                 var address;
                 var place;
                 this.checkReset();
                 var filmEncoded = encodeURIComponent(requestedFilm());
                 var geocoder = new google.maps.Geocoder();
-                loadFilmInfoBox(requestedFilm());
+                loadNYTData(requestedFilm());
 
                 function masterGeocoder(myGeocodeOptions, place) {
                     var contentString;
@@ -221,9 +220,9 @@ $(function() {
 
                             if (place) {
                                 contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
-                                                streetViewImage + '</a></div><div class="content-body"><p class="content-heading">' + place +
-                                                '</p><p>' + results[0].formatted_address + '</p>' +
-                                                '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
+                                    streetViewImage + '</a></div><div class="content-body"><p class="content-heading">' + place +
+                                    '</p><p>' + results[0].formatted_address + '</p>' +
+                                    '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
                                 marker = new google.maps.Marker({
                                     map: map,
                                     position: results[0].geometry.location,
@@ -233,11 +232,11 @@ $(function() {
 
                             } else {
                                 contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
-                                                streetViewImage + '</a></div><div class="content-body"><p>' +
-                                                results[0].formatted_address + '</p>' +
-                                                '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
+                                    streetViewImage + '</a></div><div class="content-body"><p>' +
+                                    results[0].formatted_address + '</p>' +
+                                    '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
 
-                                 marker = new google.maps.Marker({
+                                marker = new google.maps.Marker({
                                     map: map,
                                     position: results[0].geometry.location,
                                     title: myGeocodeOptions.address, // intended address
@@ -256,9 +255,7 @@ $(function() {
                                 }
 
                                 prev_infowindow = infowindow;
-
                                 map.panTo(marker.getPosition());
-
                                 infowindow.open(map, marker);
                             });
 
@@ -272,36 +269,36 @@ $(function() {
 
                 for (var i = 0; i < my.vm.scenes().length; i++) {
                     if (requestedFilm() == my.vm.scenes()[i].filmTitle()) {
-                            if (my.vm.scenes()[i].place()) {
-                                address = my.vm.scenes()[i].streetAddress();
-                                place = my.vm.scenes()[i].place();
-                            } else {
-                                address = my.vm.scenes()[i].fullAddress();
-                                place = undefined;
-                            }
-
-                            currentScenes.push(my.vm.scenes()[i]);
-
-                            var geocodeOptions = {
-                                address: address + ', San Francisco, CA',
-                                componentRestrictions: {
-                                    country: 'US'
-                                }
-                            };
-
-                            masterGeocoder(geocodeOptions, place);
-
-                            my.vm.currentTitle(my.vm.scenes()[i].filmTitle());
-                            my.vm.currentYear(my.vm.scenes()[i].year());
-                            my.vm.currentDirector(my.vm.scenes()[i].director());
-                            my.vm.currentWriter(my.vm.scenes()[i].writer());
-                            my.vm.currentActor1(my.vm.scenes()[i].actor1());
-                            my.vm.currentActor2(my.vm.scenes()[i].actor2());
-                            my.vm.currentActor3(my.vm.scenes()[i].actor3());
-                            my.vm.currentStudio(my.vm.scenes()[i].studio());
-                            my.vm.funFact(my.vm.scenes()[i].funFact());
+                        if (my.vm.scenes()[i].place()) {
+                            address = my.vm.scenes()[i].streetAddress();
+                            place = my.vm.scenes()[i].place();
+                        } else {
+                            address = my.vm.scenes()[i].fullAddress();
+                            place = undefined;
                         }
+
+                        currentScenes.push(my.vm.scenes()[i]);
+
+                        var geocodeOptions = {
+                            address: address + ', San Francisco, CA',
+                            componentRestrictions: {
+                                country: 'US'
+                            }
+                        };
+
+                        masterGeocoder(geocodeOptions, place);
+
+                        my.vm.currentTitle(my.vm.scenes()[i].filmTitle());
+                        my.vm.currentYear(my.vm.scenes()[i].year());
+                        my.vm.currentDirector(my.vm.scenes()[i].director());
+                        my.vm.currentWriter(my.vm.scenes()[i].writer());
+                        my.vm.currentActor1(my.vm.scenes()[i].actor1());
+                        my.vm.currentActor2(my.vm.scenes()[i].actor2());
+                        my.vm.currentActor3(my.vm.scenes()[i].actor3());
+                        my.vm.currentStudio(my.vm.scenes()[i].studio());
+                        my.vm.funFact(my.vm.scenes()[i].funFact());
                     }
+                }
 
 
                 theMovieDb.search.getMovie({ "query": filmEncoded },

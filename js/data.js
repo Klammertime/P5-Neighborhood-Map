@@ -4823,7 +4823,7 @@ my.filmData = (function (my) {
     "actor_3": "Cloris Leachman",
     "director": "Eric von Stroheim ",
     "distributor": "Metro-Goldwyn-Mayer (MGM)",
-    "film_location": "Bush St and Sutter St",
+    "film_location": "Bush St & Sutter St",
     "production_company": "Metro-Goldwyn-Mayer (MGM)",
     "release_year": "1924",
     "film_title": "Greed",
