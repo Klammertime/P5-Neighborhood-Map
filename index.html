@@ -74,16 +74,17 @@
                     <blockquote data-bind="visible: my.vm.nytCapsuleReview">
                         <p data-bind="text:my.vm.nytCapsuleReview"></p>
                         <footer>
-
-                            <span data-bind="visible: my.vm.nytByline, text: my.vm.nytByline"></span> in <cite title="Source Title"><a target="_blank" data-bind="visible: my.vm.nytReviewURL, attr: { href: my.vm.nytReviewURL }">The New York Times</a></cite>
+                            <span data-bind="visible: my.vm.nytByline, text: my.vm.nytByline"></span> in
+                            <cite title="Source Title"><a target="_blank" data-bind="visible: my.vm.nytReviewURL, attr: { href: my.vm.nytReviewURL }">The New York Times</a></cite>
                         </footer>
                     </blockquote>
-                    <div>
-                        <p data-bind="visible: my.vm.nytHeadline, text: my.vm.nytHeadline"></p>
-                        <p data-bind="visible: my.vm.nytByline, text: my.vm.nytByline"></p>
-                        <p data-bind="visible: my.vm.nytReviewURL, text: my.vm.nytReviewURL"></p>
-                    </div>
-
+                    <blockquote data-bind="visible: my.vm.nytHeadline">
+                        <p data-bind="text:my.vm.nytHeadline"></p>
+                        <footer>
+                            <span data-bind="visible: my.vm.nytByline, text: my.vm.nytByline"></span> in
+                            <cite title="Source Title"><a target="_blank" data-bind="visible: my.vm.nytReviewURL, attr: { href: my.vm.nytReviewURL }">The New York Times</a></cite>
+                        </footer>
+                    </blockquote>
                     <p data-bind="visible: my.vm.overview, text: my.vm.overview"></p>
                 </ul>
                 <div>

@@ -171,14 +171,12 @@ $(function() {
                     chosenFilm + "'&api-key=" + nytKey;
                 my.vm.nytCapsuleReview(undefined);
                 my.vm.nytTitle(undefined);
-
-                function fasterReviewUrl(fullUrl){
+                //movies.nytimes.com was not loading, copying their url structure instead
+                function fasterReviewUrl(fullUrl) {
                     var urlString = fullUrl;
                     var myRegexp = /\.(.*)$/; // get everything after first period
                     var match = myRegexp.exec(urlString);
-                    console.log("match", match);
                     var urlResult = 'http://www.' + match[1]; //it works just not while on local server
-                    console.log("urlResult", urlResult);
                     return urlResult;
                 }
 
@@ -192,12 +190,18 @@ $(function() {
                     success: function(data) {
                         console.log("data from NYTimes", data);
                         if ((data.results[0].display_title).toLowerCase().trim() == chosenFilm.toLowerCase().trim() | 'the ' + (data.results[0].display_title).toLowerCase().trim() == chosenFilm.toLowerCase().trim()) {
+                            my.vm.nytReviewURL(fasterReviewUrl(data.results[0].link.url));
                             my.vm.nytByline(data.results[0].byline); // byline also wrote capsule_review
                             // don't use summary_short, its always empty
-                            my.vm.nytCapsuleReview(data.results[0].capsule_review);
-                            my.vm.nytHeadline(data.results[0].headline);
-                            my.vm.nytReviewURL(fasterReviewUrl(data.results[0].link.url));
-                            my.vm.nytTitle(data.results[0].display_title);
+                            if (data.results[0].capsule_review) {
+                                my.vm.nytCapsuleReview(data.results[0].capsule_review);
+                            } else if (data.results[0].headline) {
+                                my.vm.nytHeadline(data.results[0].headline);
+                            }
+
+                            // Don't think you need this
+                            // my.vm.nytTitle(data.results[0].display_title);
+
                         }
                     },
                     fail: function(jqxhr, textStatus, error) {
