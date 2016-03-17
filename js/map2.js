@@ -5,6 +5,7 @@ $(function() {
     var infowindow;
     var prev_infowindow = false;
 
+
     function googleSuccess() {
         var myLatLng = new google.maps.LatLng(37.77493, -122.419416);
         var mapOptions = {
@@ -60,6 +61,7 @@ $(function() {
         });
     }
 
+
     // Location construction
     var SceneFilmModel = Base.extend({
         constructor: function(director, studio, fullAddress, place, streetAddress, year, filmTitle, writer, favorite, actor1, actor2, actor3, funFact) {
@@ -93,6 +95,7 @@ $(function() {
         var trailerVideo = ko.observable();
         var trailerURL = ko.observable();
         var overview = ko.observable();
+        var tagline = ko.observable();
         var trailerHTML = ko.observable();
         var currentTitle = ko.observable();
         var currentYear = ko.observable();
@@ -108,6 +111,7 @@ $(function() {
         var nytByline = ko.observable();
         var nytReviewURL = ko.observable();
         var nytTitle = ko.observable();
+        var optionValue = ko.observable();
 
         // not using right now
         var films = ko.observableArray([]);
@@ -198,10 +202,9 @@ $(function() {
                                 my.vm.nytCapsuleReview(data.results[0].capsule_review);
                             } else if (data.results[0].headline) {
                                 my.vm.nytHeadline(data.results[0].headline);
+                            } else {
+                                my.vm.nytTitle(data.results[0].display_title);
                             }
-
-                            // Don't think you need this
-                            // my.vm.nytTitle(data.results[0].display_title);
 
                         }
                     },
@@ -211,10 +214,15 @@ $(function() {
                 });
             },
             loadMovieDbData = function(encodedFilm) {
+
+                // TODO: set one up for TV, example: 'Looking' is a tv show about gay men but this is turning
+                // up this: Dreams, memories and hallucinations unleash a past that Cecilia had left behind.
+                // Def. not the same.
                 theMovieDb.search.getMovie({ "query": encodedFilm },
                     (function(data) {
                         dbStore = JSON.parse(data);
                         my.vm.movieDbData(dbStore);
+                        console.log("dbStore", dbStore);
                         var posterPath = my.vm.movieDbData().results[0].poster_path;
                         var posterHTML = '<img class="poster img-responsive" src="https://image.tmdb.org/t/p/w370/' + posterPath + '" >';
                         var overview = my.vm.movieDbData().results[0].overview;
@@ -235,6 +243,18 @@ $(function() {
                             (function() {
                                 console.log("you fail!");
                             }));
+                        theMovieDb.movies.getById({ "id": filmID },
+                            (function(data) {
+                                var movieInfo = JSON.parse(data);
+                                var tagline = movieInfo.tagline;
+                                my.vm.tagline(tagline);
+                                console.log("tagline", tagline);
+                            }),
+                            (function() {
+                                console.log("you fail!");
+                            }));
+
+
 
                         my.vm.posterImage(posterHTML);
                         my.vm.overview(overview);
@@ -379,7 +399,8 @@ $(function() {
             nytByline: nytByline,
             nytReviewURL: nytReviewURL,
             nytTitle: nytTitle,
-            funFact: funFact
+            funFact: funFact,
+            tagline: tagline
         };
     }();
 
