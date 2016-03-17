@@ -268,13 +268,39 @@ input {
 }
 
 
- .ui-button { margin-left: -1px; }
-.ui-button-icon-only .ui-button-text { padding: 0.35em; }
-.ui-autocomplete-input { margin: 0; padding: 0.48em 0 0.47em 0.45em; width: 140px; }
-ul.ui-widget {font-size: 0.7em;}
-input.ui-widget {font-size: 0.7em;}
-button.ui-widget {font-size: 0.7em;}
-.ui-menu { max-height: 200px; overflow-y: auto;}.pulse {
+/* trying this: http://codepen.io/pixxelia/pen/NxpQRP */;
+.pin {
+  width: 30px;
+  height: 30px;
+  -webkit-border-radius: 50% 50% 50% 0;
+  border-radius: 50% 50% 50% 0;
+  background: green;
+  position: absolute;
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  left: 50%;
+  top: 50%;
+  margin: -20px 0 0 -20px;
+  -webkit-animation-name: bounce;
+  -moz-animation-name: bounce;
+  -o-animation-name: bounce;
+  -ms-animation-name: bounce;
+  animation-name: bounce;
+  -webkit-animation-fill-mode: both;
+  -moz-animation-fill-mode: both;
+  -o-animation-fill-mode: both;
+  -ms-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation-duration: 1s;
+  -moz-animation-duration: 1s;
+  -o-animation-duration: 1s;
+  -ms-animation-duration: 1s;
+  animation-duration: 1s;
+}
+.pulse {
   background: rgba(0,0,0,0.2);
   -webkit-border-radius: 50%;
   border-radius: 50%;

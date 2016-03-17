@@ -5,13 +5,22 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <title>Maps</title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="jquery-ui/jquery-ui.css">
     <link rel="stylesheet" href="css/style.css">
-    <link href='https://fonts.googleapis.com/css?family=Raleway:600,700,300,400' rel='stylesheet' type='text/css'>
-    <!--  <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700"> -->
+    <script src="https://use.typekit.net/ghz2fyp.js"></script>
+    <script>
+    try {
+        Typekit.load({
+            async: true
+        });
+    } catch (e) {}
+    </script>
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <script src="js/base.js"></script>
-    <!-- change to minified for production -->
     <script src="js/knockout-3.4.0.js"></script>
+    <script src="jquery-ui/jquery-ui.js"></script>
+    <script src="js/richmarker.js"></script>
+    <!-- change to minified for production -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <script src="js/themoviedb.js"></script>
     <script src="js/data.js"></script>
@@ -27,7 +36,7 @@
                     <div class="logo">
                         <h2 class="logo-font">SF Film Locations</h2></div>
                     <div class="panel-body">
-                        <input id="filmList" data-bind="value: my.vm.requestedFilm" list="filmSceneList" type="text" class="form-control" placeholder="Search for a film..." />
+                        <input id="filmList" data-bind="value: my.vm.requestedFilm, valueUpdate: ['blur']" list="filmSceneList" type="text" class="form-control" placeholder="Search for a film..." />
                         <datalist id="filmSceneList" data-bind="foreach: my.vm.uniqueTitles">
                             <option data-bind="value: $data"></option>
                         </datalist>
@@ -54,6 +63,7 @@
         </div>
         <div class="col-md-4 col-lg-4 col-sm-4">
             <div data-bind="visible: my.vm.requestedFilm" class="panel panel-default filmInfoBox">
+                <h3 data-bind="visible: my.vm.requestedFilm, text: my.vm.currentTitle"></h3>
                 <ul class="media-list">
                     <li class="media">
                         <div class="media-left">
@@ -62,7 +72,7 @@
                             </a>
                         </div>
                         <div class="media-body">
-                            <h4 class="media-heading" data-bind="visible: my.vm.requestedFilm, text: my.vm.currentTitle"></h4>
+                            <h5 class="media-heading" data-bind="visible: my.vm.tagline, text: my.vm.tagline"></h5>
                             <p><span class="itemHeader">Year: </span><span data-bind="text: my.vm.currentYear"></span></p>
                             <p><span class="itemHeader">Production Company: </span><span data-bind="text: my.vm.currentStudio"></span></p>
                             <p><span class="itemHeader">Director: </span><span data-bind="text: my.vm.currentDirector"></span></p>
@@ -80,6 +90,13 @@
                     </blockquote>
                     <blockquote data-bind="visible: my.vm.nytHeadline">
                         <p data-bind="text:my.vm.nytHeadline"></p>
+                        <footer>
+                            <span data-bind="visible: my.vm.nytByline, text: my.vm.nytByline"></span> in
+                            <cite title="Source Title"><a target="_blank" data-bind="visible: my.vm.nytReviewURL, attr: { href: my.vm.nytReviewURL }">The New York Times</a></cite>
+                        </footer>
+                    </blockquote>
+                    <blockquote data-bind="visible: my.vm.nytTitle">
+                        <p data-bind="text:my.vm.nytTitle"></p>
                         <footer>
                             <span data-bind="visible: my.vm.nytByline, text: my.vm.nytByline"></span> in
                             <cite title="Source Title"><a target="_blank" data-bind="visible: my.vm.nytReviewURL, attr: { href: my.vm.nytReviewURL }">The New York Times</a></cite>

@@ -287,6 +287,14 @@ $(function() {
                                 animation: google.maps.Animation.DROP
                             });
 
+
+                            // marker = new RichMarker({
+                            //     map: map,
+                            //     position: results[0].geometry.location,
+                            //     title: myGeocodeOptions.address, // intended address
+                            //     content: '<div class="pin"></div><div class="pulse"></div>'
+                            // });
+
                         } else {
                             contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
                                 streetViewImage + '</a></div><div class="content-body"><p>' +
@@ -299,6 +307,15 @@ $(function() {
                                 title: myGeocodeOptions.address, // intended address
                                 animation: google.maps.Animation.DROP
                             });
+
+                            // Trying richmarker http://jsfiddle.net/onxkqcwq/
+
+                            // marker = new RichMarker({
+                            //     map: map,
+                            //     position: results[0].geometry.location,
+                            //     title: myGeocodeOptions.address, // intended address
+                            //     content: '<div class="pin"></div><div class="pulse"></div>'
+                            // });
                         }
 
                         var infowindow = new google.maps.InfoWindow({
