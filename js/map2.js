@@ -171,6 +171,7 @@ $(function() {
                     chosenFilm + "'&api-key=" + nytKey;
                 my.vm.nytCapsuleReview(undefined);
                 my.vm.nytTitle(undefined);
+                my.vm.nytHeadline(undefined);
                 //movies.nytimes.com was not loading, copying their url structure instead
                 function fasterReviewUrl(fullUrl) {
                     var urlString = fullUrl;
