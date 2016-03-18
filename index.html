@@ -13,7 +13,7 @@
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <script src="js/themoviedb.js"></script>
     <script src="js/data.js"></script>
-    <script src="js/map2.js"></script>
+    <script src="js/app.js"></script>
     <script src="https://use.typekit.net/ghz2fyp.js"></script>
     <script>
     try {
@@ -115,13 +115,13 @@
         </blockquote>
     </div>
     <!-- nyt template end -->
-    <!-- overview template, shows overview from omdb API -->
+    <!-- overview template, shows overview from TMDb API -->
     <div id="overviewTemplate" style="display: none">
         <h4 class="itemHeader uppercase" data-bind="visible: overview">Overview</h4>
         <p class="overview" data-bind="visible: overview, text: overview"></p>
     </div>
     <!-- overview template end -->
-    <!-- trailer template, shows trailer from omdb API -->
+    <!-- trailer template, shows trailer from TMDb API -->
     <div id="trailerTemplate" style="display: none">
         <div>
             <span data-bind="visible: trailerVideo, html: trailerHTML"></span>

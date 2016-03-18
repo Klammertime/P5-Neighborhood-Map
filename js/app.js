@@ -213,13 +213,12 @@ $(function() {
                 });
             },
             loadMovieDbData = function(encodedFilm) {
+                console.log("encodedFilm", encodedFilm);
 
-                // TODO: set one up for TV, example: 'Looking' is a tv show about gay men but this is turning
-                // up this: Dreams, memories and hallucinations unleash a past that Cecilia had left behind.
-                // Def. not the same. THe Bridge is tv too.
                 theMovieDb.search.getMovie({ "query": encodedFilm },
                     (function(data) {
                         var dbStore = JSON.parse(data);
+                        console.log("dbStore", dbStore);
                         movieDbData(dbStore);
                         //'this' is window
                         var posterPath = movieDbData().results[0].poster_path;
@@ -240,24 +239,24 @@ $(function() {
                                 }
                             }),
                             (function() {
-                                console.log("you fail!");
+                                console.log("you fail!"); //TODO: find the proper error
                             }));
                         theMovieDb.movies.getById({ "id": filmID },
                             (function(data) {
                                 var movieInfo = JSON.parse(data);
                                 var tagline = movieInfo.tagline;
                                 my.vm.tagline(tagline);
-                                console.log("self", self);
+                                console.log("self", self); // self is window here! odd
                             }),
                             (function() {
-                                console.log("you fail!");
+                                console.log("you fail!"); //TODO: find the proper error
                             }));
                         // 'this' in this context is the window
                         my.vm.posterImage(posterHTML);
                         my.vm.overview(overview);
                     }),
                     (function() {
-                        console.log("you fail!");
+                        console.log("you fail!"); //TODO: find the proper error
                     }));
             },
 
