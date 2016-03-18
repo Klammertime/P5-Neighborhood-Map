@@ -5,8 +5,15 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <title>Maps</title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="jquery-ui/jquery-ui.css">
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <script src="js/base.js"></script>
+    <script src="js/knockout-3.4.0.js"></script>
+    <!-- change to minified for production -->
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/themoviedb.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/map2.js"></script>
     <script src="https://use.typekit.net/ghz2fyp.js"></script>
     <script>
     try {
@@ -15,35 +22,25 @@
         });
     } catch (e) {}
     </script>
-    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
-    <script src="js/base.js"></script>
-    <script src="js/knockout-3.4.0.js"></script>
-    <script src="jquery-ui/jquery-ui.js"></script>
-    <script src="js/richmarker.js"></script>
-    <!-- change to minified for production -->
-    <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src="js/themoviedb.js"></script>
-    <script src="js/data.js"></script>
-    <script src="js/map2.js"></script>
 </head>
 
 <body>
     <div class="row">
-        <div class="col-md-3 col-lg-3 col-sm-4">
+        <div class="col-md-3 col-lg-3 col-sm-4" data-bind="with: my.vm">
             <div class="widget-pane-content-holder">
                 <div class="panel panel-default searchbar">
                     <img class="sf" src="img/sfLogo8.svg">
                     <div class="logo">
                         <h2 class="logo-font">SF Film Locations</h2></div>
                     <div class="panel-body">
-                        <input id="filmList" data-bind="value: my.vm.requestedFilm, valueUpdate: ['blur']" list="filmSceneList" type="text" class="form-control" placeholder="Search for a film..." />
-                        <datalist id="filmSceneList" data-bind="foreach: my.vm.uniqueTitles">
+                        <input id="filmList" data-bind="value: requestedFilm, valueUpdate: ['blur']" list="filmSceneList" type="text" class="form-control" placeholder="Search for a film..." />
+                        <datalist id="filmSceneList" data-bind="foreach: uniqueTitles">
                             <option data-bind="value: $data"></option>
                         </datalist>
                         <button class="btn btn-info pull-right" type="button" data-bind="click: codeAddress">Go!</button>
                     </div>
                     <table class="table">
-                        <tbody data-bind="foreach: my.vm.markers">
+                        <tbody data-bind="foreach: markers">
                             <tr>
                                 <td>
                                     <a class="icon"><span class="glyphicon glyphicon-map-marker" aria-hidden="true" data-bind="click: $parent.panToMarker"></span></a>
@@ -61,51 +58,34 @@
             and the absolute positioning -->
         <div class="col-md-6 col-lg-5 col-sm-4">
         </div>
-        <div class="col-md-4 col-lg-4 col-sm-4">
-            <div data-bind="visible: my.vm.requestedFilm" class="panel panel-default filmInfoBox">
-                <h3 data-bind="visible: my.vm.requestedFilm, text: my.vm.currentTitle"></h3>
+        <div class="col-md-4 col-lg-4 col-sm-4" data-bind="with: my.vm">
+            <div class="panel panel-default filmInfoBox" data-bind="visible: currentTitle">
+                <h3 data-bind="visible: currentTitle, text: currentTitle"></h3>
                 <ul class="media-list">
                     <li class="media">
                         <div class="media-left">
                             <a href="#">
-                                <span data-bind="html: my.vm.posterImage" class="thumbnail media-object"></span>
+                                <span data-bind="visible: posterImage, html: posterImage" class="thumbnail media-object"></span>
                             </a>
                         </div>
                         <div class="media-body">
-                            <h5 class="media-heading" data-bind="visible: my.vm.tagline, text: my.vm.tagline"></h5>
-                            <p><span class="itemHeader">Year: </span><span data-bind="text: my.vm.currentYear"></span></p>
-                            <p><span class="itemHeader">Production Company: </span><span data-bind="text: my.vm.currentStudio"></span></p>
-                            <p><span class="itemHeader">Director: </span><span data-bind="text: my.vm.currentDirector"></span></p>
-                            <p><span class="itemHeader">Writer: </span><span data-bind="text: my.vm.currentWriter"></span></p>
-                            <p><span data-bind="visible: my.vm.currentActor1" class="itemHeader">Actors: </span>
-                                <span data-bind="visible: my.vm.currentActor1, text: my.vm.currentActor1"></span><span data-bind="visible: my.vm.currentActor2">, </span><span data-bind="visible: my.vm.currentActor2, text: my.vm.currentActor2"></span><span data-bind="visible: my.vm.currentActor3">, </span><span data-bind="visible: my.vm.currentActor3, text: my.vm.currentActor3"></span>
+                            <h5 class="media-heading" data-bind="visible: tagline, text: tagline"></h5>
+                            <p><span class="itemHeader">Year: </span><span data-bind="visible: currentYear, text: currentYear"></span></p>
+                            <p><span class="itemHeader">Production Company: </span><span data-bind="visible: currentStudio, text: currentStudio"></span></p>
+                            <p><span class="itemHeader">Director: </span><span data-bind="visible: currentDirector, text: currentDirector"></span></p>
+                            <p><span class="itemHeader">Writer: </span><span data-bind="visible: currentWriter, text: currentWriter"></span></p>
+                            <p><span data-bind="visible: currentActor1" class="itemHeader">Actors: </span>
+                                <span data-bind="visible: currentActor1, text: currentActor1"></span><span data-bind="visible: currentActor2">, </span><span data-bind="visible: currentActor2, text: currentActor2"></span><span data-bind="visible: currentActor3">, </span><span data-bind="visible: currentActor3, text: currentActor3"></span>
                             </p>
                     </li>
-                    <blockquote data-bind="visible: my.vm.nytCapsuleReview">
-                        <p data-bind="text:my.vm.nytCapsuleReview"></p>
-                        <footer>
-                            <span data-bind="visible: my.vm.nytByline, text: my.vm.nytByline"></span> in
-                            <cite title="Source Title"><a target="_blank" data-bind="visible: my.vm.nytReviewURL, attr: { href: my.vm.nytReviewURL }">The New York Times</a></cite>
-                        </footer>
-                    </blockquote>
-                    <blockquote data-bind="visible: my.vm.nytHeadline">
-                        <p data-bind="text:my.vm.nytHeadline"></p>
-                        <footer>
-                            <span data-bind="visible: my.vm.nytByline, text: my.vm.nytByline"></span> in
-                            <cite title="Source Title"><a target="_blank" data-bind="visible: my.vm.nytReviewURL, attr: { href: my.vm.nytReviewURL }">The New York Times</a></cite>
-                        </footer>
-                    </blockquote>
-                    <blockquote data-bind="visible: my.vm.nytTitle">
-                        <p data-bind="text:my.vm.nytTitle"></p>
-                        <footer>
-                            <span data-bind="visible: my.vm.nytByline, text: my.vm.nytByline"></span> in
-                            <cite title="Source Title"><a target="_blank" data-bind="visible: my.vm.nytReviewURL, attr: { href: my.vm.nytReviewURL }">The New York Times</a></cite>
-                        </footer>
-                    </blockquote>
-                    <p data-bind="visible: my.vm.overview, text: my.vm.overview"></p>
+                    <div data-bind="template: {name: 'nytTemplate'}"></div>
+
+
+                    <h4 class="itemHeader uppercase" data-bind="visible: overview">Overview</h4>
+                    <p class="overview" data-bind="visible: overview, text: overview"></p>
                 </ul>
                 <div>
-                    <span data-bind="visible: my.vm.trailerVideo, html: my.vm.trailerHTML"></span>
+                    <span data-bind="visible: trailerVideo, html: trailerHTML"></span>
                 </div>
                 </div>
             </div>
@@ -113,6 +93,17 @@
         <div class="col-md-1 col-lg-1 col-sm-1"> </div>
         <div id="googleMap" class="map-canvas"></div>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiFWUDeNqeIgmx7njjzjJAVWwC2t9hNP0&libraries=places&callback=my.vm.googleInit" async defer></script>
+        <div id="nytTemplate" style="display: none">
+            <blockquote data-bind="visible: nytByline">
+                <p data-bind="visible: nytCapsuleReview, text: nytCapsuleReview"></p>
+                <p data-bind="visible: nytSummary, text: nytSummary"></p>
+                <p data-bind="visible: nytHeadline, text: nytHeadline"></p>
+                <footer>
+                    <span data-bind="visible: nytByline, text: nytByline"></span> in
+                    <cite title="Source Title"><a target="_blank" data-bind="visible: nytReviewURL, attr: { href: nytReviewURL }">The New York Times</a></cite>
+                </footer>
+            </blockquote>
+        </div>
 </body>
 
 </html>

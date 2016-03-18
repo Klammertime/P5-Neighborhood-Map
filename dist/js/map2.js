@@ -1,5 +1,5 @@
 $(function() {
-    var googleMap;
+    'use strict';
     var geocoder;
     var map;
     var infowindow;
@@ -7,6 +7,7 @@ $(function() {
 
 
     function googleSuccess() {
+        var center;
         var myLatLng = new google.maps.LatLng(37.77493, -122.419416);
         var mapOptions = {
             center: myLatLng,
@@ -61,7 +62,6 @@ $(function() {
         });
     }
 
-
     // Location construction
     var SceneFilmModel = Base.extend({
         constructor: function(director, studio, fullAddress, place, streetAddress, year, filmTitle, writer, favorite, actor1, actor2, actor3, funFact) {
@@ -89,8 +89,7 @@ $(function() {
         var allTitles = ko.observableArray([]);
         var requestedFilm = ko.observable();
         var markers = ko.observableArray([]);
-        var filmInfoBox = ko.observableArray([]);
-        var movieDbData = ko.observableArray([]); //TODO: rename to something meaningful
+        var movieDbData = ko.observableArray([]);
         var posterImage = ko.observable();
         var trailerVideo = ko.observable();
         var trailerURL = ko.observable();
@@ -105,16 +104,11 @@ $(function() {
         var currentActor2 = ko.observable();
         var currentActor3 = ko.observable();
         var currentStudio = ko.observable();
-        var funFact = ko.observable();
         var nytCapsuleReview = ko.observable();
         var nytHeadline = ko.observable();
         var nytByline = ko.observable();
         var nytReviewURL = ko.observable();
-        var nytTitle = ko.observable();
-        var optionValue = ko.observable();
-
-        // not using right now
-        var films = ko.observableArray([]);
+        var nytSummary = ko.observable();
 
         var loadSceneFM = function() {
                 function escapeRegExp(string) {
@@ -173,9 +167,13 @@ $(function() {
                 var nytKey = '70f203863d9c8555f9b345f32ec442e8:10:59953537';
                 var nyTimesMovieAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
                     chosenFilm + "'&api-key=" + nytKey;
-                my.vm.nytCapsuleReview(undefined);
-                my.vm.nytTitle(undefined);
-                my.vm.nytHeadline(undefined);
+                    //'this' is the window
+
+                nytCapsuleReview(undefined);
+                nytSummary(undefined);
+                nytReviewURL(undefined);
+                nytByline(undefined);
+                nytHeadline(undefined);
                 //movies.nytimes.com was not loading, copying their url structure instead
                 function fasterReviewUrl(fullUrl) {
                     var urlString = fullUrl;
@@ -194,16 +192,17 @@ $(function() {
                     complete: function() {},
                     success: function(data) {
                         console.log("data from NYTimes", data);
-                        if ((data.results[0].display_title).toLowerCase().trim() == chosenFilm.toLowerCase().trim() | 'the ' + (data.results[0].display_title).toLowerCase().trim() == chosenFilm.toLowerCase().trim()) {
-                            my.vm.nytReviewURL(fasterReviewUrl(data.results[0].link.url));
-                            my.vm.nytByline(data.results[0].byline); // byline also wrote capsule_review
-                            // don't use summary_short, its always empty
+                        if ((data.results[0].display_title).toLowerCase().trim() == chosenFilm.toLowerCase().trim() || ('the ' + (data.results[0].display_title).toLowerCase().trim()) == chosenFilm.toLowerCase().trim()) {
+                            nytReviewURL(fasterReviewUrl(data.results[0].link.url));
+                            nytByline(data.results[0].byline); // byline also wrote capsule_review
                             if (data.results[0].capsule_review) {
-                                my.vm.nytCapsuleReview(data.results[0].capsule_review);
+                                // capsule_review is for the movies they don't write a full review for
+                                nytCapsuleReview(data.results[0].capsule_review);
+                            } else if (data.results[0].summary_short) {
+                                // headline goes with summary_short
+                                nytSummary(data.results[0].summary_short);
                             } else if (data.results[0].headline) {
-                                my.vm.nytHeadline(data.results[0].headline);
-                            } else {
-                                my.vm.nytTitle(data.results[0].display_title);
+                                nytSummary(data.results[0].headline);
                             }
 
                         }
@@ -217,27 +216,27 @@ $(function() {
 
                 // TODO: set one up for TV, example: 'Looking' is a tv show about gay men but this is turning
                 // up this: Dreams, memories and hallucinations unleash a past that Cecilia had left behind.
-                // Def. not the same.
+                // Def. not the same. THe Bridge is tv too.
                 theMovieDb.search.getMovie({ "query": encodedFilm },
                     (function(data) {
-                        dbStore = JSON.parse(data);
-                        my.vm.movieDbData(dbStore);
-                        console.log("dbStore", dbStore);
-                        var posterPath = my.vm.movieDbData().results[0].poster_path;
+                        var dbStore = JSON.parse(data);
+                        movieDbData(dbStore);
+                        //'this' is window
+                        var posterPath = movieDbData().results[0].poster_path;
                         var posterHTML = '<img class="poster img-responsive" src="https://image.tmdb.org/t/p/w370/' + posterPath + '" >';
-                        var overview = my.vm.movieDbData().results[0].overview;
-                        var filmID = my.vm.movieDbData().results[0].id;
+                        var overview = movieDbData().results[0].overview;
+                        var filmID = movieDbData().results[0].id;
 
                         theMovieDb.movies.getTrailers({ "id": filmID },
                             (function(data) {
                                 var theTrailer = JSON.parse(data);
                                 my.vm.trailerVideo(theTrailer);
-                                if (my.vm.trailerVideo().youtube.length === 0) {
-                                    my.vm.trailerVideo(undefined);
+                                if (trailerVideo().youtube.length === 0) {
+                                    trailerVideo(undefined);
                                 } else {
                                     var trailerIframe = '<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" width="1280" height="720" src="https://www.youtube.com/embed/' +
-                                        my.vm.trailerVideo().youtube[0].source + '?rel=0&amp;showinfo=0" allowfullscreen></iframe></div>';
-                                    my.vm.trailerHTML(trailerIframe);
+                                        trailerVideo().youtube[0].source + '?rel=0&amp;showinfo=0" allowfullscreen></iframe></div>';
+                                    trailerHTML(trailerIframe);
                                 }
                             }),
                             (function() {
@@ -248,14 +247,12 @@ $(function() {
                                 var movieInfo = JSON.parse(data);
                                 var tagline = movieInfo.tagline;
                                 my.vm.tagline(tagline);
-                                console.log("tagline", tagline);
+                                console.log("self", self);
                             }),
                             (function() {
                                 console.log("you fail!");
                             }));
-
-
-
+                        // 'this' in this context is the window
                         my.vm.posterImage(posterHTML);
                         my.vm.overview(overview);
                     }),
@@ -287,14 +284,6 @@ $(function() {
                                 animation: google.maps.Animation.DROP
                             });
 
-
-                            // marker = new RichMarker({
-                            //     map: map,
-                            //     position: results[0].geometry.location,
-                            //     title: myGeocodeOptions.address, // intended address
-                            //     content: '<div class="pin"></div><div class="pulse"></div>'
-                            // });
-
                         } else {
                             contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
                                 streetViewImage + '</a></div><div class="content-body"><p>' +
@@ -307,15 +296,6 @@ $(function() {
                                 title: myGeocodeOptions.address, // intended address
                                 animation: google.maps.Animation.DROP
                             });
-
-                            // Trying richmarker http://jsfiddle.net/onxkqcwq/
-
-                            // marker = new RichMarker({
-                            //     map: map,
-                            //     position: results[0].geometry.location,
-                            //     title: myGeocodeOptions.address, // intended address
-                            //     content: '<div class="pin"></div><div class="pulse"></div>'
-                            // });
                         }
 
                         var infowindow = new google.maps.InfoWindow({
@@ -343,23 +323,27 @@ $(function() {
             codeAddress = function() {
                 var address;
                 var place;
+                var matchedScene;
+                var matchedTitle;
                 this.checkReset();
-                var filmEncoded = encodeURIComponent(requestedFilm());
-                var geocoder = new google.maps.Geocoder();
-                loadNYTData(requestedFilm());
-                loadMovieDbData(filmEncoded);
+
                 //TODO change to foreach
-                for (var i = 0; i < my.vm.scenes().length; i++) {
-                    if (requestedFilm() == my.vm.scenes()[i].filmTitle()) {
-                        if (my.vm.scenes()[i].place()) {
-                            address = my.vm.scenes()[i].streetAddress();
-                            place = my.vm.scenes()[i].place();
+                for (var i = 0; i < this.scenes().length; i++) {
+                    if (requestedFilm().toLowerCase().trim() === this.scenes()[i].filmTitle().toLowerCase().trim()) {
+                        matchedScene = this.scenes()[i];
+                        matchedTitle = this.scenes()[i].filmTitle();
+                        var geocoder = new google.maps.Geocoder();
+
+                        if (this.scenes()[i].place()) {
+
+                            address = this.scenes()[i].streetAddress();
+                            place = this.scenes()[i].place();
                         } else {
-                            address = my.vm.scenes()[i].fullAddress();
+                            address = this.scenes()[i].fullAddress();
                             place = undefined;
                         }
 
-                        currentScenes.push(my.vm.scenes()[i]);
+                        currentScenes.push(this.scenes()[i]);
 
                         var geocodeOptions = {
                             address: address + ', San Francisco, CA',
@@ -367,20 +351,21 @@ $(function() {
                                 country: 'US'
                             }
                         };
-
                         masterGeocoder(geocodeOptions, place, geocoder);
-
-                        my.vm.currentTitle(my.vm.scenes()[i].filmTitle());
-                        my.vm.currentYear(my.vm.scenes()[i].year());
-                        my.vm.currentDirector(my.vm.scenes()[i].director());
-                        my.vm.currentWriter(my.vm.scenes()[i].writer());
-                        my.vm.currentActor1(my.vm.scenes()[i].actor1());
-                        my.vm.currentActor2(my.vm.scenes()[i].actor2());
-                        my.vm.currentActor3(my.vm.scenes()[i].actor3());
-                        my.vm.currentStudio(my.vm.scenes()[i].studio());
-                        my.vm.funFact(my.vm.scenes()[i].funFact());
                     } // end of master if statement
                 }
+                this.currentTitle(matchedTitle);
+                this.currentYear(matchedScene.year());
+                this.currentDirector(matchedScene.director());
+                this.currentWriter(matchedScene.writer());
+                this.currentActor1(matchedScene.actor1());
+                this.currentActor2(matchedScene.actor2());
+                this.currentActor3(matchedScene.actor3());
+                this.currentStudio(matchedScene.studio());
+                loadNYTData(matchedTitle);
+                loadMovieDbData(encodeURIComponent(matchedTitle));
+                //Todo: do an alert for the wrong film
+                // <div class="alert alert-danger" role="alert">...</div>
             };
 
 
@@ -393,9 +378,7 @@ $(function() {
             codeAddress: codeAddress,
             currentScenes: currentScenes,
             markers: markers,
-            checkReset: checkReset,
             panToMarker: panToMarker,
-            filmInfoBox: filmInfoBox,
             movieDbData: movieDbData,
             posterImage: posterImage,
             trailerVideo: trailerVideo,
@@ -410,14 +393,13 @@ $(function() {
             currentActor2: currentActor2,
             currentActor3: currentActor3,
             currentStudio: currentStudio,
-            films: films,
             nytCapsuleReview: nytCapsuleReview,
-            nytHeadline: nytHeadline,
             nytByline: nytByline,
             nytReviewURL: nytReviewURL,
-            nytTitle: nytTitle,
-            funFact: funFact,
-            tagline: tagline
+            tagline: tagline,
+            checkReset: checkReset,
+            nytSummary: nytSummary,
+            nytHeadline: nytHeadline
         };
     }();
 

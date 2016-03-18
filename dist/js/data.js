@@ -10494,7 +10494,7 @@ my.filmData = (function (my) {
     "film_location": "16th & Utah",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10505,7 +10505,7 @@ my.filmData = (function (my) {
     "film_location": "Van Ness Ave between Fell and Lombard",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10516,7 +10516,7 @@ my.filmData = (function (my) {
     "film_location": "California St between Leavensworth & Powell St",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10527,7 +10527,7 @@ my.filmData = (function (my) {
     "film_location": "Mission St & 1st & 2nd",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10538,7 +10538,7 @@ my.filmData = (function (my) {
     "film_location": "Market St & Mason",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10549,7 +10549,7 @@ my.filmData = (function (my) {
     "film_location": "California St & Larkin",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10560,7 +10560,7 @@ my.filmData = (function (my) {
     "film_location": "Califorinia & Jones",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10571,7 +10571,7 @@ my.filmData = (function (my) {
     "film_location": "Pine & Leavensworth",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10582,7 +10582,7 @@ my.filmData = (function (my) {
     "film_location": "Howard St from Embarcadero to 11 St",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10593,7 +10593,7 @@ my.filmData = (function (my) {
     "film_location": "Construction Site in front of 260 Stockton St & Post St",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10604,7 +10604,7 @@ my.filmData = (function (my) {
     "film_location": "California St between Drumm St & Kearny St",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10615,7 +10615,7 @@ my.filmData = (function (my) {
     "film_location": "Market St & Embarcadero area",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10626,7 +10626,7 @@ my.filmData = (function (my) {
     "film_location": "Pine St between Market St & Kearny St",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10637,7 +10637,7 @@ my.filmData = (function (my) {
     "film_location": "Front St between Market St & Clay St",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10648,7 +10648,7 @@ my.filmData = (function (my) {
     "film_location": "Union Square",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10659,7 +10659,7 @@ my.filmData = (function (my) {
     "film_location": "San Francisco - Oakland Bay Bridge",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10670,7 +10670,7 @@ my.filmData = (function (my) {
     "film_location": "Mission St, Embarcadero, & Front between Clay St & Market",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10681,7 +10681,7 @@ my.filmData = (function (my) {
     "film_location": "SFMTA Sutter Stockton Garage (444 Stockton St)",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10692,7 +10692,7 @@ my.filmData = (function (my) {
     "film_location": "Bush St & Stockton St",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10703,7 +10703,7 @@ my.filmData = (function (my) {
     "film_location": "Powell St & Geary St",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10714,7 +10714,7 @@ my.filmData = (function (my) {
     "film_location": "1 Market St St Landmark Building",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10725,7 +10725,7 @@ my.filmData = (function (my) {
     "film_location": "Embarcadero between Pier 2 & Harrison St",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10736,7 +10736,7 @@ my.filmData = (function (my) {
     "film_location": "Pier 14",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
@@ -10747,7 +10747,7 @@ my.filmData = (function (my) {
     "film_location": "Pine St between Market St & Montgomery",
     "production_company": "T5 Productions LLC",
     "release_year": "2015",
-    "film_title": "Terminator - Genisys",
+    "film_title": "Terminator Genisys",
     "writer": "James Cameron"
   },
   {
