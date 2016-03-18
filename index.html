@@ -13,7 +13,7 @@
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <script src="js/themoviedb.js"></script>
     <script src="js/data.js"></script>
-    <script src="js/map2.js"></script>
+    <script src="js/app.js"></script>
     <script src="https://use.typekit.net/ghz2fyp.js"></script>
     <script>
     try {
@@ -39,18 +39,7 @@
                         </datalist>
                         <button class="btn btn-info pull-right" type="button" data-bind="click: codeAddress">Go!</button>
                     </div>
-                    <table class="table">
-                        <tbody data-bind="foreach: markers">
-                            <tr>
-                                <td>
-                                    <a class="icon"><span class="glyphicon glyphicon-map-marker" aria-hidden="true" data-bind="click: $parent.panToMarker"></span></a>
-                                </td>
-                                <td>
-                                    <p class="locationLink" data-bind="text: $data.marker.title, click: $parent.panToMarker"></p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div data-bind="template: {name: 'locationsTemplate'}"></div>
                 </div>
             </div>
         </div>
@@ -62,48 +51,83 @@
             <div class="panel panel-default filmInfoBox" data-bind="visible: currentTitle">
                 <h3 data-bind="visible: currentTitle, text: currentTitle"></h3>
                 <ul class="media-list">
-                    <li class="media">
-                        <div class="media-left">
-                            <a href="#">
-                                <span data-bind="visible: posterImage, html: posterImage" class="thumbnail media-object"></span>
-                            </a>
-                        </div>
-                        <div class="media-body">
-                            <h5 class="media-heading" data-bind="visible: tagline, text: tagline"></h5>
-                            <p><span class="itemHeader">Year: </span><span data-bind="visible: currentYear, text: currentYear"></span></p>
-                            <p><span class="itemHeader">Production Company: </span><span data-bind="visible: currentStudio, text: currentStudio"></span></p>
-                            <p><span class="itemHeader">Director: </span><span data-bind="visible: currentDirector, text: currentDirector"></span></p>
-                            <p><span class="itemHeader">Writer: </span><span data-bind="visible: currentWriter, text: currentWriter"></span></p>
-                            <p><span data-bind="visible: currentActor1" class="itemHeader">Actors: </span>
-                                <span data-bind="visible: currentActor1, text: currentActor1"></span><span data-bind="visible: currentActor2">, </span><span data-bind="visible: currentActor2, text: currentActor2"></span><span data-bind="visible: currentActor3">, </span><span data-bind="visible: currentActor3, text: currentActor3"></span>
-                            </p>
-                    </li>
+                    <div data-bind="template: {name: 'filmInfoTemplate'}"></div>
                     <div data-bind="template: {name: 'nytTemplate'}"></div>
-
-
-                    <h4 class="itemHeader uppercase" data-bind="visible: overview">Overview</h4>
-                    <p class="overview" data-bind="visible: overview, text: overview"></p>
+                    <div data-bind="template: {name: 'overviewTemplate'}"></div>
                 </ul>
-                <div>
-                    <span data-bind="visible: trailerVideo, html: trailerHTML"></span>
-                </div>
-                </div>
+                <div data-bind="template: {name: 'trailerTemplate'}"></div>
             </div>
         </div>
-        <div class="col-md-1 col-lg-1 col-sm-1"> </div>
-        <div id="googleMap" class="map-canvas"></div>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiFWUDeNqeIgmx7njjzjJAVWwC2t9hNP0&libraries=places&callback=my.vm.googleInit" async defer></script>
-        <div id="nytTemplate" style="display: none">
-            <blockquote data-bind="visible: nytByline">
-                <p data-bind="visible: nytCapsuleReview, text: nytCapsuleReview"></p>
-                <p data-bind="visible: nytSummary, text: nytSummary"></p>
-                <p data-bind="visible: nytHeadline, text: nytHeadline"></p>
-                <footer>
-                    <span data-bind="visible: nytByline, text: nytByline"></span> in
-                    <cite title="Source Title"><a target="_blank" data-bind="visible: nytReviewURL, attr: { href: nytReviewURL }">The New York Times</a></cite>
-                </footer>
-            </blockquote>
+    </div>
+    <div class="col-md-1 col-lg-1 col-sm-1"> </div>
+    <div id="googleMap" class="map-canvas"></div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiFWUDeNqeIgmx7njjzjJAVWwC2t9hNP0&libraries=places&callback=my.vm.googleInit" async defer></script>
+    <!--TODO: is there a reason it shouldn't be stored after maps api? Doesn't seem to be affecting it -->
+    <!--TEMPLATES STORED HERE-->
+    <!-- locations template, shows locations from markers -->
+    <div id="locationsTemplate" style="display: none">
+        <table class="table">
+            <tbody data-bind="foreach: markers">
+                <tr>
+                    <td>
+                        <a class="icon"><span class="glyphicon glyphicon-map-marker" aria-hidden="true" data-bind="click: $parent.panToMarker"></span></a>
+                    </td>
+                    <td>
+                        <p class="locationLink" data-bind="text: $data.marker.title, click: $parent.panToMarker"></p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- locations template end -->
+    <!-- filmInfo template, shows info from SFData in data.js -->
+    <div id="filmInfoTemplate" style="display: none">
+        <li class="media">
+            <div class="media-left">
+                <a data-bind="visible: posterImage" href="#">
+                    <span data-bind="visible: posterImage, html: posterImage" class="thumbnail media-object"></span>
+                </a>
+            </div>
+            <div class="media-body">
+                <h5 class="media-heading" data-bind="visible: tagline, text: tagline"></h5>
+                <p><span class="itemHeader">Year: </span><span data-bind="visible: currentYear, text: currentYear"></span></p>
+                <p><span class="itemHeader">Production Company: </span><span data-bind="visible: currentStudio, text: currentStudio"></span></p>
+                <p><span class="itemHeader">Director: </span><span data-bind="visible: currentDirector, text: currentDirector"></span></p>
+                <p><span class="itemHeader">Writer: </span><span data-bind="visible: currentWriter, text: currentWriter"></span></p>
+                <p>
+                    <span data-bind="visible: currentActor1" class="itemHeader">Actors: </span>
+                    <span data-bind="visible: currentActor1, text: currentActor1"></span><span data-bind="visible: currentActor2">, </span><span data-bind="visible: currentActor2, text: currentActor2"></span><span data-bind="visible: currentActor3">, </span><span data-bind="visible: currentActor3, text: currentActor3"></span>
+                </p>
+            </div>
+        </li>
+    </div>
+    <!-- filmInfo template end -->
+    <!-- nyt template, shows blockquote from nyt API -->
+    <div id="nytTemplate" style="display: none">
+        <blockquote data-bind="visible: nytByline">
+            <p data-bind="visible: nytCapsuleReview, text: nytCapsuleReview"></p>
+            <p data-bind="visible: nytSummary, text: nytSummary"></p>
+            <p data-bind="visible: nytHeadline, text: nytHeadline"></p>
+            <footer>
+                <span data-bind="visible: nytByline, text: nytByline"></span> in
+                <cite title="Source Title"><a target="_blank" data-bind="visible: nytReviewURL, attr: { href: nytReviewURL }">The New York Times</a></cite>
+            </footer>
+        </blockquote>
+    </div>
+    <!-- nyt template end -->
+    <!-- overview template, shows overview from TMDb API -->
+    <div id="overviewTemplate" style="display: none">
+        <h4 class="itemHeader uppercase" data-bind="visible: overview">Overview</h4>
+        <p class="overview" data-bind="visible: overview, text: overview"></p>
+    </div>
+    <!-- overview template end -->
+    <!-- trailer template, shows trailer from TMDb API -->
+    <div id="trailerTemplate" style="display: none">
+        <div>
+            <span data-bind="visible: trailerVideo, html: trailerHTML"></span>
         </div>
+    </div>
+    <!-- trailer template end -->
 </body>
 
 </html>
