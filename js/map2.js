@@ -167,7 +167,7 @@ $(function() {
                 var nytKey = '70f203863d9c8555f9b345f32ec442e8:10:59953537';
                 var nyTimesMovieAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
                     chosenFilm + "'&api-key=" + nytKey;
-                    //'this' is the window
+                //'this' is the window
 
                 nytCapsuleReview(undefined);
                 nytSummary(undefined);
