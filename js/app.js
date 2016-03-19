@@ -111,12 +111,15 @@ $(function() {
         var nytSummary = ko.observable();
 
         var loadSceneFM = function() {
+                // Returns everything before first parentheses, which is the place
                 function escapeRegExp(string) {
                     var regExp = /^.*?(?=\s\()/;
                     var matches = regExp.exec(string);
                     return matches ? matches[0] : undefined;
                 }
 
+                // Returns everything between the parentheses, which is the street address
+                // and is the format Google Maps JS API for Geolocation prefers
                 function escapeRegExp2(string) {
                     var regExp2 = /\(([^)]+)\)/;
                     var matches = regExp2.exec(string);
@@ -164,9 +167,12 @@ $(function() {
             },
 
             loadNYTData = function(chosenFilm) {
+                console.log("chosenFilm in loadNYTData",chosenFilm);
+
                 var nytKey = '70f203863d9c8555f9b345f32ec442e8:10:59953537';
                 var nyTimesMovieAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
                     chosenFilm + "'&api-key=" + nytKey;
+                console.log("nyTimesMovieAPI", nyTimesMovieAPI);
                 //'this' is the window
 
                 nytCapsuleReview(undefined);
@@ -212,19 +218,46 @@ $(function() {
                     }
                 });
             },
-            loadMovieDbData = function(encodedFilm) {
-                console.log("encodedFilm", encodedFilm);
+            loadMovieDbData = function(encodedFilm, nonEncodedFilm, releaseYear) {
+                var filmFound = ko.observable();
+
+                function movieDbYear(longDate){
+                    var myRegexp = /[^-]*/;
+                    var match = myRegexp.exec(longDate);
+                    return match;
+                }
 
                 theMovieDb.search.getMovie({ "query": encodedFilm },
                     (function(data) {
+                        var posterPath;
+                        var posterHTML;
+                        var overview;
+                        var filmID;
+                        var dbTitleLower;
+                        var dbReleaseYear;
+
                         var dbStore = JSON.parse(data);
-                        console.log("dbStore", dbStore);
                         movieDbData(dbStore);
-                        //'this' is window
-                        var posterPath = movieDbData().results[0].poster_path;
-                        var posterHTML = '<img class="poster img-responsive" src="https://image.tmdb.org/t/p/w370/' + posterPath + '" >';
-                        var overview = movieDbData().results[0].overview;
-                        var filmID = movieDbData().results[0].id;
+                        console.log("dbStore", dbStore);
+                        var resultsLength = movieDbData().results.length;
+                        var nonEncodedLower = nonEncodedFilm.toLowerCase();
+                        var theNonEncodedLower = 'the ' + nonEncodedLower;
+
+                        for(var i = 0; i < resultsLength; i++){
+                            dbTitleLower = movieDbData().results[i].original_title.toLowerCase();
+                            dbReleaseYear = movieDbYear(movieDbData().results[i].release_date);
+                            if((dbTitleLower == nonEncodedLower || dbTitleLower == theNonEncodedLower) && (dbReleaseYear == releaseYear)) {
+                                filmFound(movieDbData().results[i]);
+                                console.log("filmFound()", filmFound());
+                            }
+                        }
+
+                        posterPath = filmFound().poster_path;
+                        posterHTML = '<img class="poster img-responsive" src="https://image.tmdb.org/t/p/w370' + posterPath + '" >';
+                        my.vm.posterImage(posterHTML);
+                        overview = filmFound().overview;
+                        my.vm.overview(overview);
+                        filmID = filmFound().id;
 
                         theMovieDb.movies.getTrailers({ "id": filmID },
                             (function(data) {
@@ -235,29 +268,29 @@ $(function() {
                                 } else {
                                     var trailerIframe = '<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" width="1280" height="720" src="https://www.youtube.com/embed/' +
                                         trailerVideo().youtube[0].source + '?rel=0&amp;showinfo=0" allowfullscreen></iframe></div>';
-                                    trailerHTML(trailerIframe);
+                                    my.vm.trailerHTML(trailerIframe);
                                 }
                             }),
                             (function() {
                                 console.log("you fail!"); //TODO: find the proper error
-                            }));
+                        }));
+
                         theMovieDb.movies.getById({ "id": filmID },
                             (function(data) {
                                 var movieInfo = JSON.parse(data);
                                 var tagline = movieInfo.tagline;
                                 my.vm.tagline(tagline);
-                                console.log("self", self); // self is window here! odd
+
+                                //self is window here! odd
                             }),
                             (function() {
                                 console.log("you fail!"); //TODO: find the proper error
-                            }));
-                        // 'this' in this context is the window
-                        my.vm.posterImage(posterHTML);
-                        my.vm.overview(overview);
+                        }));
                     }),
                     (function() {
                         console.log("you fail!"); //TODO: find the proper error
                     }));
+
             },
 
             masterGeocoder = function(myGeocodeOptions, place, geocoder) {
@@ -324,6 +357,7 @@ $(function() {
                 var place;
                 var matchedScene;
                 var matchedTitle;
+                var matchedYear;
                 this.checkReset();
 
                 //TODO change to foreach
@@ -331,6 +365,7 @@ $(function() {
                     if (requestedFilm().toLowerCase().trim() === this.scenes()[i].filmTitle().toLowerCase().trim()) {
                         matchedScene = this.scenes()[i];
                         matchedTitle = this.scenes()[i].filmTitle();
+                        matchedYear = this.scenes()[i].year();
                         var geocoder = new google.maps.Geocoder();
 
                         if (this.scenes()[i].place()) {
@@ -362,7 +397,7 @@ $(function() {
                 this.currentActor3(matchedScene.actor3());
                 this.currentStudio(matchedScene.studio());
                 loadNYTData(matchedTitle);
-                loadMovieDbData(encodeURIComponent(matchedTitle));
+                loadMovieDbData(encodeURIComponent(matchedTitle), matchedTitle, matchedYear);
                 //Todo: do an alert for the wrong film
                 // <div class="alert alert-danger" role="alert">...</div>
             };
