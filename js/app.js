@@ -113,7 +113,6 @@ $(function() {
         var requestedFilm = ko.observable();
         var markers = ko.observableArray([]);
         var movieDbData = ko.observableArray([]);
-        var posterImage = ko.observable();
         var trailerVideo = ko.observable();
         var trailerURL = ko.observable();
         var overview = ko.observable();
@@ -126,6 +125,7 @@ $(function() {
         var currentActor2 = ko.observable();
         var currentActor3 = ko.observable();
         var currentStudio = ko.observable();
+        var posteSRC = ko.observable();
         var nytInfo = ko.observableArray([]);
 
         var loadSceneFM = function() {
@@ -236,8 +236,6 @@ $(function() {
 
                 theMovieDb.search.getMovie({ "query": encodedFilm },
                     (function(data) {
-                        var posterPath;
-                        var posterHTML;
                         var overview;
                         var filmID;
                         var dbTitleLower;
@@ -257,9 +255,8 @@ $(function() {
                             }
                         }
 
-                        posterPath = filmFound().poster_path;
-                        posterHTML = '<img class="poster img-responsive" src="https://image.tmdb.org/t/p/w370' + posterPath + '" >';
-                        my.vm.posterImage(posterHTML);
+                        var posterURL = 'https://image.tmdb.org/t/p/w370' + filmFound().poster_path;
+                        my.vm.posterSRC(posterURL);
                         overview = filmFound().overview;
                         my.vm.overview(overview);
                         filmID = filmFound().id;
@@ -415,7 +412,6 @@ $(function() {
             markers: markers,
             panToMarker: panToMarker,
             movieDbData: movieDbData,
-            posterImage: posterImage,
             trailerVideo: trailerVideo,
             overview: overview,
             googleInit: googleInit,
@@ -430,6 +426,7 @@ $(function() {
             tagline: tagline,
             checkReset: checkReset,
             trailerURL: trailerURL,
+            posterSRC: posterSRC,
             nytInfo: nytInfo
         };
     }();
