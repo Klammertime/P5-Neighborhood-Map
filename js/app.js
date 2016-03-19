@@ -5,7 +5,6 @@ $(function() {
     var infowindow;
     var prev_infowindow = false;
 
-
     function googleSuccess() {
         var center;
         var myLatLng = new google.maps.LatLng(37.77493, -122.419416);
@@ -81,8 +80,41 @@ $(function() {
         }
     });
 
+
+    // for(var i = 0; i < resultsLength; i++){
+    //     dbTitleLower = movieDbData().results[i].original_title.toLowerCase();
+    //     dbReleaseYear = movieDbYear(movieDbData().results[i].release_date);
+    //     if((dbTitleLower == nonEncodedLower || dbTitleLower == theNonEncodedLower) && (dbReleaseYear == releaseYear)) {
+    //         filmFound(movieDbData().results[i]);
+    //     }
+    // }
+
+    var titleCheck = function(theData, resultsTitleProp, resultsDateProp, desiredTitle, desiredYear){
+        //apiResults will be this data.results so you do this in for loop data.results[i]
+        //do this later after get first to work
+        // var theAPIResultsTitle = 'the ' + apiResultsTitle;
+        console.log("theData", theData);
+        var resultsLength = theData.results.length;
+
+        function justYear(longDate){
+            var myRegexp = /[^-]*/;
+            var match = myRegexp.exec(longDate);
+            return match;
+        }
+
+        for(var i = 0; i < resultsLength; i++){
+            var resultsTitle = theData.results[i][resultsTitleProp];
+            var resultsYear = justYear(theData.results[i][resultsDateProp]);
+            resultsYear = resultsYear[0];
+
+            if((resultsTitle === desiredTitle) && (resultsYear == desiredYear)){
+                console.log("returned i", i);
+                return i;
+            }
+        }
+    };
+
     my.vm = function() {
-        var self = this;
         var scenes = ko.observableArray([]);
         var currentScenes = ko.observableArray([]); //put current selected film locs
         var favoritedScenes = ko.observableArray([]);
@@ -109,6 +141,7 @@ $(function() {
         var nytByline = ko.observable();
         var nytReviewURL = ko.observable();
         var nytSummary = ko.observable();
+        var nytInfo = ko.observableArray([]);
 
         var loadSceneFM = function() {
                 // Returns everything before first parentheses, which is the place
@@ -166,52 +199,61 @@ $(function() {
                 clickedLocation.infowindow.open(map, clickedLocation.marker);
             },
 
-            loadNYTData = function(chosenFilm) {
-                console.log("chosenFilm in loadNYTData",chosenFilm);
-
+            loadNYTData = function(encodedFilm, nonEncodedFilm, releaseYear) {
                 var nytKey = '70f203863d9c8555f9b345f32ec442e8:10:59953537';
-                var nyTimesMovieAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
-                    chosenFilm + "'&api-key=" + nytKey;
-                console.log("nyTimesMovieAPI", nyTimesMovieAPI);
-                //'this' is the window
+                var nytAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
+                    encodedFilm + "'&api-key=" + nytKey;
 
+
+                var nytFilmFound = ko.observable();
                 nytCapsuleReview(undefined);
                 nytSummary(undefined);
                 nytReviewURL(undefined);
                 nytByline(undefined);
                 nytHeadline(undefined);
                 //movies.nytimes.com was not loading, copying their url structure instead
-                function fasterReviewUrl(fullUrl) {
-                    var urlString = fullUrl;
+                function domain(fullUrl) {
                     var myRegexp = /\.(.*)$/; // get everything after first period
-                    var match = myRegexp.exec(urlString);
-                    var urlResult = 'http://www.' + match[1]; //it works just not while on local server
-                    return urlResult;
+                    var match = myRegexp.exec(fullUrl);
+                    return 'http://www.' + match[1]; //it works just not while on local server
                 }
 
                 $.ajax({
                     type: "GET",
-                    url: nyTimesMovieAPI,
+                    url: nytAPI,
                     timeout: 2000,
                     dataType: "json",
                     beforeSend: function() {},
                     complete: function() {},
                     success: function(data) {
                         console.log("data from NYTimes", data);
-                        if ((data.results[0].display_title).toLowerCase().trim() == chosenFilm.toLowerCase().trim() || ('the ' + (data.results[0].display_title).toLowerCase().trim()) == chosenFilm.toLowerCase().trim()) {
-                            nytReviewURL(fasterReviewUrl(data.results[0].link.url));
-                            nytByline(data.results[0].byline); // byline also wrote capsule_review
-                            if (data.results[0].capsule_review) {
-                                // capsule_review is for the movies they don't write a full review for
-                                nytCapsuleReview(data.results[0].capsule_review);
-                            } else if (data.results[0].summary_short) {
-                                // headline goes with summary_short
-                                nytSummary(data.results[0].summary_short);
-                            } else if (data.results[0].headline) {
-                                nytSummary(data.results[0].headline);
-                            }
 
-                        }
+                        var index = titleCheck(data, 'display_title', 'publication_date', nonEncodedFilm, releaseYear);
+                        console.log("index in nytCall", index);
+                        nytInfo({
+                            title: data.results[index].display_title,
+                            capsuleReview: data.results[index].capsule_review,
+                            summary: data.results[index].summary_short,
+                            reviewURL: domain(data.results[index].link.url),
+                            byline: data.results[index].byline,
+                            headline: data.results[index].headline,
+                            releaseYear: data.results[index].publication_date
+                        });
+                        console.log("nytInfo()", nytInfo());
+                            // nytFilmFound(data.results[i]);
+                            // nytReviewURL(domain(nytFilmFound().link.url));
+                            // nytByline(nytFilmFound().byline); // byline also wrote capsule_review
+                            // console.log("nytFilmFound().byline", nytFilmFound().byline);
+                            // if (nytFilmFound().capsule_review) {
+                            //     // capsule_review is for the movies they don't write a full review for
+                            //     nytCapsuleReview(nytFilmFound().capsule_review);
+                            // } else if (nytFilmFound().summary_short) {
+                            //     // headline goes with summary_short
+                            //     nytSummary(nytFilmFound().summary_short);
+                            // } else if (nytFilmFound().headline) {
+                            //     nytSummary(nytFilmFound().headline);
+                            // }
+
                     },
                     fail: function(jqxhr, textStatus, error) {
                         console.log("New York Times Article Could Not Be Loaded: ", error);
@@ -235,7 +277,6 @@ $(function() {
                         var filmID;
                         var dbTitleLower;
                         var dbReleaseYear;
-
                         var dbStore = JSON.parse(data);
                         movieDbData(dbStore);
                         console.log("dbStore", dbStore);
@@ -248,7 +289,6 @@ $(function() {
                             dbReleaseYear = movieDbYear(movieDbData().results[i].release_date);
                             if((dbTitleLower == nonEncodedLower || dbTitleLower == theNonEncodedLower) && (dbReleaseYear == releaseYear)) {
                                 filmFound(movieDbData().results[i]);
-                                console.log("filmFound()", filmFound());
                             }
                         }
 
@@ -365,6 +405,7 @@ $(function() {
                     if (requestedFilm().toLowerCase().trim() === this.scenes()[i].filmTitle().toLowerCase().trim()) {
                         matchedScene = this.scenes()[i];
                         matchedTitle = this.scenes()[i].filmTitle();
+                        console.log("matchedTitle", matchedTitle);
                         matchedYear = this.scenes()[i].year();
                         var geocoder = new google.maps.Geocoder();
 
@@ -396,7 +437,7 @@ $(function() {
                 this.currentActor2(matchedScene.actor2());
                 this.currentActor3(matchedScene.actor3());
                 this.currentStudio(matchedScene.studio());
-                loadNYTData(matchedTitle);
+                loadNYTData(encodeURIComponent(matchedTitle), matchedTitle, matchedYear);
                 loadMovieDbData(encodeURIComponent(matchedTitle), matchedTitle, matchedYear);
                 //Todo: do an alert for the wrong film
                 // <div class="alert alert-danger" role="alert">...</div>
@@ -433,7 +474,8 @@ $(function() {
             tagline: tagline,
             checkReset: checkReset,
             nytSummary: nytSummary,
-            nytHeadline: nytHeadline
+            nytHeadline: nytHeadline,
+            nytInfo: nytInfo
         };
     }();
 

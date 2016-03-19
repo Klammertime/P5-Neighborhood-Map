@@ -50,7 +50,6 @@
         <div class="col-md-4 col-lg-4 col-sm-4" data-bind="with: my.vm">
             <div class="panel panel-default filmInfoBox" data-bind="visible: currentTitle">
                 <h3 data-bind="visible: currentTitle, text: currentTitle"></h3>
-                <ul class="media-list">
                     <div data-bind="template: {name: 'filmInfoTemplate'}"></div>
                     <div data-bind="template: {name: 'nytTemplate'}"></div>
                     <div data-bind="template: {name: 'overviewTemplate'}"></div>
@@ -63,7 +62,9 @@
     <div id="googleMap" class="map-canvas"></div>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiFWUDeNqeIgmx7njjzjJAVWwC2t9hNP0&libraries=places&callback=my.vm.googleInit" async defer></script>
     <!--TODO: is there a reason it shouldn't be stored after maps api? Doesn't seem to be affecting it -->
-    <!--TEMPLATES STORED HERE-->
+
+    <!--TEMPLATES STORED HERE!!!!!!!!!!!!!!!!-->
+
     <!-- locations template, shows locations from markers -->
     <div id="locationsTemplate" style="display: none">
         <table class="table">
@@ -80,6 +81,7 @@
         </table>
     </div>
     <!-- locations template end -->
+
     <!-- filmInfo template, shows info from SFData in data.js -->
     <div id="filmInfoTemplate" style="display: none">
         <li class="media">
@@ -102,25 +104,35 @@
         </li>
     </div>
     <!-- filmInfo template end -->
+
     <!-- nyt template, shows blockquote from nyt API -->
     <div id="nytTemplate" style="display: none">
-        <blockquote data-bind="visible: nytByline">
-            <p data-bind="visible: nytCapsuleReview, text: nytCapsuleReview"></p>
-            <p data-bind="visible: nytSummary, text: nytSummary"></p>
-            <p data-bind="visible: nytHeadline, text: nytHeadline"></p>
-            <footer>
-                <span data-bind="visible: nytByline, text: nytByline"></span> in
-                <cite title="Source Title"><a target="_blank" data-bind="visible: nytReviewURL, attr: { href: nytReviewURL }">The New York Times</a></cite>
-            </footer>
+        <blockquote data-bind="visible: nytInfo(), foreach: nytInfo">
+            <div data-bind="if: capsuleReview">
+                <p data-bind="text: capsuleReview"></p>
+            </div>
+
+            <div data-bind="if: headline">
+                <p data-bind="text: headline"></p>
+            </div>
+
+            <div data-bind="if: summary">
+                <p data-bind="text: summary"></p>
+            </div>
+
+            <p><footer><span data-bind="if: byline"><span data-bind="text: byline"></span>, </span><span data-bind="if: reviewURL"><cite title="Source Title"><a target="_blank" data-bind="attr: { href: reviewURL }">The New York Times</a></cite></span>
+            </footer></p>
         </blockquote>
     </div>
     <!-- nyt template end -->
+
     <!-- overview template, shows overview from TMDb API -->
     <div id="overviewTemplate" style="display: none">
         <h4 class="itemHeader uppercase" data-bind="visible: overview">Overview</h4>
         <p class="overview" data-bind="visible: overview, text: overview"></p>
     </div>
     <!-- overview template end -->
+
     <!-- trailer template, shows trailer from TMDb API -->
     <div id="trailerTemplate" style="display: none">
         <div>
@@ -128,6 +140,7 @@
         </div>
     </div>
     <!-- trailer template end -->
+
 </body>
 
 </html>
