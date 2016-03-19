@@ -80,15 +80,6 @@ $(function() {
         }
     });
 
-
-    // for(var i = 0; i < resultsLength; i++){
-    //     dbTitleLower = movieDbData().results[i].original_title.toLowerCase();
-    //     dbReleaseYear = movieDbYear(movieDbData().results[i].release_date);
-    //     if((dbTitleLower == nonEncodedLower || dbTitleLower == theNonEncodedLower) && (dbReleaseYear == releaseYear)) {
-    //         filmFound(movieDbData().results[i]);
-    //     }
-    // }
-
     var titleCheck = function(theData, resultsTitleProp, resultsDateProp, desiredTitle, desiredYear){
         //apiResults will be this data.results so you do this in for loop data.results[i]
         //do this later after get first to work
@@ -127,7 +118,6 @@ $(function() {
         var trailerURL = ko.observable();
         var overview = ko.observable();
         var tagline = ko.observable();
-        var trailerHTML = ko.observable();
         var currentTitle = ko.observable();
         var currentYear = ko.observable();
         var currentDirector = ko.observable();
@@ -136,11 +126,6 @@ $(function() {
         var currentActor2 = ko.observable();
         var currentActor3 = ko.observable();
         var currentStudio = ko.observable();
-        var nytCapsuleReview = ko.observable();
-        var nytHeadline = ko.observable();
-        var nytByline = ko.observable();
-        var nytReviewURL = ko.observable();
-        var nytSummary = ko.observable();
         var nytInfo = ko.observableArray([]);
 
         var loadSceneFM = function() {
@@ -192,8 +177,7 @@ $(function() {
                 }
 
                 prev_infowindow = clickedLocation.infowindow;
-                // Without this it still works but doesn't open the infowindow,
-                // it goes to it and drops the marker
+                // Without this it still works but doesn't open the infowindow, it goes to it and drops the marker
                 map.panTo(clickedLocation.marker.getPosition());
                 // Without this, it doesn't work
                 clickedLocation.infowindow.open(map, clickedLocation.marker);
@@ -204,14 +188,6 @@ $(function() {
                 var nytAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
                     encodedFilm + "'&api-key=" + nytKey;
 
-
-                var nytFilmFound = ko.observable();
-                nytCapsuleReview(undefined);
-                nytSummary(undefined);
-                nytReviewURL(undefined);
-                nytByline(undefined);
-                nytHeadline(undefined);
-                //movies.nytimes.com was not loading, copying their url structure instead
                 function domain(fullUrl) {
                     var myRegexp = /\.(.*)$/; // get everything after first period
                     var match = myRegexp.exec(fullUrl);
@@ -227,32 +203,21 @@ $(function() {
                     complete: function() {},
                     success: function(data) {
                         console.log("data from NYTimes", data);
-
                         var index = titleCheck(data, 'display_title', 'publication_date', nonEncodedFilm, releaseYear);
                         console.log("index in nytCall", index);
-                        nytInfo({
-                            title: data.results[index].display_title,
-                            capsuleReview: data.results[index].capsule_review,
-                            summary: data.results[index].summary_short,
-                            reviewURL: domain(data.results[index].link.url),
-                            byline: data.results[index].byline,
-                            headline: data.results[index].headline,
-                            releaseYear: data.results[index].publication_date
-                        });
-                        console.log("nytInfo()", nytInfo());
-                            // nytFilmFound(data.results[i]);
-                            // nytReviewURL(domain(nytFilmFound().link.url));
-                            // nytByline(nytFilmFound().byline); // byline also wrote capsule_review
-                            // console.log("nytFilmFound().byline", nytFilmFound().byline);
-                            // if (nytFilmFound().capsule_review) {
-                            //     // capsule_review is for the movies they don't write a full review for
-                            //     nytCapsuleReview(nytFilmFound().capsule_review);
-                            // } else if (nytFilmFound().summary_short) {
-                            //     // headline goes with summary_short
-                            //     nytSummary(nytFilmFound().summary_short);
-                            // } else if (nytFilmFound().headline) {
-                            //     nytSummary(nytFilmFound().headline);
-                            // }
+                        if(index !== undefined){
+                            nytInfo({
+                                title: data.results[index].display_title,
+                                capsuleReview: data.results[index].capsule_review,
+                                summary: data.results[index].summary_short,
+                                reviewURL: domain(data.results[index].link.url),
+                                byline: data.results[index].byline,
+                                headline: data.results[index].headline,
+                                releaseYear: data.results[index].publication_date
+                            });
+                        } else {
+                            nytInfo(undefined);
+                        }
 
                     },
                     fail: function(jqxhr, textStatus, error) {
@@ -304,11 +269,10 @@ $(function() {
                                 var theTrailer = JSON.parse(data);
                                 my.vm.trailerVideo(theTrailer);
                                 if (trailerVideo().youtube.length === 0) {
-                                    trailerVideo(undefined);
+                                    my.vm.trailerURL(undefined);
                                 } else {
-                                    var trailerIframe = '<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" width="1280" height="720" src="https://www.youtube.com/embed/' +
-                                        trailerVideo().youtube[0].source + '?rel=0&amp;showinfo=0" allowfullscreen></iframe></div>';
-                                    my.vm.trailerHTML(trailerIframe);
+                                    var youtubeURL = 'https://www.youtube.com/embed/' + trailerVideo().youtube[0].source + '?rel=0&amp;showinfo=0';
+                                    my.vm.trailerURL(youtubeURL);
                                 }
                             }),
                             (function() {
@@ -320,8 +284,6 @@ $(function() {
                                 var movieInfo = JSON.parse(data);
                                 var tagline = movieInfo.tagline;
                                 my.vm.tagline(tagline);
-
-                                //self is window here! odd
                             }),
                             (function() {
                                 console.log("you fail!"); //TODO: find the proper error
@@ -405,12 +367,10 @@ $(function() {
                     if (requestedFilm().toLowerCase().trim() === this.scenes()[i].filmTitle().toLowerCase().trim()) {
                         matchedScene = this.scenes()[i];
                         matchedTitle = this.scenes()[i].filmTitle();
-                        console.log("matchedTitle", matchedTitle);
                         matchedYear = this.scenes()[i].year();
                         var geocoder = new google.maps.Geocoder();
 
                         if (this.scenes()[i].place()) {
-
                             address = this.scenes()[i].streetAddress();
                             place = this.scenes()[i].place();
                         } else {
@@ -458,7 +418,6 @@ $(function() {
             posterImage: posterImage,
             trailerVideo: trailerVideo,
             overview: overview,
-            trailerHTML: trailerHTML,
             googleInit: googleInit,
             currentTitle: currentTitle,
             currentYear: currentYear,
@@ -468,13 +427,9 @@ $(function() {
             currentActor2: currentActor2,
             currentActor3: currentActor3,
             currentStudio: currentStudio,
-            nytCapsuleReview: nytCapsuleReview,
-            nytByline: nytByline,
-            nytReviewURL: nytReviewURL,
             tagline: tagline,
             checkReset: checkReset,
-            nytSummary: nytSummary,
-            nytHeadline: nytHeadline,
+            trailerURL: trailerURL,
             nytInfo: nytInfo
         };
     }();

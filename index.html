@@ -135,8 +135,9 @@
 
     <!-- trailer template, shows trailer from TMDb API -->
     <div id="trailerTemplate" style="display: none">
-        <div>
-            <span data-bind="visible: trailerVideo, html: trailerHTML"></span>
+        <div data-bind="visible: trailerURL" class="embed-responsive embed-responsive-16by9">
+            <iframe data-bind="attr: { src: trailerURL }" class="embed-responsive-item" width="1280" height="720" allowfullscreen>
+            </iframe>
         </div>
     </div>
     <!-- trailer template end -->
