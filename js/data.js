@@ -404,7 +404,7 @@ my.filmData = (function (my) {
     "film_location": "Pier 50- end of the pier",
     "production_company": "Lionsgate \/ Sidney Kimmel Entertainment \/ Lakeshore Entertainment",
     "release_year": "2015",
-    "film_title": "Age of Adaline",
+    "film_title": "The Age of Adaline",
     "writer": "J. Mills Goodloe"
   },
   {
@@ -415,7 +415,7 @@ my.filmData = (function (my) {
     "film_location": "California St & Montgomery",
     "production_company": "Lionsgate \/ Sidney Kimmel Entertainment \/ Lakeshore Entertainment",
     "release_year": "2015",
-    "film_title": "Age of Adaline",
+    "film_title": "The Age of Adaline",
     "writer": "J. Mills Goodloe"
   },
   {
@@ -426,7 +426,7 @@ my.filmData = (function (my) {
     "film_location": "Montgomery\/Green",
     "production_company": "Lionsgate \/ Sidney Kimmel Entertainment \/ Lakeshore Entertainment",
     "release_year": "2015",
-    "film_title": "Age of Adaline",
+    "film_title": "The Age of Adaline",
     "writer": "J. Mills Goodloe"
   },
   {
@@ -6128,7 +6128,7 @@ my.filmData = (function (my) {
     "film_location": "Lusty Lady Theatre (1033 Kearny St)",
     "production_company": "Constant Communication",
     "release_year": "2000",
-    "film_title": "Live Nude Girls Unite",
+    "film_title": "Live Nude Girls UNITE!",
     "writer": "Vicky Funari"
   },
   {

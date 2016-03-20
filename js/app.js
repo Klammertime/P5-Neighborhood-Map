@@ -80,7 +80,7 @@ $(function() {
         }
     });
 
-    var titleCheck = function(theData, resultsTitleProp, resultsDateProp, desiredTitle, desiredYear) {
+    function titleCheck(theData, resultsTitleProp, resultsDateProp, desiredTitle, desiredYear) {
         var resultsLength = theData.results.length;
 
         function justYear(longDate) {
@@ -94,11 +94,11 @@ $(function() {
             var resultsYear = justYear(theData.results[i][resultsDateProp]);
             resultsYear = resultsYear[0];
 
-            if ((resultsTitle === desiredTitle) && (resultsYear == desiredYear)) {
+            if ((resultsTitle == desiredTitle) && (resultsYear == desiredYear)) {
                 return i;
             }
         }
-    };
+    }
 
     my.vm = function() {
         var scenes = ko.observableArray([]);
@@ -107,11 +107,9 @@ $(function() {
         var allTitles = ko.observableArray([]);
         var requestedFilm = ko.observable();
         var markers = ko.observableArray([]);
-        var movieDbData = ko.observableArray([]);
-        var trailerVideo = ko.observable();
-        var trailerURL = ko.observable();
         var overview = ko.observable();
         var tagline = ko.observable();
+        var trailerURL = ko.observable();
         var currentTitle = ko.observable();
         var currentYear = ko.observable();
         var currentDirector = ko.observable();
@@ -122,6 +120,8 @@ $(function() {
         var currentStudio = ko.observable();
         var posterSRC = ko.observable();
         var nytInfo = ko.observableArray([]);
+        var movieDBInfo = ko.observableArray([]);
+        var moviedb = ko.observable();
 
         var loadSceneFM = function() {
                 // Returns everything before first parentheses, which is the place
@@ -179,9 +179,12 @@ $(function() {
             },
 
             loadNYTData = function(encodedFilm, nonEncodedFilm, releaseYear) {
+                var index1;
                 var nytKey = '70f203863d9c8555f9b345f32ec442e8:10:59953537';
                 var nytAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
                     encodedFilm + "'&api-key=" + nytKey;
+                nytInfo(undefined);
+
 
                 function domain(fullUrl) {
                     var myRegexp = /\.(.*)$/; // get everything after first period
@@ -198,21 +201,22 @@ $(function() {
                     complete: function() {},
                     success: function(data) {
                         console.log("data from NYTimes", data);
-                        var index = titleCheck(data, 'display_title', 'publication_date', nonEncodedFilm, releaseYear);
-                        console.log("index in nytCall", index);
-                        if (index !== undefined) {
-                            nytInfo({
-                                title: data.results[index].display_title,
-                                capsuleReview: data.results[index].capsule_review,
-                                summary: data.results[index].summary_short,
-                                reviewURL: domain(data.results[index].link.url),
-                                byline: data.results[index].byline,
-                                headline: data.results[index].headline,
-                                releaseYear: data.results[index].publication_date
-                            });
+                        if ((data.results[0].display_title == nonEncodedFilm) || (data.results[0].display_title == 'The ' + nonEncodedFilm)) {
+                            index1 = 0;
                         } else {
-                            nytInfo(undefined);
+                            index1 = titleCheck(data, 'display_title', 'publication_date', nonEncodedFilm, releaseYear);
                         }
+                        //TODO: should each of those be observable arrays?
+                        nytInfo({
+                            title: data.results[index1].display_title,
+                            capsuleReview: data.results[index1].capsule_review,
+                            summary: data.results[index1].summary_short,
+                            reviewURL: domain(data.results[index1].link.url),
+                            byline: data.results[index1].byline,
+                            headline: data.results[index1].headline,
+                            releaseYear: data.results[index1].publication_date
+                        });
+
                     },
                     fail: function(jqxhr, textStatus, error) {
                         console.log("New York Times Article Could Not Be Loaded: ", error);
@@ -220,41 +224,36 @@ $(function() {
                 });
             },
             loadMovieDbData = function(encodedFilm, nonEncodedFilm, releaseYear) {
-                var filmFound = ko.observable();
-
-                function movieDbYear(longDate) {
-                    var myRegexp = /[^-]*/;
-                    var match = myRegexp.exec(longDate);
-                    return match;
-                }
+                posterSRC(null); //TODO: is there a diff. btwn using null and undefined here?
+                overview(null);
+                tagline(undefined);
+                trailerURL(undefined);
 
                 theMovieDb.search.getMovie({ "query": encodedFilm },
                     (function(data) {
-                        var overview;
                         var filmID;
+                        var index;
                         var dbStore = JSON.parse(data);
-                        movieDbData(dbStore);
-                        console.log("dbStore", dbStore);
+                        moviedb(dbStore);
+                        console.log("moviedb()", moviedb());
+                        if ((moviedb().results[0].original_title.toLowerCase() == nonEncodedFilm.toLowerCase()) || (moviedb().results[0].original_title == ('The ' + nonEncodedFilm))) {
+                            index = 0;
+                        } else {
+                            index = titleCheck(dbStore, 'original_title', 'release_date', nonEncodedFilm, releaseYear);
+                            console.log("index in moviedb", index);
+                            if(index === undefined) {
 
-                        var index = titleCheck(dbStore, 'title', 'release_date', nonEncodedFilm, releaseYear);
-                        filmFound(movieDbData().results[index]);
+                            }
+                        }
 
-                        var posterURL = 'https://image.tmdb.org/t/p/w370' + filmFound().poster_path;
-                        my.vm.posterSRC(posterURL);
-                        overview = filmFound().overview;
-                        my.vm.overview(overview);
-                        filmID = filmFound().id;
-
+                        posterSRC('https://image.tmdb.org/t/p/w370' + moviedb().results[index].poster_path);
+                        overview(moviedb().results[index].overview);
+                        filmID = moviedb().results[index].id;
                         theMovieDb.movies.getTrailers({ "id": filmID },
                             (function(data) {
                                 var theTrailer = JSON.parse(data);
-                                my.vm.trailerVideo(theTrailer);
-                                if (trailerVideo().youtube.length === 0) {
-                                    my.vm.trailerURL(undefined);
-                                } else {
-                                    var youtubeURL = 'https://www.youtube.com/embed/' + trailerVideo().youtube[0].source + '?rel=0&amp;showinfo=0';
-                                    my.vm.trailerURL(youtubeURL);
-                                }
+                                var url = theTrailer.youtube.length > 0 ? ('https://www.youtube.com/embed/' + theTrailer.youtube[0].source + '?rel=0&amp;showinfo=0') : undefined;
+                                trailerURL(url);
                             }),
                             (function() {
                                 console.log("you fail!"); //TODO: find the proper error
@@ -263,8 +262,7 @@ $(function() {
                         theMovieDb.movies.getById({ "id": filmID },
                             (function(data) {
                                 var movieInfo = JSON.parse(data);
-                                var tagline = movieInfo.tagline;
-                                my.vm.tagline(tagline);
+                                tagline(movieInfo.tagline);
                             }),
                             (function() {
                                 console.log("you fail!"); //TODO: find the proper error
@@ -273,8 +271,21 @@ $(function() {
                     (function() {
                         console.log("you fail!"); //TODO: find the proper error
                     }));
+            testDB();
 
             },
+
+           testDB = function() {
+                function successCB(data){
+                    console.log("test data", data);
+                }
+                function errorCB(data){
+                    console.log("test errorCB");
+                }
+
+                theMovieDb.collections.getCollection({"id": 10, "append_to_response": "trailers"}, successCB, errorCB);
+
+           },
 
             masterGeocoder = function(myGeocodeOptions, place, geocoder) {
                 var contentString;
@@ -341,37 +352,38 @@ $(function() {
                 var matchedScene;
                 var matchedTitle;
                 var matchedYear;
+                var scenesLength = this.scenes().length;
                 this.checkReset();
+                    //TODO change to foreach
+                    for (var i = 0; i < scenesLength; i++) {
+                        if (requestedFilm().toLowerCase().trim() == this.scenes()[i].filmTitle().toLowerCase().trim()) {
+                            matchedScene = this.scenes()[i];
+                            matchedTitle = this.scenes()[i].filmTitle();
+                            matchedYear = this.scenes()[i].year();
+                            var geocoder = new google.maps.Geocoder();
 
-                //TODO change to foreach
-                for (var i = 0; i < this.scenes().length; i++) {
-                    if (requestedFilm().toLowerCase().trim() === this.scenes()[i].filmTitle().toLowerCase().trim()) {
-                        matchedScene = this.scenes()[i];
-                        matchedTitle = this.scenes()[i].filmTitle();
-                        matchedYear = this.scenes()[i].year();
-                        var geocoder = new google.maps.Geocoder();
-
-                        if (this.scenes()[i].place()) {
-                            address = this.scenes()[i].streetAddress();
-                            place = this.scenes()[i].place();
-                        } else {
-                            address = this.scenes()[i].fullAddress();
-                            place = undefined;
-                        }
-
-                        currentScenes.push(this.scenes()[i]);
-
-                        var geocodeOptions = {
-                            address: address + ', San Francisco, CA',
-                            componentRestrictions: {
-                                country: 'US'
+                            if (this.scenes()[i].place()) {
+                                address = this.scenes()[i].streetAddress();
+                                place = this.scenes()[i].place();
+                            } else {
+                                address = this.scenes()[i].fullAddress();
+                                place = undefined;
                             }
-                        };
-                        masterGeocoder(geocodeOptions, place, geocoder);
-                    } // end of master if statement
-                }
+
+                            currentScenes.push(this.scenes()[i]);
+
+                            var geocodeOptions = {
+                                address: address + ', San Francisco, CA',
+                                componentRestrictions: {
+                                    country: 'US'
+                                }
+                            };
+                            masterGeocoder(geocodeOptions, place, geocoder);
+                        } // end of master if statement
+                    }
+
                 this.currentTitle(matchedTitle);
-                this.currentYear(matchedScene.year());
+                this.currentYear(matchedYear);
                 this.currentDirector(matchedScene.director());
                 this.currentWriter(matchedScene.writer());
                 this.currentActor1(matchedScene.actor1());
@@ -381,8 +393,8 @@ $(function() {
                 loadNYTData(encodeURIComponent(matchedTitle), matchedTitle, matchedYear);
                 loadMovieDbData(encodeURIComponent(matchedTitle), matchedTitle, matchedYear);
                 //TODO: do an alert for the wrong film, html binding? <div class="alert alert-danger" role="alert">...</div>
+                // This page might help: https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/ch02s04.html
             };
-
 
         return {
             scenes: scenes,
@@ -394,8 +406,6 @@ $(function() {
             currentScenes: currentScenes,
             markers: markers,
             panToMarker: panToMarker,
-            movieDbData: movieDbData,
-            trailerVideo: trailerVideo,
             overview: overview,
             googleInit: googleInit,
             currentTitle: currentTitle,
@@ -410,7 +420,9 @@ $(function() {
             checkReset: checkReset,
             trailerURL: trailerURL,
             posterSRC: posterSRC,
-            nytInfo: nytInfo
+            nytInfo: nytInfo,
+            movieDBInfo: movieDBInfo,
+            testDB: testDB
         };
     }();
 
@@ -420,5 +432,4 @@ $(function() {
     ko.observable.fn.equalityComparer = function(a, b) {
         return a === b;
     };
-
-})
+});

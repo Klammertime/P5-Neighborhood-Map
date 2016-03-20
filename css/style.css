@@ -34,6 +34,7 @@ h3 {
     font-weight: 900;
     text-transform: uppercase;
     margin-bottom: 15px;
+
 }
 
 h5 {
@@ -81,11 +82,10 @@ h5 {
     background-color: #fff;
     z-index: 2;
     overflow: auto;
-    margin: 6px auto 0 auto;
-    padding: 15px;
+    margin: 6px 30px 0 30px;
+    padding: 0 15px;
     max-height: 100vh;
-    margin-right: 30px;
-    margin-right: 30px;
+    padding-bottom: 15px;
 }
 
 .row {
@@ -124,9 +124,7 @@ input {
     font-family: inherit;
 }
 
-.btn-default {
-    border: none;
-}
+
 
 .btn-group {
     padding-top: 10px;
@@ -176,7 +174,7 @@ input {
     letter-spacing: 0px;
     text-align: left;
     line-height: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     margin-top: 0;
 }
 
@@ -237,7 +235,7 @@ input {
 
 .contentString {
     width: 300px;
-    min-height: 90px;
+    min-height: 100px;
     padding-top: 10px;
     padding-bottom: 10px;
 }
@@ -257,7 +255,7 @@ input {
 }
 
 .streetView {
-    width: 90px;
+    width: 80px;
     height: auto;
     border-radius: 100%;
 }
@@ -287,4 +285,35 @@ scrollbar {
 
 ::-webkit-scrollbar-thumb {
     background-color: RGBA(42, 100, 150, .8);
+}
+.table {
+    margin-bottom: 0;
+}
+
+.input-group-filter {
+    width: 96%;
+    padding-left: 15px;
+    padding-bottom: 15px;
+}
+
+.form-control-filter {
+    width: 100%;
+}
+
+.input-group-btn-filter {
+    width: 17%;
+}
+
+.btn-default-filter {
+    width: 75%;
+    background-color: #fff;
+    border-color: #ccc;
+    border: 1px solid transparent;
+    color: #333;
+}
+
+.btn-default {
+    background-color: #fff;
+    border-color: #ccc;
+    color: #333;
 }
