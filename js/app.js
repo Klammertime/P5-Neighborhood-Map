@@ -80,26 +80,21 @@ $(function() {
         }
     });
 
-    var titleCheck = function(theData, resultsTitleProp, resultsDateProp, desiredTitle, desiredYear){
-        //apiResults will be this data.results so you do this in for loop data.results[i]
-        //do this later after get first to work
-        // var theAPIResultsTitle = 'the ' + apiResultsTitle;
-        console.log("theData", theData);
+    var titleCheck = function(theData, resultsTitleProp, resultsDateProp, desiredTitle, desiredYear) {
         var resultsLength = theData.results.length;
 
-        function justYear(longDate){
+        function justYear(longDate) {
             var myRegexp = /[^-]*/;
             var match = myRegexp.exec(longDate);
             return match;
         }
 
-        for(var i = 0; i < resultsLength; i++){
+        for (var i = 0; i < resultsLength; i++) {
             var resultsTitle = theData.results[i][resultsTitleProp];
             var resultsYear = justYear(theData.results[i][resultsDateProp]);
             resultsYear = resultsYear[0];
 
-            if((resultsTitle === desiredTitle) && (resultsYear == desiredYear)){
-                console.log("returned i", i);
+            if ((resultsTitle === desiredTitle) && (resultsYear == desiredYear)) {
                 return i;
             }
         }
@@ -125,7 +120,7 @@ $(function() {
         var currentActor2 = ko.observable();
         var currentActor3 = ko.observable();
         var currentStudio = ko.observable();
-        var posteSRC = ko.observable();
+        var posterSRC = ko.observable();
         var nytInfo = ko.observableArray([]);
 
         var loadSceneFM = function() {
@@ -205,7 +200,7 @@ $(function() {
                         console.log("data from NYTimes", data);
                         var index = titleCheck(data, 'display_title', 'publication_date', nonEncodedFilm, releaseYear);
                         console.log("index in nytCall", index);
-                        if(index !== undefined){
+                        if (index !== undefined) {
                             nytInfo({
                                 title: data.results[index].display_title,
                                 capsuleReview: data.results[index].capsule_review,
@@ -218,7 +213,6 @@ $(function() {
                         } else {
                             nytInfo(undefined);
                         }
-
                     },
                     fail: function(jqxhr, textStatus, error) {
                         console.log("New York Times Article Could Not Be Loaded: ", error);
@@ -228,7 +222,7 @@ $(function() {
             loadMovieDbData = function(encodedFilm, nonEncodedFilm, releaseYear) {
                 var filmFound = ko.observable();
 
-                function movieDbYear(longDate){
+                function movieDbYear(longDate) {
                     var myRegexp = /[^-]*/;
                     var match = myRegexp.exec(longDate);
                     return match;
@@ -238,22 +232,12 @@ $(function() {
                     (function(data) {
                         var overview;
                         var filmID;
-                        var dbTitleLower;
-                        var dbReleaseYear;
                         var dbStore = JSON.parse(data);
                         movieDbData(dbStore);
                         console.log("dbStore", dbStore);
-                        var resultsLength = movieDbData().results.length;
-                        var nonEncodedLower = nonEncodedFilm.toLowerCase();
-                        var theNonEncodedLower = 'the ' + nonEncodedLower;
 
-                        for(var i = 0; i < resultsLength; i++){
-                            dbTitleLower = movieDbData().results[i].original_title.toLowerCase();
-                            dbReleaseYear = movieDbYear(movieDbData().results[i].release_date);
-                            if((dbTitleLower == nonEncodedLower || dbTitleLower == theNonEncodedLower) && (dbReleaseYear == releaseYear)) {
-                                filmFound(movieDbData().results[i]);
-                            }
-                        }
+                        var index = titleCheck(dbStore, 'title', 'release_date', nonEncodedFilm, releaseYear);
+                        filmFound(movieDbData().results[index]);
 
                         var posterURL = 'https://image.tmdb.org/t/p/w370' + filmFound().poster_path;
                         my.vm.posterSRC(posterURL);
@@ -274,7 +258,7 @@ $(function() {
                             }),
                             (function() {
                                 console.log("you fail!"); //TODO: find the proper error
-                        }));
+                            }));
 
                         theMovieDb.movies.getById({ "id": filmID },
                             (function(data) {
@@ -284,7 +268,7 @@ $(function() {
                             }),
                             (function() {
                                 console.log("you fail!"); //TODO: find the proper error
-                        }));
+                            }));
                     }),
                     (function() {
                         console.log("you fail!"); //TODO: find the proper error
@@ -396,8 +380,7 @@ $(function() {
                 this.currentStudio(matchedScene.studio());
                 loadNYTData(encodeURIComponent(matchedTitle), matchedTitle, matchedYear);
                 loadMovieDbData(encodeURIComponent(matchedTitle), matchedTitle, matchedYear);
-                //Todo: do an alert for the wrong film
-                // <div class="alert alert-danger" role="alert">...</div>
+                //TODO: do an alert for the wrong film, html binding? <div class="alert alert-danger" role="alert">...</div>
             };
 
 
@@ -438,4 +421,4 @@ $(function() {
         return a === b;
     };
 
-});
+})

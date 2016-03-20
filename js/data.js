@@ -3153,7 +3153,7 @@ my.filmData = (function (my) {
     "film_location": "Webster St",
     "production_company": "Twentieth Century Fox Film Cooperation",
     "release_year": "1998",
-    "film_title": "Doctor Dolittle",
+    "film_title": "Dr Dolittle",
     "writer": "Nat Mauldin"
   },
   {
@@ -3176,7 +3176,7 @@ my.filmData = (function (my) {
     "film_location": "Telegraph Hill Blvd (Telegraph Hill)",
     "production_company": "Twentieth Century Fox Film Cooperation",
     "release_year": "1998",
-    "film_title": "Doctor Dolittle",
+    "film_title": "Dr. Dolittle",
     "writer": "Nat Mauldin"
   },
   {
@@ -3187,7 +3187,7 @@ my.filmData = (function (my) {
     "film_location": "Larkin & Hyde St",
     "production_company": "Twentieth Century Fox Film Cooperation",
     "release_year": "1998",
-    "film_title": "Doctor Dolittle",
+    "film_title": "Dr. Dolittle",
     "writer": "Nat Mauldin"
   },
   {
@@ -3199,7 +3199,7 @@ my.filmData = (function (my) {
     "film_location": "Gabbiano's Restaurant - San Francisco Ferry Bldg (1 Sausalito)",
     "production_company": "Twentieth Century Fox Film Cooperation",
     "release_year": "1998",
-    "film_title": "Doctor Dolittle",
+    "film_title": "Dr. Dolittle",
     "writer": "Nat Mauldin"
   },
   {
@@ -3211,7 +3211,7 @@ my.filmData = (function (my) {
     "film_location": "Coit Tower",
     "production_company": "Twentieth Century Fox Film Cooperation",
     "release_year": "1998",
-    "film_title": "Doctor Dolittle",
+    "film_title": "Dr. Dolittle",
     "writer": "Nat Mauldin"
   },
   {
@@ -3222,7 +3222,7 @@ my.filmData = (function (my) {
     "film_location": "2107 Union St",
     "production_company": "Twentieth Century Fox Film Cooperation",
     "release_year": "1998",
-    "film_title": "Doctor Dolittle",
+    "film_title": "Dr. Dolittle",
     "writer": "Nat Mauldin"
   },
   {
@@ -3233,7 +3233,7 @@ my.filmData = (function (my) {
     "film_location": "2100 Green St",
     "production_company": "Twentieth Century Fox Film Cooperation",
     "release_year": "1998",
-    "film_title": "Doctor Dolittle",
+    "film_title": "Dr. Dolittle",
     "writer": "Nat Mauldin"
   },
   {
