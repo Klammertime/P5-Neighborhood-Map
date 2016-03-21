@@ -70,9 +70,11 @@
         <table class="table">
             <thead>
                 <div class="input-group input-group-filter">
-                  <input data-bind="visible: currentTitle" type="text" class="form-control form-control-filter" placeholder="Filter by street">
+                  <input data-bind="visible: currentTitle, value: filterWord, valueUpdate: ['blur']" type="text" class="form-control form-control-filter" placeholder="Filter by street">
+
+
                     <div class="input-group-btn input-group-btn-filter">
-                        <button data-bind="visible: currentTitle" type="button" class="btn btn-default btn-default-filter">Action
+                        <button data-bind="visible: currentTitle, click: activateRoadFilter" type="button" class="btn btn-default btn-default-filter">Filter
                         </button>
                         <button data-bind="visible: currentTitle" type="button" class="btn btn-default dropdown-toggle dropdown-toggle-filter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span data-bind="visible: currentTitle" class="caret"></span >

@@ -63,7 +63,7 @@ $(function() {
 
     // Location construction
     var SceneFilmModel = Base.extend({
-        constructor: function(director, studio, fullAddress, place, streetAddress, year, filmTitle, writer, actor1, actor2, actor3, funFact) {
+        constructor: function(director, studio, fullAddress, place, streetAddress, year, filmTitle, writer, actor1, actor2, actor3) {
             this.director = ko.observable(director);
             this.studio = ko.observable(studio);
             this.fullAddress = ko.observable(fullAddress);
@@ -75,7 +75,6 @@ $(function() {
             this.actor2 = ko.observable(actor2);
             this.actor3 = ko.observable(actor3);
             this.writer = ko.observable(writer);
-            this.funFact = ko.observable(funFact);
         }
     });
 
@@ -87,7 +86,7 @@ $(function() {
         }
 
         for (var i = 0, r = theData.results.length; i < r; i++) {
-            if (((theData.results[i][resultsTitleProp]) == desiredTitle) && (justYear(theData.results[i][resultsDateProp]) == desiredYear)) {
+            if (((theData.results[i][resultsTitleProp]) === desiredTitle) && (justYear(theData.results[i][resultsDateProp]) === desiredYear)) {
                 return i;
             }
         }
@@ -110,8 +109,8 @@ $(function() {
             currentActor1 = ko.observable(),
             currentActor2 = ko.observable(),
             currentActor3 = ko.observable(),
-            currentActors = ko.observableArray([]),
             currentStudio = ko.observable(),
+            filterWord = ko.observable(),
             posterSRC = ko.observable(),
             nytInfo = ko.observableArray([]),
             movieDBInfo = ko.observableArray([]),
@@ -132,7 +131,7 @@ $(function() {
 
                 $.each(my.filmData.data.Scenes, function(i, s) { //s stands for 'scene'
                     if (s.film_location !== undefined) { // create more false conditions
-                        scenes.push(new SceneFilmModel(s.director, s.production_company, s.film_location, escapeRegExp(s.film_location), escapeRegExp2(s.film_location), s.release_year, s.film_title, s.writer, s.actor_1, s.actor_2, s.actor_3, s.fun_facts));
+                        scenes.push(new SceneFilmModel(s.director, s.production_company, s.film_location, escapeRegExp(s.film_location), escapeRegExp2(s.film_location), s.release_year, s.film_title, s.writer, s.actor_1, s.actor_2, s.actor_3));
                         allTitles.push(s.film_title);
                     }
                 });
@@ -148,12 +147,6 @@ $(function() {
 
 
 
-            // roadFilter = ko.computed(function() {
-            //     var matchedLocs = ko.utils.arrayFilter(this.markers(), function(marker) {
-            //         return marker.title == this.filterWord();
-            //     });
-            //     //? return matchedLocs
-            // }),
 
             // The current item will be passed as the first parameter
             panToMarker = function(clickedLocation) {
@@ -170,9 +163,7 @@ $(function() {
             },
 
             loadNYTData = function(encodedFilm, nonEncodedFilm, releaseYear) {
-                var index1,
-                    nytAPI = "http://api.nytimes.com/svc/movies/v2/reviews/search.json?query='" +
-                    encodedFilm + "'&api-key=70f203863d9c8555f9b345f32ec442e8:10:59953537";
+                var index;
                 nytInfo(undefined);
 
 
@@ -183,27 +174,28 @@ $(function() {
 
                 $.ajax({
                     type: "GET",
-                    url: nytAPI,
+                    url: 'http://api.nytimes.com/svc/movies/v2/reviews/search.json?query="' +
+                        encodedFilm + '"&api-key=70f203863d9c8555f9b345f32ec442e8:10:59953537',
                     timeout: 2000,
                     dataType: "json",
                     beforeSend: function() {},
                     complete: function() {},
                     success: function(data) {
                         console.log("data from NYTimes", data);
-                        if ((data.results[0].display_title == nonEncodedFilm) || (data.results[0].display_title == 'The ' + nonEncodedFilm)) {
-                            index1 = 0;
+                        if ((data.results[0].display_title === nonEncodedFilm) || (data.results[0].display_title === 'The ' + nonEncodedFilm)) {
+                            index = 0;
                         } else {
-                            index1 = titleCheck(data, 'display_title', 'publication_date', nonEncodedFilm, releaseYear);
+                            index = titleCheck(data, 'display_title', 'publication_date', nonEncodedFilm, releaseYear);
                         }
                         //TODO: should each of those be observable arrays?
                         nytInfo({
-                            title: data.results[index1].display_title,
-                            capsuleReview: data.results[index1].capsule_review,
-                            summary: data.results[index1].summary_short,
-                            reviewURL: domain(data.results[index1].link.url),
-                            byline: data.results[index1].byline,
-                            headline: data.results[index1].headline,
-                            releaseYear: data.results[index1].publication_date
+                            title: data.results[index].display_title,
+                            capsuleReview: data.results[index].capsule_review,
+                            summary: data.results[index].summary_short,
+                            reviewURL: domain(data.results[index].link.url),
+                            byline: data.results[index].byline,
+                            headline: data.results[index].headline,
+                            releaseYear: data.results[index].publication_date
                         });
 
                     },
@@ -224,30 +216,28 @@ $(function() {
                             index,
                             dbStore = JSON.parse(data);
                         moviedb(dbStore);
+                        console.log("theMovieDb.search.getMovie is running");
                         console.log("moviedb()", moviedb());
-                        if ((moviedb().results[0].original_title.toLowerCase() == nonEncodedFilm.toLowerCase()) || (moviedb().results[0].original_title == ('The ' + nonEncodedFilm))) {
+                        if ((moviedb().results[0].original_title.toLowerCase() === nonEncodedFilm.toLowerCase()) || (moviedb().results[0].original_title === ('The ' + nonEncodedFilm))) {
                             index = 0;
                         } else {
                             index = titleCheck(dbStore, 'original_title', 'release_date', nonEncodedFilm, releaseYear);
                             console.log("index in moviedb", index);
-                            if (index === undefined) {
-
-                            }
                         }
 
                         posterSRC('https://image.tmdb.org/t/p/w370' + moviedb().results[index].poster_path);
                         overview(moviedb().results[index].overview);
                         filmID = moviedb().results[index].id;
                         theMovieDb.movies.getTrailers({ "id": filmID },
+
                             (function(data) {
                                 var theTrailer = JSON.parse(data);
-                                var url = theTrailer.youtube.length > 0 ? ('https://www.youtube.com/embed/' + theTrailer.youtube[0].source + '?rel=0&amp;showinfo=0') : undefined;
-                                trailerURL(url);
+                                console.log("theMovieDb.search.getMovie is running");
+                                trailerURL(theTrailer.youtube.length > 0 ? ('https://www.youtube.com/embed/' + theTrailer.youtube[0].source + '?rel=0&amp;showinfo=0') : undefined);
                             }),
                             (function() {
                                 console.log("you fail!"); //TODO: find the proper error
                             }));
-
                         theMovieDb.movies.getById({ "id": filmID },
                             (function(data) {
                                 var movieInfo = JSON.parse(data);
@@ -261,7 +251,6 @@ $(function() {
                         console.log("you fail!"); //TODO: find the proper error
                     }));
                 testDB();
-
             },
 
             testDB = function() {
@@ -283,28 +272,36 @@ $(function() {
                 geocoder.geocode(myGeocodeOptions, function(results, status) {
                     if (status == google.maps.GeocoderStatus.OK) {
                         map.setCenter(results[0].geometry.location);
-                        var streetViewURL = 'https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
-                            results[0].geometry.location;
-                        var streetViewImage = '<img class="streetView media-object" src="' + streetViewURL +
-                            '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetView">';
+                        console.time("streetViewImage");
+
+                        var streetViewImage = '<img class="streetView media-object" src="https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
+                            results[0].geometry.location + '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetView">';
+                        console.timeEnd("streetViewImage");
 
                         if (place) {
+                            console.time("contentString");
                             contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
                                 streetViewImage + '</a></div><div class="content-body"><p class="content-heading">' + place +
                                 '</p><p>' + results[0].formatted_address + '</p>' +
                                 '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
+                            console.timeEnd("contentString");
+                            console.time("marker");
                             marker = new google.maps.Marker({
                                 map: map,
                                 position: results[0].geometry.location,
                                 title: place + ", " + myGeocodeOptions.address, // intended address
                                 animation: google.maps.Animation.DROP
                             });
+                            console.timeEnd("marker");
 
                         } else {
+                            console.time("contentString");
                             contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
                                 streetViewImage + '</a></div><div class="content-body"><p>' +
                                 results[0].formatted_address + '</p>' +
                                 '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
+                            console.timeEnd("contentString");
+                            console.time("marker");
 
                             marker = new google.maps.Marker({
                                 map: map,
@@ -312,6 +309,8 @@ $(function() {
                                 title: myGeocodeOptions.address, // intended address
                                 animation: google.maps.Animation.DROP
                             });
+                            console.log("marker.title", marker.title);
+                            console.timeEnd("marker");
                         }
 
                         var infowindow = new google.maps.InfoWindow({
@@ -362,12 +361,12 @@ $(function() {
                     matchedScene,
                     matchedTitle,
                     matchedYear;
-                console.log("codeAddress fired");
+                console.time("codeAddress>allscenesLoop");
 
                 if (this.checkReset()) {
-                    console.log("scene area firing");
+                    console.time("scene area firing");
                     for (var j = 0, s = this.scenes().length; j < s; j++) {
-                        if (requestedFilm().toLowerCase().trim() == this.scenes()[j].filmTitle().toLowerCase().trim()) {
+                        if (requestedFilm().toLowerCase().trim() === this.scenes()[j].filmTitle().toLowerCase().trim()) {
                             matchedScene = this.scenes()[j];
                             matchedTitle = this.scenes()[j].filmTitle();
                             matchedYear = this.scenes()[j].year();
@@ -393,6 +392,8 @@ $(function() {
                             masterGeocoder(geocodeOptions, place, geocoder);
                         } // end of master if statement
                     }
+                    console.timeEnd("codeAddress>allscenesLoop");
+
                     console.log("reaching bottom of codeAddress");
                     this.currentTitle(matchedTitle);
                     this.currentYear(matchedYear);
@@ -402,13 +403,30 @@ $(function() {
                     this.currentActor2(matchedScene.actor2());
                     this.currentActor3(matchedScene.actor3());
                     this.currentStudio(matchedScene.studio());
+                    console.time("loadNYTData");
                     loadNYTData(encodeURIComponent(matchedTitle), matchedTitle, matchedYear);
+                    console.timeEnd("loadNYTData");
+                    console.time("loadMovieDbData");
                     loadMovieDbData(encodeURIComponent(matchedTitle), matchedTitle, matchedYear);
+                    console.timeEnd("loadMovieDbData");
                     pastFilm(requestedFilm());
                 }
+            },
+            activateRoadFilter = function() {
+                var roadFilter = ko.computed(function() {
+                    console.log("my.vm.markers()", my.vm.markers());
+                    console.log("my.vm.markers()", my.vm.markers());
 
-                //TODO: do an alert for the wrong film, html binding? <div class="alert alert-danger" role="alert">...</div>
-                // This page might help: https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/ch02s04.html
+
+                    var matchedLocs = ko.utils.arrayFilter(my.vm.markers(), function(marker) {
+                        console.log("marker inside matchedLocs", marker);
+                        console.log("marker.marker.title inside matchedLocs", marker.marker.title);
+                        console.log("my.vm.filterWord() inside matchedLocs", my.vm.filterWord());
+
+                        return marker.marker.title === my.vm.filterWord();
+                    });
+                   console.log(" after return statement runs matchedLocs", matchedLocs);
+                });
             };
 
         return {
@@ -437,7 +455,9 @@ $(function() {
             posterSRC: posterSRC,
             nytInfo: nytInfo,
             movieDBInfo: movieDBInfo,
-            testDB: testDB
+            testDB: testDB,
+            activateRoadFilter: activateRoadFilter,
+            filterWord: filterWord
         };
     }();
 
@@ -447,4 +467,8 @@ $(function() {
     ko.observable.fn.equalityComparer = function(a, b) {
         return a === b;
     };
-})
+});
+
+
+ //TODO: do an alert for the wrong film, html binding? <div class="alert alert-danger" role="alert">...</div>
+ // This page might help: https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/ch02s04.html
