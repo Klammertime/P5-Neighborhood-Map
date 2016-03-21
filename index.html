@@ -6,14 +6,17 @@
     <title>Maps</title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
+
+
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
-    <script src="js/base.js"></script>
     <script src="js/knockout-3.4.0.js"></script>
     <!-- change to minified for production -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src="js/themoviedb.js"></script>
     <script src="js/data.js"></script>
+    <script src="js/themoviedb.js"></script>
+    <script src="js/base.js"></script>
     <script src="js/app.js"></script>
+
     <script src="https://use.typekit.net/ghz2fyp.js"></script>
     <script>
     try {
@@ -138,11 +141,13 @@
     <!-- nyt template, shows blockquote from nyt API -->
     <div id="nytTemplate" style="display: none">
         <blockquote data-bind="visible: nytInfo(), foreach: nytInfo">
-            <div data-bind="if: capsuleReview">
-                <p data-bind="text: capsuleReview"></p>
+            <div class data-bind="ifnot: summary">
+                <div data-bind="if: capsuleReview">
+                    <p data-bind="text: capsuleReview"></p>
+                </div>
             </div>
             <div data-bind="if: headline">
-                <p data-bind="text: headline"></p>
+                <h3 data-bind="text: headline"></h3>
             </div>
             <div data-bind="if: summary">
                 <p data-bind="text: summary"></p>
@@ -168,6 +173,7 @@
         </div>
     </div>
     <!-- trailer template end -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiFWUDeNqeIgmx7njjzjJAVWwC2t9hNP0&libraries=places&callback=my.vm.googleInit" async defer></script>
+
+   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiFWUDeNqeIgmx7njjzjJAVWwC2t9hNP0&libraries=places&callback=my.vm.googleInit" async defer></script>
 </body>
 </ht
