@@ -7,12 +7,12 @@
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
-    <script src="js/base.js"></script>
     <script src="js/knockout-3.4.0.js"></script>
     <!-- change to minified for production -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src="js/themoviedb.js"></script>
     <script src="js/data.js"></script>
+    <script src="js/themoviedb.js"></script>
+    <script src="js/base.js"></script>
     <script src="js/app.js"></script>
     <script src="https://use.typekit.net/ghz2fyp.js"></script>
     <script>
@@ -50,23 +50,49 @@
         <div class="col-md-4 col-lg-4 col-sm-4" data-bind="with: my.vm">
             <div class="panel panel-default filmInfoBox" data-bind="visible: currentTitle">
                 <h3 data-bind="visible: currentTitle, text: currentTitle"></h3>
-                <ul class="media-list">
-                    <div data-bind="template: {name: 'filmInfoTemplate'}"></div>
-                    <div data-bind="template: {name: 'nytTemplate'}"></div>
-                    <div data-bind="template: {name: 'overviewTemplate'}"></div>
-                </ul>
+                <h5 class="media-heading" data-bind="visible: tagline, text: tagline"></h5>
+                <div data-bind="template: {name: 'filmInfoTemplate'}"></div>
+                <div data-bind="template: {name: 'nytTemplate'}"></div>
+                <div data-bind="template: {name: 'overviewTemplate'}"></div>
                 <div data-bind="template: {name: 'trailerTemplate'}"></div>
             </div>
         </div>
     </div>
     <div class="col-md-1 col-lg-1 col-sm-1"> </div>
     <div id="googleMap" class="map-canvas"></div>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiFWUDeNqeIgmx7njjzjJAVWwC2t9hNP0&libraries=places&callback=my.vm.googleInit" async defer></script>
-    <!--TODO: is there a reason it shouldn't be stored after maps api? Doesn't seem to be affecting it -->
-    <!--TEMPLATES STORED HERE-->
+    <!--TEMPLATES STORED HERE!!!!!!!!!!!!!!!!-->
     <!-- locations template, shows locations from markers -->
     <div id="locationsTemplate" style="display: none">
         <table class="table">
+            <thead>
+                <div class="input-group input-group-filter">
+                    <input class="form-control form-control-filter" placeholder="Search…" type="search" data-bind="visible: currentTitle, value: query, valueUpdate: ['blur']" autocomplete="off">
+                    <div class="input-group-btn input-group-btn-filter">
+                        <button data-bind="visible: currentTitle, click: filter" type="button" class="btn btn-default btn-default-filter">Filter
+                        </button>
+                        <button data-bind="visible: currentTitle" type="button" class="btn btn-default dropdown-toggle dropdown-toggle-filter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span data-bind="visible: currentTitle" class="caret"></span >
+                            <span class = "sr-only"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li>
+                                <a data-bind="visible: markerStore, click: filterReset" href="#">Reset</a>
+                            </li>
+                            <!-- <li>
+                                <a href = "#">Another action</a>
+                            </li>
+                            <li>
+                                <a href="#">Something else here</a>
+                            </li>
+                            <li role="separator" class="divider">
+                            </li>
+                            <li>
+                                <a href="#">Separated link</a >
+                            </li> -->
+                        </ul>
+                    </div>
+                </div>
+            </thead>
             <tbody data-bind="foreach: markers">
                 <tr>
                     <td>
@@ -82,14 +108,13 @@
     <!-- locations template end -->
     <!-- filmInfo template, shows info from SFData in data.js -->
     <div id="filmInfoTemplate" style="display: none">
-        <li class="media">
+        <div class="media" data-bind="with: my.vm">
             <div class="media-left">
-                <a data-bind="visible: posterImage" href="#">
-                    <span data-bind="visible: posterImage, html: posterImage" class="thumbnail media-object"></span>
+                <a data-bind="visible: posterSRC" href="#" class="thumbnail media-object">
+                    <img data-bind="attr: { src: posterSRC }">
                 </a>
             </div>
             <div class="media-body">
-                <h5 class="media-heading" data-bind="visible: tagline, text: tagline"></h5>
                 <p><span class="itemHeader">Year: </span><span data-bind="visible: currentYear, text: currentYear"></span></p>
                 <p><span class="itemHeader">Production Company: </span><span data-bind="visible: currentStudio, text: currentStudio"></span></p>
                 <p><span class="itemHeader">Director: </span><span data-bind="visible: currentDirector, text: currentDirector"></span></p>
@@ -99,19 +124,27 @@
                     <span data-bind="visible: currentActor1, text: currentActor1"></span><span data-bind="visible: currentActor2">, </span><span data-bind="visible: currentActor2, text: currentActor2"></span><span data-bind="visible: currentActor3">, </span><span data-bind="visible: currentActor3, text: currentActor3"></span>
                 </p>
             </div>
-        </li>
+        </div>
     </div>
     <!-- filmInfo template end -->
     <!-- nyt template, shows blockquote from nyt API -->
     <div id="nytTemplate" style="display: none">
-        <blockquote data-bind="visible: nytByline">
-            <p data-bind="visible: nytCapsuleReview, text: nytCapsuleReview"></p>
-            <p data-bind="visible: nytSummary, text: nytSummary"></p>
-            <p data-bind="visible: nytHeadline, text: nytHeadline"></p>
-            <footer>
-                <span data-bind="visible: nytByline, text: nytByline"></span> in
-                <cite title="Source Title"><a target="_blank" data-bind="visible: nytReviewURL, attr: { href: nytReviewURL }">The New York Times</a></cite>
-            </footer>
+        <blockquote data-bind="visible: nytInfo(), foreach: nytInfo">
+            <div class data-bind="ifnot: summary">
+                <div data-bind="if: capsuleReview">
+                    <p data-bind="text: capsuleReview"></p>
+                </div>
+            </div>
+            <div data-bind="if: headline">
+                <h3 data-bind="text: headline"></h3>
+            </div>
+            <div data-bind="if: summary">
+                <p data-bind="text: summary"></p>
+            </div>
+            <p>
+                <footer><span data-bind="if: byline"><span data-bind="text: byline"></span>, </span><span data-bind="if: reviewURL"><cite title="Source Title"><a target="_blank" data-bind="attr: { href: reviewURL }">The New York Times</a></cite></span>
+                </footer>
+            </p>
         </blockquote>
     </div>
     <!-- nyt template end -->
@@ -123,11 +156,12 @@
     <!-- overview template end -->
     <!-- trailer template, shows trailer from TMDb API -->
     <div id="trailerTemplate" style="display: none">
-        <div>
-            <span data-bind="visible: trailerVideo, html: trailerHTML"></span>
+        <div data-bind="visible: trailerURL" class="embed-responsive embed-responsive-16by9">
+            <iframe data-bind="attr: { src: trailerURL }" class="embed-responsive-item" width="1280" height="720" allowfullscreen>
+            </iframe>
         </div>
     </div>
     <!-- trailer template end -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiFWUDeNqeIgmx7njjzjJAVWwC2t9hNP0&libraries=places&callback=my.vm.googleInit" async defer></script>
 </body>
-
-</html>
+</h
