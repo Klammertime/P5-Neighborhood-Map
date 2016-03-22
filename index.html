@@ -6,7 +6,6 @@
     <title>Maps</title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
-
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <script src="js/knockout-3.4.0.js"></script>
     <!-- change to minified for production -->
@@ -15,7 +14,6 @@
     <script src="js/themoviedb.js"></script>
     <script src="js/base.js"></script>
     <script src="js/app.js"></script>
-
     <script src="https://use.typekit.net/ghz2fyp.js"></script>
     <script>
     try {
@@ -68,7 +66,7 @@
         <table class="table">
             <thead>
                 <div class="input-group input-group-filter">
-             <input class="form-control form-control-filter" placeholder="Search…" type="search" data-bind="visible: currentTitle, value: query, valueUpdate: ['blur']" autocomplete="off">
+                    <input class="form-control form-control-filter" placeholder="Search…" type="search" data-bind="visible: currentTitle, value: query, valueUpdate: ['blur']" autocomplete="off">
                     <div class="input-group-btn input-group-btn-filter">
                         <button data-bind="visible: currentTitle, click: filter" type="button" class="btn btn-default btn-default-filter">Filter
                         </button>
@@ -94,7 +92,6 @@
                         </ul>
                     </div>
                 </div>
-
             </thead>
             <tbody data-bind="foreach: markers">
                 <tr>
@@ -165,7 +162,6 @@
         </div>
     </div>
     <!-- trailer template end -->
-
-   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiFWUDeNqeIgmx7njjzjJAVWwC2t9hNP0&libraries=places&callback=my.vm.googleInit" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiFWUDeNqeIgmx7njjzjJAVWwC2t9hNP0&libraries=places&callback=my.vm.googleInit" async defer></script>
 </body>
-</ht
+</h

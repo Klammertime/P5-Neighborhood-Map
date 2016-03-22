@@ -404,7 +404,7 @@ my.filmData = (function (my) {
     "film_location": "Pier 50- end of the pier",
     "production_company": "Lionsgate \/ Sidney Kimmel Entertainment \/ Lakeshore Entertainment",
     "release_year": "2015",
-    "film_title": "Age of Adaline",
+    "film_title": "The Age of Adaline",
     "writer": "J. Mills Goodloe"
   },
   {
@@ -415,7 +415,7 @@ my.filmData = (function (my) {
     "film_location": "California St & Montgomery",
     "production_company": "Lionsgate \/ Sidney Kimmel Entertainment \/ Lakeshore Entertainment",
     "release_year": "2015",
-    "film_title": "Age of Adaline",
+    "film_title": "The Age of Adaline",
     "writer": "J. Mills Goodloe"
   },
   {
@@ -426,7 +426,7 @@ my.filmData = (function (my) {
     "film_location": "Montgomery\/Green",
     "production_company": "Lionsgate \/ Sidney Kimmel Entertainment \/ Lakeshore Entertainment",
     "release_year": "2015",
-    "film_title": "Age of Adaline",
+    "film_title": "The Age of Adaline",
     "writer": "J. Mills Goodloe"
   },
   {
@@ -2797,7 +2797,7 @@ my.filmData = (function (my) {
     "actor_3": "Oliver Platt",
     "director": "Rudolph Mate",
     "distributor": "United Artists",
-    "film_location": "Market St & Steuart St (Financial District)",
+    "film_location": "Financial District (Market St & Steuart St)",
     "production_company": "Cardinal Pictures",
     "release_year": "1950",
     "film_title": "D.O.A",
@@ -3146,17 +3146,6 @@ my.filmData = (function (my) {
     "writer": "Harry Julian Fink"
   },
   {
-    "actor_1": "Eddie Murphy",
-    "actor_2": "Ossie Davis",
-    "director": "Betty Thomas",
-    "distributor": "Twentieth Century Fox Film Cooperation",
-    "film_location": "Webster St",
-    "production_company": "Twentieth Century Fox Film Cooperation",
-    "release_year": "1998",
-    "film_title": "Doctor Dolittle",
-    "writer": "Nat Mauldin"
-  },
-  {
     "actor_1": "Matthew McConaughey",
     "actor_2": "Jenna Elfman",
     "actor_3": "Uma Thurman",
@@ -3176,7 +3165,7 @@ my.filmData = (function (my) {
     "film_location": "Telegraph Hill Blvd (Telegraph Hill)",
     "production_company": "Twentieth Century Fox Film Cooperation",
     "release_year": "1998",
-    "film_title": "Doctor Dolittle",
+    "film_title": "Dr. Dolittle",
     "writer": "Nat Mauldin"
   },
   {
@@ -3187,7 +3176,7 @@ my.filmData = (function (my) {
     "film_location": "Larkin & Hyde St",
     "production_company": "Twentieth Century Fox Film Cooperation",
     "release_year": "1998",
-    "film_title": "Doctor Dolittle",
+    "film_title": "Dr. Dolittle",
     "writer": "Nat Mauldin"
   },
   {
@@ -3199,7 +3188,7 @@ my.filmData = (function (my) {
     "film_location": "Gabbiano's Restaurant - San Francisco Ferry Bldg (1 Sausalito)",
     "production_company": "Twentieth Century Fox Film Cooperation",
     "release_year": "1998",
-    "film_title": "Doctor Dolittle",
+    "film_title": "Dr. Dolittle",
     "writer": "Nat Mauldin"
   },
   {
@@ -3211,7 +3200,7 @@ my.filmData = (function (my) {
     "film_location": "Coit Tower",
     "production_company": "Twentieth Century Fox Film Cooperation",
     "release_year": "1998",
-    "film_title": "Doctor Dolittle",
+    "film_title": "Dr. Dolittle",
     "writer": "Nat Mauldin"
   },
   {
@@ -3222,7 +3211,7 @@ my.filmData = (function (my) {
     "film_location": "2107 Union St",
     "production_company": "Twentieth Century Fox Film Cooperation",
     "release_year": "1998",
-    "film_title": "Doctor Dolittle",
+    "film_title": "Dr. Dolittle",
     "writer": "Nat Mauldin"
   },
   {
@@ -3233,7 +3222,7 @@ my.filmData = (function (my) {
     "film_location": "2100 Green St",
     "production_company": "Twentieth Century Fox Film Cooperation",
     "release_year": "1998",
-    "film_title": "Doctor Dolittle",
+    "film_title": "Dr. Dolittle",
     "writer": "Nat Mauldin"
   },
   {
@@ -3301,7 +3290,7 @@ my.filmData = (function (my) {
     "actor_3": "William Devane",
     "director": "Steve Carr",
     "distributor": "Twentieth Century Fox Film Corp.",
-    "film_location": "Sacramento St, Between Pierce St& Broderick St ",
+    "film_location": "Sacramento St, Between Pierce St & Broderick St ",
     "production_company": "Twentieth Century Fox Film Corp.",
     "release_year": "2001",
     "film_title": "Dr. Dolittle 2",
@@ -3461,7 +3450,7 @@ my.filmData = (function (my) {
     "director": "Ron Howard",
     "distributor": "MCA \/ Universal Pictures",
     "fun_facts": "The original Castro Theatre was built in 1910, a few doors down from the current theatre. The original theatre was converted into retail space, and the current theatre was built in the 1920s.",
-    "film_location": "Castro Theatre (429 Castro St, The Castro)",
+    "film_location": "Castro Theatre = The Castro (429 Castro St)",
     "production_company": "Imagine Entertainment",
     "release_year": "1999",
     "film_title": "Edtv",
@@ -3567,7 +3556,7 @@ my.filmData = (function (my) {
     "director": "Blake Edwards",
     "distributor": "Columbia Pictures",
     "fun_facts": "The hotel was destroyed in the 1906 earthquake and fire, had to be rebuilt, and was reopened in 1909. ",
-    "film_location": "Sheraton Palace Hotel - Financial District(2 Montgomery St)",
+    "film_location": "Sheraton Palace Hotel - Financial District (2 Montgomery St)",
     "production_company": "Columbia Pictures Corporation",
     "release_year": "1962",
     "film_title": "Experiment in Terror",
@@ -4728,7 +4717,7 @@ my.filmData = (function (my) {
     "actor_3": "Bryan Cranston",
     "director": "Gareth Edwards",
     "distributor": "Warner Bros. Pictures",
-    "film_location": "Potrero &San Bruno",
+    "film_location": "Potrero & San Bruno",
     "production_company": "Nautiflus Productions, LLC",
     "release_year": "2014",
     "film_title": "Godzilla",
@@ -6128,7 +6117,7 @@ my.filmData = (function (my) {
     "film_location": "Lusty Lady Theatre (1033 Kearny St)",
     "production_company": "Constant Communication",
     "release_year": "2000",
-    "film_title": "Live Nude Girls Unite",
+    "film_title": "Live Nude Girls UNITE!",
     "writer": "Vicky Funari"
   },
   {
@@ -8169,7 +8158,7 @@ my.filmData = (function (my) {
     "actor_2": "Debbie Reynolds",
     "director": "George Seaton",
     "distributor": "Parmaount Pictures",
-    "film_location": "2700 Vallejo St ",
+    "film_location": "2700 Vallejo St",
     "production_company": "Perlsea Company",
     "release_year": "1961",
     "film_title": "Pleasure of His Company",
@@ -8996,7 +8985,7 @@ my.filmData = (function (my) {
     "director": "The Wachowskis",
     "distributor": "Netflix",
     "fun_facts": "Filming of the \"Fresh Meat\" Festival",
-    "film_location": "Z Space Studios; 450 Florida St",
+    "film_location": "(Z Space Studios) 450 Florida St",
     "production_company": "Unpronounceable Productions, LLC",
     "release_year": "2015",
     "film_title": "Sense8",
@@ -11212,7 +11201,7 @@ my.filmData = (function (my) {
     "actor_2": "Liam Neeson",
     "director": "Buddy Van Horn",
     "distributor": "Warner Bros. Pictures",
-    "film_location": "Pierce St & California St ",
+    "film_location": "Pierce St & California St",
     "production_company": "Warner Bros. Pictures",
     "release_year": "1988",
     "film_title": "The Dead Pool",
