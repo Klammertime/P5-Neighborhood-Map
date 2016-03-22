@@ -179,10 +179,10 @@ $(function() {
                     success: function(data) {
                         console.log("data from NYTimes", data);
                         if ((data.results[0].display_title === nonEncodedFilm) || (data.results[0].display_title === 'The ' + nonEncodedFilm)) {
-                        index = 0;
-                    } else {
-                        index = titleCheck(data, 'display_title', 'publication_date', nonEncodedFilm, releaseYear);
-
+                            index = 0;
+                        } else {
+                            index = titleCheck(data, 'display_title', 'publication_date', nonEncodedFilm, releaseYear);
+                        }
                         //TODO: should each of those be observable arrays?
                         nytInfo({
                             title: data.results[index].display_title,
