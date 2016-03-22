@@ -94,7 +94,6 @@ $(function() {
 
     my.vm = function() {
         var scenes = ko.observableArray([]),
-            currentScenes = ko.observableArray([]), //put current selected film locs
             allTitles = ko.observableArray([]),
             requestedFilm = ko.observable(),
             pastFilm = ko.observable(),
@@ -110,11 +109,12 @@ $(function() {
             currentActor2 = ko.observable(),
             currentActor3 = ko.observable(),
             currentStudio = ko.observable(),
-            filterWord = ko.observable(),
             posterSRC = ko.observable(),
             nytInfo = ko.observableArray([]),
             movieDBInfo = ko.observableArray([]),
+            markerStore = ko.observableArray([]),
             moviedb = ko.observable(),
+            query = ko.observable(''),
             loadSceneFM = function() {
                 // Returns everything before first parentheses, which is the place
                 function escapeRegExp(string) {
@@ -145,9 +145,6 @@ $(function() {
                 googleSuccess();
             },
 
-
-
-
             // The current item will be passed as the first parameter
             panToMarker = function(clickedLocation) {
                 // Makes it so when click on item in list of locations takes you to marker and opens infowindow
@@ -165,7 +162,6 @@ $(function() {
             loadNYTData = function(encodedFilm, nonEncodedFilm, releaseYear) {
                 var index;
                 nytInfo(undefined);
-
 
                 function domain(fullUrl) {
                     var match = /\.(.*)$/.exec(fullUrl);
@@ -204,66 +200,76 @@ $(function() {
                     }
                 });
             },
+
             loadMovieDbData = function(encodedFilm, nonEncodedFilm, releaseYear) {
                 posterSRC(null); //TODO: is there a diff. btwn using null and undefined here?
                 overview(null);
                 tagline(undefined);
                 trailerURL(undefined);
+                var filmID,
+                    index;
 
-                theMovieDb.search.getMovie({ "query": encodedFilm },
-                    (function(data) {
-                        var filmID,
-                            index,
-                            dbStore = JSON.parse(data);
-                        moviedb(dbStore);
-                        console.log("theMovieDb.search.getMovie is running");
-                        console.log("moviedb()", moviedb());
-                        if ((moviedb().results[0].original_title.toLowerCase() === nonEncodedFilm.toLowerCase()) || (moviedb().results[0].original_title === ('The ' + nonEncodedFilm))) {
-                            index = 0;
-                        } else {
-                            index = titleCheck(dbStore, 'original_title', 'release_date', nonEncodedFilm, releaseYear);
-                            console.log("index in moviedb", index);
-                        }
+                function successCB(data) {
+                    var dbStore = JSON.parse(data);
+                    moviedb(dbStore);
 
-                        posterSRC('https://image.tmdb.org/t/p/w370' + moviedb().results[index].poster_path);
-                        overview(moviedb().results[index].overview);
-                        filmID = moviedb().results[index].id;
-                        theMovieDb.movies.getTrailers({ "id": filmID },
+                    if ((moviedb().results[0].original_title.toLowerCase() === nonEncodedFilm.toLowerCase()) || (moviedb().results[0].original_title === ('The ' + nonEncodedFilm))) {
+                        index = 0;
+                    } else {
+                        index = titleCheck(dbStore, 'original_title', 'release_date', nonEncodedFilm, releaseYear);
+                    }
 
-                            (function(data) {
-                                var theTrailer = JSON.parse(data);
-                                console.log("theMovieDb.search.getMovie is running");
-                                trailerURL(theTrailer.youtube.length > 0 ? ('https://www.youtube.com/embed/' + theTrailer.youtube[0].source + '?rel=0&amp;showinfo=0') : undefined);
-                            }),
-                            (function() {
-                                console.log("you fail!"); //TODO: find the proper error
-                            }));
-                        theMovieDb.movies.getById({ "id": filmID },
-                            (function(data) {
-                                var movieInfo = JSON.parse(data);
-                                tagline(movieInfo.tagline);
-                            }),
-                            (function() {
-                                console.log("you fail!"); //TODO: find the proper error
-                            }));
-                    }),
-                    (function() {
-                        console.log("you fail!"); //TODO: find the proper error
-                    }));
-                testDB();
+                    posterSRC('https://image.tmdb.org/t/p/w370' + moviedb().results[index].poster_path);
+                    overview(moviedb().results[index].overview);
+                    filmID = moviedb().results[index].id;
+
+                    getTagline(filmID);
+                    getTrailer(filmID);
+                }
+
+                function errorCB() {
+                    console.log("you fail!"); //TODO: find the proper error
+                }
+            // How it works:
+            // theMovieDb.movies.getById({"id":76203 }, successCB, errorCB)
+                theMovieDb.search.getMovie({ "query": encodedFilm }, successCB, errorCB);
+            },
+
+            getTagline = function(foundfilmID) {
+                function successCB(data){
+                    var movieInfo = JSON.parse(data);
+                    tagline(movieInfo.tagline);
+                }
+
+                function errorCB(){
+                    console.log("you fail!"); //TODO: find the proper error
+                }
+                theMovieDb.movies.getById({ "id": foundfilmID }, successCB, errorCB);
+            },
+
+            getTrailer = function(foundfilmID2) {
+                function successCB(data){
+                    var theTrailer = JSON.parse(data);
+                    trailerURL(theTrailer.youtube.length > 0 ? ('https://www.youtube.com/embed/' + theTrailer.youtube[0].source + '?rel=0&amp;showinfo=0') : undefined);
+                }
+
+                function errorCB(){
+                    console.log("you fail!"); //TODO: find the proper error
+                }
+
+                theMovieDb.movies.getTrailers({ "id": foundfilmID2 }, successCB, errorCB);
             },
 
             testDB = function() {
+                // http://api.themoviedb.org/3/search/multi
+                // https://api.themoviedb.org/3/movie/63?api_key=###&append_to_response=credits,images
                 function successCB(data) {
-                    // console.log("test data", data);
                 }
 
                 function errorCB(data) {
-                    console.log("test errorCB");
                 }
 
                 theMovieDb.collections.getCollection({ "id": 10, "append_to_response": "trailers" }, successCB, errorCB);
-
             },
 
             masterGeocoder = function(myGeocodeOptions, place, geocoder) {
@@ -272,36 +278,28 @@ $(function() {
                 geocoder.geocode(myGeocodeOptions, function(results, status) {
                     if (status == google.maps.GeocoderStatus.OK) {
                         map.setCenter(results[0].geometry.location);
-                        console.time("streetViewImage");
 
                         var streetViewImage = '<img class="streetView media-object" src="https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
                             results[0].geometry.location + '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetView">';
-                        console.timeEnd("streetViewImage");
 
                         if (place) {
-                            console.time("contentString");
                             contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
                                 streetViewImage + '</a></div><div class="content-body"><p class="content-heading">' + place +
                                 '</p><p>' + results[0].formatted_address + '</p>' +
                                 '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
-                            console.timeEnd("contentString");
-                            console.time("marker");
+
                             marker = new google.maps.Marker({
                                 map: map,
                                 position: results[0].geometry.location,
                                 title: place + ", " + myGeocodeOptions.address, // intended address
                                 animation: google.maps.Animation.DROP
                             });
-                            console.timeEnd("marker");
 
                         } else {
-                            console.time("contentString");
                             contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
                                 streetViewImage + '</a></div><div class="content-body"><p>' +
                                 results[0].formatted_address + '</p>' +
                                 '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
-                            console.timeEnd("contentString");
-                            console.time("marker");
 
                             marker = new google.maps.Marker({
                                 map: map,
@@ -309,8 +307,6 @@ $(function() {
                                 title: myGeocodeOptions.address, // intended address
                                 animation: google.maps.Animation.DROP
                             });
-                            console.log("marker.title", marker.title);
-                            console.timeEnd("marker");
                         }
 
                         var infowindow = new google.maps.InfoWindow({
@@ -334,23 +330,17 @@ $(function() {
                     }
                 });
             },
-            checkReset = function() {
-                console.log("checkReset fired");
-                console.log("pastFilm() in checkReset", pastFilm());
-                console.log("requestedFilm() in checkReset", requestedFilm());
 
+            checkReset = function() {
                 if ((this.markers().length > 0) && (pastFilm() !== requestedFilm())) {
-                    console.log("(pastFilm() !== requestedFilm())", pastFilm() !== requestedFilm());
                     $.each(this.markers(), function(i, marker) {
                         marker.marker.setMap(null);
                     });
                     this.markers([]);
                     return true;
                 } else if (!pastFilm()) {
-                    console.log("!pastFilm()", !pastFilm());
                     return true;
                 } else {
-                    console.log("its returning false");
                     return false;
                 }
             },
@@ -361,10 +351,8 @@ $(function() {
                     matchedScene,
                     matchedTitle,
                     matchedYear;
-                console.time("codeAddress>allscenesLoop");
 
                 if (this.checkReset()) {
-                    console.time("scene area firing");
                     for (var j = 0, s = this.scenes().length; j < s; j++) {
                         if (requestedFilm().toLowerCase().trim() === this.scenes()[j].filmTitle().toLowerCase().trim()) {
                             matchedScene = this.scenes()[j];
@@ -380,9 +368,6 @@ $(function() {
                                 place = undefined;
                             }
 
-                            //TODO: you don't do anything with this!
-                            currentScenes.push(this.scenes()[j]);
-
                             var geocodeOptions = {
                                 address: address + ', San Francisco, CA',
                                 componentRestrictions: {
@@ -392,9 +377,7 @@ $(function() {
                             masterGeocoder(geocodeOptions, place, geocoder);
                         } // end of master if statement
                     }
-                    console.timeEnd("codeAddress>allscenesLoop");
 
-                    console.log("reaching bottom of codeAddress");
                     this.currentTitle(matchedTitle);
                     this.currentYear(matchedYear);
                     this.currentDirector(matchedScene.director());
@@ -412,22 +395,26 @@ $(function() {
                     pastFilm(requestedFilm());
                 }
             },
-            activateRoadFilter = function() {
-                var roadFilter = ko.computed(function() {
-                    console.log("my.vm.markers()", my.vm.markers());
-                    console.log("my.vm.markers()", my.vm.markers());
 
-
-                    var matchedLocs = ko.utils.arrayFilter(my.vm.markers(), function(marker) {
-                        console.log("marker inside matchedLocs", marker);
-                        console.log("marker.marker.title inside matchedLocs", marker.marker.title);
-                        console.log("my.vm.filterWord() inside matchedLocs", my.vm.filterWord());
-
-                        return marker.marker.title === my.vm.filterWord();
-                    });
-                   console.log(" after return statement runs matchedLocs", matchedLocs);
+            filter = function(){
+                var newArr = my.vm.markers.remove( function (item) {
+                    return item.marker.title === my.vm.query();
                 });
+                for(var i = 0, f = my.vm.markers().length; i < f; i++){
+                    my.vm.markers()[i].marker.setMap(null);
+                }
+                my.vm.markerStore(my.vm.markers());
+                my.vm.markerStore.push(newArr[0]); //TODO: have it be a loop because might not be 0
+                my.vm.markers(newArr[0]);
+            },
+
+            filterReset = function(){
+                for(var i = 0; i < my.vm.markerStore().length; i++){
+                    my.vm.markerStore()[i].marker.setMap(map);
+                }
+                my.vm.markers(my.vm.markerStore());
             };
+             // if(theMarkers[x].marker.title.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
 
         return {
             scenes: scenes,
@@ -436,7 +423,6 @@ $(function() {
             allTitles: allTitles,
             requestedFilm: requestedFilm,
             codeAddress: codeAddress,
-            currentScenes: currentScenes,
             markers: markers,
             panToMarker: panToMarker,
             overview: overview,
@@ -456,8 +442,10 @@ $(function() {
             nytInfo: nytInfo,
             movieDBInfo: movieDBInfo,
             testDB: testDB,
-            activateRoadFilter: activateRoadFilter,
-            filterWord: filterWord
+            query: query,
+            filter: filter,
+            filterReset: filterReset,
+            markerStore: markerStore
         };
     }();
 

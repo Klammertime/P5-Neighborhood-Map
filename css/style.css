@@ -317,3 +317,38 @@ scrollbar {
     border-color: #ccc;
     color: #333;
 }
+
+.input-group-btn:last-child>.btn {
+    margin-left: -6px;
+}
+
+.dropdown-menu>li>a {
+    padding: 3px 10px;
+}
+.input-group-btn:last-child>.btn {
+    margin-left: -2px;
+}
+
+.input-group-filter {
+    width: 99%;
+    padding-left: 15px;
+    padding-bottom: 15px;
+}
+
+.input-group-btn-filter {
+    width: 17%;
+}
+
+.dropdown-menu>li>a {
+    display: block;
+    padding: 4px 0 4px 8px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+}
+
+.btn-default-filter {
+    width: 60%;
+}

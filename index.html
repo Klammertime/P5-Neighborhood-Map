@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
 
-
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <script src="js/knockout-3.4.0.js"></script>
     <!-- change to minified for production -->
@@ -63,28 +62,25 @@
     </div>
     <div class="col-md-1 col-lg-1 col-sm-1"> </div>
     <div id="googleMap" class="map-canvas"></div>
-    <!--TODO: is there a reason it shouldn't be stored after maps api? Doesn't seem to be affecting it -->
     <!--TEMPLATES STORED HERE!!!!!!!!!!!!!!!!-->
     <!-- locations template, shows locations from markers -->
     <div id="locationsTemplate" style="display: none">
         <table class="table">
             <thead>
                 <div class="input-group input-group-filter">
-                  <input data-bind="visible: currentTitle, value: filterWord, valueUpdate: ['blur']" type="text" class="form-control form-control-filter" placeholder="Filter by street">
-
-
+             <input class="form-control form-control-filter" placeholder="Search…" type="search" data-bind="visible: currentTitle, value: query, valueUpdate: ['blur']" autocomplete="off">
                     <div class="input-group-btn input-group-btn-filter">
-                        <button data-bind="visible: currentTitle, click: activateRoadFilter" type="button" class="btn btn-default btn-default-filter">Filter
+                        <button data-bind="visible: currentTitle, click: filter" type="button" class="btn btn-default btn-default-filter">Filter
                         </button>
                         <button data-bind="visible: currentTitle" type="button" class="btn btn-default dropdown-toggle dropdown-toggle-filter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span data-bind="visible: currentTitle" class="caret"></span >
-                            <span class = "sr-only">Toggle Dropdown</span>
+                            <span class = "sr-only"></span>
                         </button>
-                        <ul class = "dropdown-menu dropdown-menu-right">
+                        <ul class="dropdown-menu dropdown-menu-right">
                             <li>
-                                <a href = "#">Action</a>
+                                <a data-bind="visible: markerStore, click: filterReset" href="#">Reset</a>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <a href = "#">Another action</a>
                             </li>
                             <li>
@@ -94,17 +90,11 @@
                             </li>
                             <li>
                                 <a href="#">Separated link</a >
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                 </div>
 
-
-                      <!-- <span data-bind="visible: currentTitle"class="input-group-btn">
-                        <button class="btn btn-default" type="button">Go!</button>
-                      </span>
-                    </div>
-                </div>-->
             </thead>
             <tbody data-bind="foreach: markers">
                 <tr>
