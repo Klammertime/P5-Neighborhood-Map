@@ -66,7 +66,7 @@
         <table class="table">
             <thead>
                 <div class="input-group input-group-filter">
-                    <input class="form-control form-control-filter" placeholder="Search…" type="search" data-bind="visible: currentTitle, value: query, valueUpdate: ['blur']" autocomplete="off">
+                    <input class="form-control form-control-filter" placeholder="Search…" type="search" data-bind="visible: currentTitle, value: query, valueUpdate: 'afterkeydown'" autocomplete="off">
                     <div class="input-group-btn input-group-btn-filter">
                         <button data-bind="visible: currentTitle, click: filter" type="button" class="btn btn-default btn-default-filter">Filter
                         </button>
@@ -104,6 +104,9 @@
                 </tr>
             </tbody>
         </table>
+   <!--          <ul data-bind="foreach: locationsFiltered">
+                <li data-bind="text: title, click: $parent.panToMarker"></li>
+            </ul> -->
     </div>
     <!-- locations template end -->
     <!-- filmInfo template, shows info from SFData in data.js -->
