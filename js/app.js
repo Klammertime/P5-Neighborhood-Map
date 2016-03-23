@@ -417,7 +417,7 @@ $(function() {
                     my.vm.markers()[i].marker.setMap(map);
                 }
                 query(null);
-            };
+            },
 
             // clearAndTraverse = function(obs){
             //     $.each(obs, function(key,val){
@@ -431,12 +431,10 @@ $(function() {
             //     });
             // },
 
-            // clear = function() {
-            //     console.log("clear query observ");
-            //     clearAndTraverse(query);
-            //     query(null);
-            //     //addEmptyString?();
-            // };
+            clear = function() {
+                console.log("clear query observ");
+                query(null);
+            };
 
         return {
             scenes: scenes,
@@ -467,8 +465,8 @@ $(function() {
             query: query,
             filter: filter,
             filterReset: filterReset,
-            markerStore: markerStore
-            // clear: clear
+            markerStore: markerStore,
+            clear: clear
         };
     }();
 
