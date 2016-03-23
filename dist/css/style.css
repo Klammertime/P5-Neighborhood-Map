@@ -31,9 +31,10 @@ h5 {
 }
 
 h3 {
-    font-weight: 900;
+    font-weight: 600;
     text-transform: uppercase;
     margin-bottom: 15px;
+    letter-spacing: 1.5px;
 
 }
 
@@ -74,6 +75,8 @@ h5 {
     overflow: auto;
     margin: 6px auto 0 auto;
     max-height: 100vh;
+    top: -43px;
+    left: -7px;
 }
 
 .filmInfoBox {
@@ -149,10 +152,10 @@ input {
 }
 
 .logo-font {
-    font-size: 14px;
+    font-size: 15px;
     margin-top: 20px;
     color: #454545;
-    font-weight: 700;
+    font-weight: 900;
     line-height: 34px;
     margin-bottom: 0px;
     text-transform: uppercase;
@@ -243,15 +246,15 @@ input {
 .content-heading {
     color: #666;
     text-transform: uppercase;
-    font-weight: 800;
+    font-weight: 500;
     font-size: 14px;
-    letter-spacing: 0px;
     text-align: left;
     line-height: 20px;
     margin-bottom: 0px;
     margin-top: 0;
     max-height: 40px;
     overflow: hidden;
+    letter-spacing: 1.5px;
 }
 
 .streetView {

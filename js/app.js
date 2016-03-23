@@ -399,8 +399,6 @@ $(function() {
             },
 
             filter = function(query){
-
-
                 var newArr = my.vm.markers.remove( function (item) {
                     var markerTitle = item.marker.title || '';
                     var queryMatches = markerTitle.toLowerCase().indexOf(my.vm.query().toLowerCase()) != -1;
@@ -415,11 +413,30 @@ $(function() {
 
             filterReset = function(){
              my.vm.markers(my.vm.markerStore());
-
                 for(var i = 0; i < my.vm.markerStore().length; i++){
                     my.vm.markers()[i].marker.setMap(map);
                 }
+                query(null);
             };
+
+            // clearAndTraverse = function(obs){
+            //     $.each(obs, function(key,val){
+            //         if(ko.isObservable(val)) {
+            //             if(val.removeAll !== undefined) {
+            //                 val.removeAll();
+            //             } else {
+            //                 val(null);
+            //             }
+            //         }
+            //     });
+            // },
+
+            // clear = function() {
+            //     console.log("clear query observ");
+            //     clearAndTraverse(query);
+            //     query(null);
+            //     //addEmptyString?();
+            // };
 
         return {
             scenes: scenes,
@@ -451,6 +468,7 @@ $(function() {
             filter: filter,
             filterReset: filterReset,
             markerStore: markerStore
+            // clear: clear
         };
     }();
 
