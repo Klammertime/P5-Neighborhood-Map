@@ -114,7 +114,7 @@ $(function() {
             movieDBInfo = ko.observableArray([]),
             markerStore = ko.observableArray([]),
             moviedb = ko.observable(),
-            query = ko.observable(''),
+            query = ko.observable(),
             loadSceneFM = function() {
                 // Returns everything before first parentheses, which is the place
                 function escapeRegExp(string) {
@@ -329,6 +329,8 @@ $(function() {
                         console.log("Geocode was not successful for the following reason: " + status);
                     }
                 });
+                my.vm.markerStore(my.vm.markers());
+
             },
 
             checkReset = function() {
@@ -396,25 +398,28 @@ $(function() {
                 }
             },
 
-            filter = function(){
+            filter = function(query){
+
+
                 var newArr = my.vm.markers.remove( function (item) {
-                    return item.marker.title === my.vm.query();
+                    var markerTitle = item.marker.title || '';
+                    var queryMatches = markerTitle.toLowerCase().indexOf(my.vm.query().toLowerCase()) != -1;
+                    return queryMatches;
                 });
+                console.log("newArr", newArr);
                 for(var i = 0, f = my.vm.markers().length; i < f; i++){
                     my.vm.markers()[i].marker.setMap(null);
                 }
-                my.vm.markerStore(my.vm.markers());
-                my.vm.markerStore.push(newArr[0]); //TODO: have it be a loop because might not be 0
-                my.vm.markers(newArr[0]);
+                my.vm.markers(newArr);
             },
 
             filterReset = function(){
+             my.vm.markers(my.vm.markerStore());
+
                 for(var i = 0; i < my.vm.markerStore().length; i++){
-                    my.vm.markerStore()[i].marker.setMap(map);
+                    my.vm.markers()[i].marker.setMap(map);
                 }
-                my.vm.markers(my.vm.markerStore());
             };
-             // if(theMarkers[x].marker.title.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
 
         return {
             scenes: scenes,
