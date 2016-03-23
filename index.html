@@ -84,9 +84,6 @@
                             <li>
                                 <a data-bind="visible: markerStore, click: filterReset" href="#">Reset</a>
                             </li>
-                            <li>
-                                <a data-bind="visible: markerStore, click: clear" href = "#">Clear</a>
-                            </li>
                         </ul>
                     </div>
                 </div>
@@ -131,18 +128,20 @@
             <div class data-bind="ifnot: summary">
                 <div data-bind="if: capsuleReview">
                     <p data-bind="text: capsuleReview"></p>
+                    <!--ko text: byline--><!--/ko-->, <cite title="Source Title"><a target="_blank" data-bind="attr: { href: reviewURL }, visible: reviewURL">The New York Times</a></cite>
                 </div>
             </div>
-            <div data-bind="if: headline">
-                <h3 data-bind="text: headline"></h3>
+            <div class data-bind="ifnot: summary">
+                <div data-bind="if: headline">
+                    <p class="headline" data-bind="text: headline"></p>
+                    <!--ko text: byline--><!--/ko-->, <cite title="Source Title"><a target="_blank" data-bind="attr: { href: reviewURL }, visible: reviewURL">The New York Times</a></cite>
+                </div>
             </div>
             <div data-bind="if: summary">
                 <p data-bind="text: summary"></p>
+                <!--ko text: byline--><!--/ko-->, <cite title="Source Title"><a target="_blank" data-bind="attr: { href: reviewURL }, visible: reviewURL">The New York Times</a></cite>
             </div>
             <p>
-                <footer data-bind="visible: headline"><span data-bind="if: byline"><span data-bind="text: byline, visible: nytInfo"></span>, </span><span data-bind="if: reviewURL, visible: nytInfo"><cite title="Source Title" data-bind="visible: nytInfo"><a target="_blank" data-bind="attr: { href: reviewURL }, visible: nytInfo">The New York Times</a></cite></span>
-                </footer>
-            </p>
         </blockquote>
     </div>
     <!-- nyt template end -->
