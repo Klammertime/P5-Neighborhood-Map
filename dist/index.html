@@ -31,7 +31,7 @@
                 <div class="form-group">
                     <input type="text" class="form-control" placeholder="Search">
                 </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
+                <button type="submit" class="btn btn-default">Submit</button>
             </form>
             <div class="widget-pane-content-holder">
                 <div class="panel panel-default searchbar">
@@ -64,7 +64,6 @@
             </div>
         </div>
     </div>
-
     <div id="googleMap" class="map-canvas"></div>
     <!--TEMPLATES STORED HERE!!!!!!!!!!!!!!!!-->
     <!-- locations template, shows locations from markers -->
@@ -72,7 +71,7 @@
         <table class="table">
             <thead>
                 <div class="input-group input-group-filter">
-                    <input class="form-control form-control-filter" placeholder="Search…" type="search" data-bind="visible: currentTitle, value: query, valueUpdate: 'afterkeydown'" autocomplete="off">
+                    <input class="form-control form-control-filter" placeholder="Filter by street..." type="search" data-bind="visible: currentTitle, value: query, valueUpdate: 'afterkeydown'" autocomplete="off">
                     <div class="input-group-btn input-group-btn-filter dropup">
                         <button data-bind="visible: currentTitle, click: filter" type="button" class="btn btn-default btn-default-filter">Filter
                         </button>
@@ -84,17 +83,6 @@
                             <li>
                                 <a data-bind="visible: markerStore, click: filterReset" href="#">Reset</a>
                             </li>
-                            <li>
-                                <a data-bind="visible: markerStore, click: clear" href = "#">Clear</a>
-                            </li>
- <!--                            <li>
-                                <a href="#">Something else here</a>
-                            </li>
-                            <li role="separator" class="divider">
-                            </li>
-                            <li>
-                                <a href="#">Separated link</a >
-                            </li> -->
                         </ul>
                     </div>
                 </div>
@@ -120,14 +108,33 @@
                     <img data-bind="attr: { src: posterSRC }">
                 </a>
             </div>
-            <div class="media-body">
-                <p><span class="itemHeader">Year: </span><span data-bind="visible: currentYear, text: currentYear"></span></p>
-                <p><span class="itemHeader">Production Company: </span><!--ko text: currentStudio--><!--/ko--><!-- <span data-bind="visible: currentStudio, text: currentStudio"></span> --></p>
-                <p><span class="itemHeader">Director: </span><span data-bind="visible: currentDirector, text: currentDirector"></span></p>
-                <p><span class="itemHeader">Writer: </span><span data-bind="visible: currentWriter, text: currentWriter"></span></p>
+            <div class="media-body" data-bind="foreach: filmTest">
+                <p><span class="itemHeader">Year: </span>
+                    <!--ko text: currentYear-->
+                    <!--/ko-->
+                </p>
+                <p><span class="itemHeader">Production Company: </span>
+                    <!--ko text: currentStudio-->
+                    <!--/ko-->
+                </p>
+                <p><span class="itemHeader">Director: </span>
+                    <!--ko text: currentDirector-->
+                    <!--/ko-->
+                    </span>
+                </p>
+                <p><span class="itemHeader">Writer: </span>
+                    <!--ko text: currentWriter-->
+                    <!--/ko-->
+                    </span>
+                </p>
                 <p>
-                    <span data-bind="visible: currentActor1" class="itemHeader">Actors: </span>
-                    <span data-bind="visible: currentActor1, text: currentActor1"></span><span data-bind="visible: currentActor2">, </span><span data-bind="visible: currentActor2, text: currentActor2"></span><span data-bind="visible: currentActor3">, </span><span data-bind="visible: currentActor3, text: currentActor3"></span>
+                    <span class="itemHeader">Actors: </span>
+                    <!--ko text: currentActor1-->
+                    <!--/ko-->,
+                    <!--ko text: currentActor2-->
+                    <!--/ko--><span data-bind="visible: currentActor3">, </span>
+                    <!--ko text: currentActor3-->
+                    <!--/ko-->
                 </p>
             </div>
         </div>
@@ -139,35 +146,60 @@
             <div class data-bind="ifnot: summary">
                 <div data-bind="if: capsuleReview">
                     <p data-bind="text: capsuleReview"></p>
+                    <!--ko text: byline-->
+                    <!--/ko-->,
+                    <cite title="Source Title"><a target="_blank" data-bind="attr: { href: reviewURL }, visible: reviewURL">The New York Times</a></cite>
                 </div>
             </div>
-            <div data-bind="if: headline">
-                <h3 data-bind="text: headline"></h3>
+            <div class data-bind="ifnot: summary">
+                <div data-bind="if: headline">
+                    <p class="headline" data-bind="text: headline"></p>
+                    <!--ko text: byline-->
+                    <!--/ko-->,
+                    <cite title="Source Title"><a target="_blank" data-bind="attr: { href: reviewURL }, visible: reviewURL">The New York Times</a></cite>
+                </div>
             </div>
             <div data-bind="if: summary">
                 <p data-bind="text: summary"></p>
+                <!--ko text: byline-->
+                <!--/ko-->,
+                <cite title="Source Title"><a target="_blank" data-bind="attr: { href: reviewURL }, visible: reviewURL">The New York Times</a></cite>
             </div>
-            <p>
-                <footer data-bind="visible: headline"><span data-bind="if: byline"><span data-bind="text: byline, visible: nytInfo"></span>, </span><span data-bind="if: reviewURL, visible: nytInfo"><cite title="Source Title" data-bind="visible: nytInfo"><a target="_blank" data-bind="attr: { href: reviewURL }, visible: nytInfo">The New York Times</a></cite></span>
-                </footer>
-            </p>
+            <div data-bind="ifnot: summary">
+                <div data-bind="ifnot: headline">
+                    <div data-bind="ifnot: capsuleReview">
+                        <div data-bind="if: suggestedLinkText">
+                            <cite title="Source Title">
+                                <a target="_blank" data-bind="attr: { href: reviewURL }, visible: reviewURL">
+                                    <!--ko text: suggestedLinkText-->
+                                    <!--/ko-->
+                                </a> by
+                                <!--ko text: byline-->
+                                <!--/ko-->
+                            </cite>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    <p>
         </blockquote>
-    </div>
-    <!-- nyt template end -->
-    <!-- overview template, shows overview from TMDb API -->
-    <div id="overviewTemplate" style="display: none">
-        <h4 class="itemHeader uppercase" data-bind="visible: overview">Overview</h4>
-        <p class="overview" data-bind="visible: overview, text: overview"></p>
-    </div>
-    <!-- overview template end -->
-    <!-- trailer template, shows trailer from TMDb API -->
-    <div id="trailerTemplate" style="display: none">
-        <div data-bind="visible: trailerURL" class="embed-responsive embed-responsive-16by9">
-            <iframe data-bind="attr: { src: trailerURL }" class="embed-responsive-item" width="1280" height="720" allowfullscreen>
-            </iframe>
         </div>
-    </div>
-    <!-- trailer template end -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiFWUDeNqeIgmx7njjzjJAVWwC2t9hNP0&libraries=places&callback=my.vm.googleInit" async defer></script>
+        <!-- nyt template end -->
+        <!-- overview template, shows overview from TMDb API -->
+        <div id="overviewTemplate" style="display: none">
+            <h4 class="itemHeader uppercase" data-bind="visible: overview">Overview</h4>
+            <p class="overview" data-bind="visible: overview, text: overview"></p>
+        </div>
+        <!-- overview template end -->
+        <!-- trailer template, shows trailer from TMDb API -->
+        <div id="trailerTemplate" style="display: none">
+            <div data-bind="visible: trailerURL" class="embed-responsive embed-responsive-16by9">
+                <iframe data-bind="attr: { src: trailerURL }" class="embed-responsive-item" width="1280" height="720" allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+        <!-- trailer template end -->
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiFWUDeNqeIgmx7njjzjJAVWwC2t9hNP0&libraries=places&callback=my.vm.googleInit" async defer></script>
 </body>
-</h
+</
