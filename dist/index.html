@@ -26,7 +26,7 @@
 
 <body>
     <div class="row">
-        <div class="col-md-4 col-lg-4 col-sm-4" data-bind="with: my.vm">
+        <div class="col-md-3 col-lg-3 col-sm-3" data-bind="with: my.vm">
             <form class="navbar-form navbar-left" role="search">
                 <div class="form-group">
                     <input type="text" class="form-control" placeholder="Search">
@@ -57,7 +57,7 @@
             <div class="panel panel-default filmInfoBox" data-bind="visible: currentTitle">
                 <h3 data-bind="visible: currentTitle, text: currentTitle"></h3>
                 <h5 class="media-heading" data-bind="visible: tagline, text: tagline"></h5>
-                <div data-bind="template: {name: 'filmInfoTemplate'}"></div>
+                <div data-bind="template: {name: 'filmInfoTemplate'}, visible: currentTitle"></div>
                 <div data-bind="template: {name: 'nytTemplate'}"></div>
                 <div data-bind="template: {name: 'overviewTemplate'}"></div>
                 <div data-bind="template: {name: 'trailerTemplate'}"></div>
@@ -87,14 +87,14 @@
                             <li>
                                 <a data-bind="visible: markerStore, click: clear" href = "#">Clear</a>
                             </li>
-                            <li>
+ <!--                            <li>
                                 <a href="#">Something else here</a>
                             </li>
                             <li role="separator" class="divider">
                             </li>
                             <li>
                                 <a href="#">Separated link</a >
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                 </div>
@@ -122,7 +122,7 @@
             </div>
             <div class="media-body">
                 <p><span class="itemHeader">Year: </span><span data-bind="visible: currentYear, text: currentYear"></span></p>
-                <p><span class="itemHeader">Production Company: </span><span data-bind="visible: currentStudio, text: currentStudio"></span></p>
+                <p><span class="itemHeader">Production Company: </span><!--ko text: currentStudio--><!--/ko--><!-- <span data-bind="visible: currentStudio, text: currentStudio"></span> --></p>
                 <p><span class="itemHeader">Director: </span><span data-bind="visible: currentDirector, text: currentDirector"></span></p>
                 <p><span class="itemHeader">Writer: </span><span data-bind="visible: currentWriter, text: currentWriter"></span></p>
                 <p>
@@ -135,7 +135,7 @@
     <!-- filmInfo template end -->
     <!-- nyt template, shows blockquote from nyt API -->
     <div id="nytTemplate" style="display: none">
-        <blockquote data-bind="visible: nytInfo(), foreach: nytInfo">
+        <blockquote data-bind="visible: nytInfo, foreach: nytInfo">
             <div class data-bind="ifnot: summary">
                 <div data-bind="if: capsuleReview">
                     <p data-bind="text: capsuleReview"></p>
@@ -148,7 +148,7 @@
                 <p data-bind="text: summary"></p>
             </div>
             <p>
-                <footer><span data-bind="if: byline"><span data-bind="text: byline"></span>, </span><span data-bind="if: reviewURL"><cite title="Source Title"><a target="_blank" data-bind="attr: { href: reviewURL }">The New York Times</a></cite></span>
+                <footer data-bind="visible: headline"><span data-bind="if: byline"><span data-bind="text: byline, visible: nytInfo"></span>, </span><span data-bind="if: reviewURL, visible: nytInfo"><cite title="Source Title" data-bind="visible: nytInfo"><a target="_blank" data-bind="attr: { href: reviewURL }, visible: nytInfo">The New York Times</a></cite></span>
                 </footer>
             </p>
         </blockquote>
