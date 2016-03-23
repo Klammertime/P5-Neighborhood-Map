@@ -94,6 +94,7 @@ $(function() {
 
     my.vm = function() {
         var scenes = ko.observableArray([]),
+            filmTest = ko.observableArray([]),
             allTitles = ko.observableArray([]),
             requestedFilm = ko.observable(),
             pastFilm = ko.observable(),
@@ -102,13 +103,6 @@ $(function() {
             tagline = ko.observable(),
             trailerURL = ko.observable(),
             currentTitle = ko.observable(),
-            currentYear = ko.observable(),
-            currentDirector = ko.observable(),
-            currentWriter = ko.observable(),
-            currentActor1 = ko.observable(),
-            currentActor2 = ko.observable(),
-            currentActor3 = ko.observable(),
-            currentStudio = ko.observable(),
             posterSRC = ko.observable(),
             nytInfo = ko.observableArray([]),
             movieDBInfo = ko.observableArray([]),
@@ -379,15 +373,18 @@ $(function() {
                             masterGeocoder(geocodeOptions, place, geocoder);
                         } // end of master if statement
                     }
+                    filmTest({
+                            currentTitle: matchedTitle,
+                            currentYear: matchedYear,
+                            currentDirector: matchedScene.director(),
+                            currentWriter: matchedScene.writer(),
+                            currentActor1: matchedScene.actor1(),
+                            currentActor2: matchedScene.actor2(),
+                            currentActor3: matchedScene.actor3(),
+                            currentStudio: matchedScene.studio()
+                    });
 
                     this.currentTitle(matchedTitle);
-                    this.currentYear(matchedYear);
-                    this.currentDirector(matchedScene.director());
-                    this.currentWriter(matchedScene.writer());
-                    this.currentActor1(matchedScene.actor1());
-                    this.currentActor2(matchedScene.actor2());
-                    this.currentActor3(matchedScene.actor3());
-                    this.currentStudio(matchedScene.studio());
                     console.time("loadNYTData");
                     loadNYTData(encodeURIComponent(matchedTitle), matchedTitle, matchedYear);
                     console.timeEnd("loadNYTData");
@@ -419,18 +416,6 @@ $(function() {
                 query(null);
             },
 
-            // clearAndTraverse = function(obs){
-            //     $.each(obs, function(key,val){
-            //         if(ko.isObservable(val)) {
-            //             if(val.removeAll !== undefined) {
-            //                 val.removeAll();
-            //             } else {
-            //                 val(null);
-            //             }
-            //         }
-            //     });
-            // },
-
             clear = function() {
                 console.log("clear query observ");
                 query(null);
@@ -448,13 +433,6 @@ $(function() {
             overview: overview,
             googleInit: googleInit,
             currentTitle: currentTitle,
-            currentYear: currentYear,
-            currentDirector: currentDirector,
-            currentWriter: currentWriter,
-            currentActor1: currentActor1,
-            currentActor2: currentActor2,
-            currentActor3: currentActor3,
-            currentStudio: currentStudio,
             tagline: tagline,
             checkReset: checkReset,
             trailerURL: trailerURL,
@@ -466,7 +444,8 @@ $(function() {
             filter: filter,
             filterReset: filterReset,
             markerStore: markerStore,
-            clear: clear
+            clear: clear,
+            filmTest: filmTest
         };
     }();
 
