@@ -177,6 +177,8 @@ $(function() {
                         } else {
                             index = titleCheck(data, 'display_title', 'publication_date', nonEncodedFilm, releaseYear);
                         }
+                        console.log("data.results[index].link.suggested_link_text", data.results[index].link.suggested_link_text);
+
                         //TODO: should each of those be observable arrays?
                         nytInfo({
                             title: data.results[index].display_title,
@@ -185,7 +187,8 @@ $(function() {
                             reviewURL: domain(data.results[index].link.url),
                             byline: data.results[index].byline,
                             headline: data.results[index].headline,
-                            releaseYear: data.results[index].publication_date
+                            releaseYear: data.results[index].publication_date,
+                            suggestedLinkText: data.results[index].link.suggested_link_text
                         });
 
                     },
@@ -224,30 +227,30 @@ $(function() {
                 function errorCB() {
                     console.log("you fail!"); //TODO: find the proper error
                 }
-            // How it works:
-            // theMovieDb.movies.getById({"id":76203 }, successCB, errorCB)
+                // How it works:
+                // theMovieDb.movies.getById({"id":76203 }, successCB, errorCB)
                 theMovieDb.search.getMovie({ "query": encodedFilm }, successCB, errorCB);
             },
 
             getTagline = function(foundfilmID) {
-                function successCB(data){
+                function successCB(data) {
                     var movieInfo = JSON.parse(data);
                     tagline(movieInfo.tagline);
                 }
 
-                function errorCB(){
+                function errorCB() {
                     console.log("you fail!"); //TODO: find the proper error
                 }
                 theMovieDb.movies.getById({ "id": foundfilmID }, successCB, errorCB);
             },
 
             getTrailer = function(foundfilmID2) {
-                function successCB(data){
+                function successCB(data) {
                     var theTrailer = JSON.parse(data);
                     trailerURL(theTrailer.youtube.length > 0 ? ('https://www.youtube.com/embed/' + theTrailer.youtube[0].source + '?rel=0&amp;showinfo=0') : undefined);
                 }
 
-                function errorCB(){
+                function errorCB() {
                     console.log("you fail!"); //TODO: find the proper error
                 }
 
@@ -257,11 +260,9 @@ $(function() {
             testDB = function() {
                 // http://api.themoviedb.org/3/search/multi
                 // https://api.themoviedb.org/3/movie/63?api_key=###&append_to_response=credits,images
-                function successCB(data) {
-                }
+                function successCB(data) {}
 
-                function errorCB(data) {
-                }
+                function errorCB(data) {}
 
                 theMovieDb.collections.getCollection({ "id": 10, "append_to_response": "trailers" }, successCB, errorCB);
             },
@@ -374,14 +375,14 @@ $(function() {
                         } // end of master if statement
                     }
                     filmTest({
-                            currentTitle: matchedTitle,
-                            currentYear: matchedYear,
-                            currentDirector: matchedScene.director(),
-                            currentWriter: matchedScene.writer(),
-                            currentActor1: matchedScene.actor1(),
-                            currentActor2: matchedScene.actor2(),
-                            currentActor3: matchedScene.actor3(),
-                            currentStudio: matchedScene.studio()
+                        currentTitle: matchedTitle,
+                        currentYear: matchedYear,
+                        currentDirector: matchedScene.director(),
+                        currentWriter: matchedScene.writer(),
+                        currentActor1: matchedScene.actor1(),
+                        currentActor2: matchedScene.actor2(),
+                        currentActor3: matchedScene.actor3(),
+                        currentStudio: matchedScene.studio()
                     });
 
                     this.currentTitle(matchedTitle);
@@ -395,22 +396,22 @@ $(function() {
                 }
             },
 
-            filter = function(query){
-                var newArr = my.vm.markers.remove( function (item) {
+            filter = function(query) {
+                var newArr = my.vm.markers.remove(function(item) {
                     var markerTitle = item.marker.title || '';
                     var queryMatches = markerTitle.toLowerCase().indexOf(my.vm.query().toLowerCase()) != -1;
                     return queryMatches;
                 });
                 console.log("newArr", newArr);
-                for(var i = 0, f = my.vm.markers().length; i < f; i++){
+                for (var i = 0, f = my.vm.markers().length; i < f; i++) {
                     my.vm.markers()[i].marker.setMap(null);
                 }
                 my.vm.markers(newArr);
             },
 
-            filterReset = function(){
-             my.vm.markers(my.vm.markerStore());
-                for(var i = 0; i < my.vm.markerStore().length; i++){
+            filterReset = function() {
+                my.vm.markers(my.vm.markerStore());
+                for (var i = 0; i < my.vm.markerStore().length; i++) {
                     my.vm.markers()[i].marker.setMap(map);
                 }
                 query(null);
@@ -458,5 +459,5 @@ $(function() {
 });
 
 
- //TODO: do an alert for the wrong film, html binding? <div class="alert alert-danger" role="alert">...</div>
- // This page might help: https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/ch02s04.html
+//TODO: do an alert for the wrong film, html binding? <div class="alert alert-danger" role="alert">...</div>
+// This page might help: https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/ch02s04.htm
