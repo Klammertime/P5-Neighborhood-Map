@@ -94,7 +94,9 @@ $(function() {
 
     my.vm = function() {
         var scenes = ko.observableArray([]),
+            uniqueTitlesResults = ko.observable(),
             filmTest = ko.observableArray([]),
+            favLoc = ko.observableArray([]),
             allTitles = ko.observableArray([]),
             requestedFilm = ko.observable(),
             pastFilm = ko.observable(),
@@ -129,11 +131,22 @@ $(function() {
                         allTitles.push(s.film_title);
                     }
                 });
-            },
 
-            uniqueTitles = ko.computed(function() {
-                return ko.utils.arrayGetDistinctValues(allTitles().sort());
-            }),
+                var uniqueTitles = ko.computed(function() {
+                    return ko.utils.arrayGetDistinctValues(allTitles().sort());
+                });
+
+                uniqueTitlesResults(uniqueTitles());
+
+                $('#autocomplete').autocomplete({
+                    lookup: my.vm.uniqueTitlesResults(),
+                    showNoSuggestionNotice: true,
+                    noSuggestionNotice: 'Sorry, no matching results',
+                    onSelect: function (suggestion) {
+                        my.vm.requestedFilm(suggestion.value);
+                    }
+                 });
+            },
 
             googleInit = function() {
                 googleSuccess();
@@ -281,7 +294,7 @@ $(function() {
                             contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
                                 streetViewImage + '</a></div><div class="content-body"><p class="content-heading">' + place +
                                 '</p><p>' + results[0].formatted_address + '</p>' +
-                                '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
+                                '<span data-bind="click: $parent.fav" class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
 
                             marker = new google.maps.Marker({
                                 map: map,
@@ -294,7 +307,7 @@ $(function() {
                             contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
                                 streetViewImage + '</a></div><div class="content-body"><p>' +
                                 results[0].formatted_address + '</p>' +
-                                '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
+                                '<span data-bind="click: $parent.fav" class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
 
                             marker = new google.maps.Marker({
                                 map: map,
@@ -342,7 +355,8 @@ $(function() {
                 }
             },
 
-            codeAddress = function() {
+            codeAddress = function(newValue) {
+                console.log("codeAddress firing");
                 var address,
                     place,
                     matchedScene,
@@ -353,6 +367,7 @@ $(function() {
                     for (var j = 0, s = this.scenes().length; j < s; j++) {
                         if (requestedFilm().toLowerCase().trim() === this.scenes()[j].filmTitle().toLowerCase().trim()) {
                             matchedScene = this.scenes()[j];
+                            console.log("matchedScene", matchedScene);
                             matchedTitle = this.scenes()[j].filmTitle();
                             matchedYear = this.scenes()[j].year();
                             var geocoder = new google.maps.Geocoder();
@@ -396,6 +411,10 @@ $(function() {
                 }
             },
 
+            fav = function(value) {
+                my.vm.favLoc.push(value);
+            },
+
             filter = function(query) {
                 var newArr = my.vm.markers.remove(function(item) {
                     var markerTitle = item.marker.title || '';
@@ -425,7 +444,6 @@ $(function() {
         return {
             scenes: scenes,
             loadSceneFM: loadSceneFM,
-            uniqueTitles: uniqueTitles,
             allTitles: allTitles,
             requestedFilm: requestedFilm,
             codeAddress: codeAddress,
@@ -446,12 +464,20 @@ $(function() {
             filterReset: filterReset,
             markerStore: markerStore,
             clear: clear,
-            filmTest: filmTest
+            filmTest: filmTest,
+            fav: fav,
+            favLoc: favLoc,
+            uniqueTitlesResults: uniqueTitlesResults
         };
     }();
 
     my.vm.loadSceneFM();
     ko.applyBindings(my.vm);
+
+    my.vm.requestedFilm.subscribe(function(newValue) {
+        console.log("newValue", newValue);
+        my.vm.codeAddress(newValue);
+    });
 
     ko.observable.fn.equalityComparer = function(a, b) {
         return a === b;

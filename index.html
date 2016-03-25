@@ -2,11 +2,27 @@
 <html>
 
 <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <title>Maps</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--     <meta name="viewport" content="initial-scale= 1.0, user-scalable=no" />
+ -->    <title>Maps</title>
+      <style>
+.autocomplete-suggestions { border: 1px solid #999; background: #fff; cursor: default; overflow: auto; }
+.autocomplete-suggestion { padding: 10px 5px; font-size: 1em; white-space: nowrap; overflow: hidden; }
+.autocomplete-selected { background: #f0f0f0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399ff; }
+
+#searchfield { display: block; width: 100%; text-align: center; }
+
+#searchfield form {
+  margin: 5px 0 0 0;
+}
+  </style>
+
+
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <script src="js/jquery.autocomplete.min.js"></script>
     <script src="js/knockout-3.4.0.js"></script>
     <!-- change to minified for production -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
@@ -24,31 +40,36 @@
     </script>
 </head>
 
+
 <body>
     <div class="row">
         <div class="col-md-3 col-lg-3 col-sm-3" data-bind="with: my.vm">
-            <form class="navbar-form navbar-left" role="search">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Search">
-                </div>
-                <button type="submit" class="btn btn-default">Submit</button>
-            </form>
             <div class="widget-pane-content-holder">
                 <div class="panel panel-default searchbar">
                     <img class="sf" src="img/sfLogo8.svg">
                     <div class="logo">
                         <h2 class="logo-font">SF Film Locations</h2></div>
                     <div class="panel-body">
-                        <input id="filmList" data-bind="value: requestedFilm, valueUpdate: ['blur']" list="filmSceneList" type="text" class="form-control" placeholder="Search for a film..." />
-                        <datalist id="filmSceneList" data-bind="foreach: uniqueTitles">
-                            <option data-bind="value: $data"></option>
-                        </datalist>
-                        <button class="btn btn-info pull-right" type="button" data-bind="click: codeAddress">Go!</button>
+
+                    <label for="filmList">
+                        <span>Type a letter to see film options</span>
+                    </label>
+
+                    <div id="content">
+                      <div id="searchfield">
+                        <form>
+                            <input type="text" class="form-control" id="autocomplete" placeholder="Godzilla...">
+                        </form>
+                      </div><!-- @end #searchfield -->
+                    </div><!-- @end #content -->
+
                     </div>
+
+
                     <div data-bind="template: {name: 'locationsTemplate'}"></div>
                 </div>
             </div>
-        </div>
+            </div>
         <!--TODO: figure out why this is so messed up on small screens, I think its the floats
             and the absolute positioning -->
         <div class="col-md-5 col-lg-5 col-sm-5">
@@ -100,6 +121,9 @@
         </table>
     </div>
     <!-- locations template end -->
+
+
+
     <!-- filmInfo template, shows info from SFData in data.js -->
     <div id="filmInfoTemplate" style="display: none">
         <div class="media" data-bind="with: my.vm">
