@@ -94,14 +94,21 @@
                 <div class="input-group input-group-filter">
                 <!--     <input class="form-control form-control-filter" placeholder="Filter by street..." type="search" data-bind="visible: currentTitle, value: query, valueUpdate: 'afterkeydown'" autocomplete="off"> -->
                 <div id="content2">
-                      <div id="searchfield2">
+      <!--                 <div id="searchfield2">
                     <form>
                         <input type="text" class="form-control" id="autocomplete2" placeholder="Mission St...">
-                    </form>
+                    </form> -->
        </div><!-- @end #searchfield -->
                     </div><!-- @end #content -->
 
 
+
+    <div class="input-group">
+      <input type="text" class="form-control" id="autocomplete2" placeholder="Mission St...">
+      <span class="input-group-btn">
+        <button class="btn btn-default" data-bind="click: filterReset" type="button">Reset</button>
+      </span>
+    </div><!-- /input-group -->
                     <!-- <div class="input-group-btn input-group-btn-filter dropup">
                         <button data-bind="visible: currentTitle, click: filter" type="button" class="btn btn-default btn-default-filter">Filter
                         </button>
