@@ -146,8 +146,6 @@ $(function() {
                         my.vm.requestedFilm(suggestion.value);
                     }
                 });
-
-
             },
 
             googleInit = function() {
@@ -346,8 +344,6 @@ $(function() {
                 });
 
                 my.vm.markerStore(my.vm.markers());
-
-
             },
 
             checkReset = function() {
@@ -394,7 +390,6 @@ $(function() {
                                 }
                             };
 
-
                             masterGeocoder(geocodeOptions, place, geocoder);
                         } // end of master if statement
                     }
@@ -411,23 +406,13 @@ $(function() {
 
                 $('#autocomplete2').autocomplete({
                     lookup: my.vm.markerTitles(),
+                    showNoSuggestionNotice: true,
+                    noSuggestionNotice: 'Sorry, no matching results',
                     onSelect: function (suggestion) {
-                        alert('You selected: ' + suggestion.value);
                         my.vm.query(suggestion.value);
-                        console.log("my.vm.query()", my.vm.query());
                         my.vm.filter();
                     }
                 });
-
-
-                // $('#autocomplete2').autocomplete({
-                //     lookup: my.vm.markerTitles(),
-                //     showNoSuggestionNotice: true,
-                //     noSuggestionNotice: 'Sorry, no matching results',
-                //     onSelect: function(suggestion) {
-                //         my.vm.query(suggestion.value);
-                //     }
-                // });
 
                     this.currentTitle(matchedTitle);
                     console.time("loadNYTData");
@@ -457,38 +442,17 @@ $(function() {
                     my.vm.markers()[i].marker.setMap(null);
                 }
                 my.vm.markers(newArr);
-
             },
 
             filterReset = function() {
-                console.log("my.vm.markers() in filterReset before resetting", my.vm.markers());
-                console.log("my.vm.markerStore() in filterReset before resetting", my.vm.markerStore());
                 var filtered = my.vm.markers()[0];
-                console.log("filtered", filtered);
                 my.vm.markers(my.vm.markerStore());
                 my.vm.markers.push(filtered);
-                console.log("my.vm.markers() in filterReset after resetting", my.vm.markers());
-                console.log("my.vm.markerStore() in filterReset after resetting", my.vm.markerStore());
-
 
                 for (var i = 0, m = my.vm.markerStore().length; i < m; i++) {
                     console.log("i in loop", i, " with my.vm.markers()[i]", my.vm.markers()[i]);
                     my.vm.markers()[i].marker.setMap(map);
                 }
-            },
-
-            filterMarkers = function() {
-                // $('#autocomplete2').autocomplete({
-                //     lookup: my.vm.markerTitles(),
-                //     showNoSuggestionNotice: true,
-                //     noSuggestionNotice: 'Sorry, no matching results',
-                //     onSelect: function(suggestion) {
-                //         my.vm.query(suggestion.value);
-                //     }
-                // });
-            },
-
-            clear = function() {
             };
 
         return {
@@ -513,13 +477,11 @@ $(function() {
             filter: filter,
             filterReset: filterReset,
             markerStore: markerStore,
-            clear: clear,
             filmTest: filmTest,
             fav: fav,
             favLoc: favLoc,
             uniqueTitlesResults: uniqueTitlesResults,
-            markerTitles: markerTitles,
-            filterMarkers: filterMarkers
+            markerTitles: markerTitles
         };
     }();
 

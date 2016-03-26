@@ -46,7 +46,6 @@
     </script>
 </head>
 
-
 <body>
     <div class="row">
         <div class="col-md-3 col-lg-3 col-sm-3" data-bind="with: my.vm">
@@ -56,22 +55,20 @@
                     <div class="logo">
                         <h2 class="logo-font">SF Film Locations</h2></div>
                     <div class="panel-body">
+                        <label for="filmList">
+                            <span>Type a letter to see film options</span>
+                        </label>
 
-                    <label for="filmList">
-                        <span>Type a letter to see film options</span>
-                    </label>
+                        <div id="content">
+                          <div id="searchfield">
+                            <form>
+                                <input type="text" class="form-control" id="autocomplete" placeholder="Godzilla...">
+                            </form>
+                          </div><!-- @end #searchfield -->
+                        </div><!-- @end #content -->
 
-                    <div id="content">
-                      <div id="searchfield">
-                        <form>
-                            <input type="text" class="form-control" id="autocomplete" placeholder="Godzilla...">
-                        </form>
-                      </div><!-- @end #searchfield -->
-                    </div><!-- @end #content -->
-
+                        <div class="filterLabel" data-bind="template: {name: 'filterTemplate'}"></div>
                     </div>
-
-
                     <div data-bind="template: {name: 'locationsTemplate'}"></div>
                 </div>
             </div>
@@ -93,44 +90,24 @@
     </div>
     <div id="googleMap" class="map-canvas"></div>
     <!--TEMPLATES STORED HERE!!!!!!!!!!!!!!!!-->
+    <!-- filter template, shows locations from filtered markers -->
+    <div id="filterTemplate" style="display: none">
+        <label data-bind="visible: currentTitle">
+            <span>Type a street to filter by location</span>
+        </label>
+        <div class="input-group" data-bind="visible: currentTitle">
+
+          <input type="text" class="form-control"  id="autocomplete2" placeholder="Mission St...">
+          <span class="input-group-btn">
+            <button class="btn btn-default" data-bind="click: filterReset" type="button">Reset</button>
+          </span>
+        </div>
+    </div>
+    <!-- filter template end -->
     <!-- locations template, shows locations from markers -->
     <div id="locationsTemplate" style="display: none">
         <table class="table">
             <thead>
-                <div class="input-group input-group-filter">
-                <!--     <input class="form-control form-control-filter" placeholder="Filter by street..." type="search" data-bind="visible: currentTitle, value: query, valueUpdate: 'afterkeydown'" autocomplete="off"> -->
-                <div id="content2">
-      <!--                 <div id="searchfield2">
-                    <form>
-                        <input type="text" class="form-control" id="autocomplete2" placeholder="Mission St...">
-                    </form> -->
-       </div><!-- @end #searchfield -->
-                    </div><!-- @end #content -->
-
-
-
-    <div class="input-group" data-bind="visible: currentTitle">
-
-      <input type="text" class="form-control"  id="autocomplete2" placeholder="Mission St...">
-
-
-      <span class="input-group-btn">
-        <button class="btn btn-default" data-bind="click: filterReset" type="button">Reset</button>
-      </span>
-    </div><!-- /input-group -->
-                    <!-- <div class="input-group-btn input-group-btn-filter dropup">
-                        <button data-bind="visible: currentTitle, click: filter" type="button" class="btn btn-default btn-default-filter">Filter
-                        </button>
-                        <button data-bind="visible: currentTitle" type="button" class="btn btn-default dropdown-toggle dropdown-toggle-filter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span data-bind="visible: currentTitle" class="caret"></span >
-                            <span class = "sr-only"></span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-right">
-                            <li>
-                                <a data-bind="visible: markerStore, click: filterReset" href="#">Reset</a>
-                            </li>
-                        </ul>
-                    </div> -->
                 </div>
             </thead>
             <tbody data-bind="foreach: markers">
@@ -146,9 +123,6 @@
         </table>
     </div>
     <!-- locations template end -->
-
-
-
     <!-- filmInfo template, shows info from SFData in data.js -->
     <div id="filmInfoTemplate" style="display: none">
         <div class="media" data-bind="with: my.vm">

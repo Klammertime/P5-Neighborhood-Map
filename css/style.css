@@ -35,7 +35,6 @@ h3 {
     text-transform: uppercase;
     margin-bottom: 15px;
     letter-spacing: 1.5px;
-
 }
 
 h5 {
@@ -71,8 +70,7 @@ label {
     background-color: none;
     z-index: 2;
     overflow: auto;
-/*    margin: 6px auto 0 auto;
-*/    max-height: 100vh;
+    max-height: 100vh;
     left: -7px;
     top: 7px;
 }
@@ -121,13 +119,9 @@ input {
     font-family: inherit;
 }
 
-
-
 .btn-group {
     padding-top: 10px;
 }
-
-
 
 .logo {
     color: none;
@@ -269,9 +263,8 @@ input {
 }
 
 .overview {
-  margin: 5px 0 23px 0;
+    margin: 5px 0 23px 0;
 }
-
 
 scrollbar {
     -webkit-appearance: none;
@@ -281,6 +274,7 @@ scrollbar {
 ::-webkit-scrollbar-thumb {
     background-color: RGBA(42, 100, 150, .8);
 }
+
 .table {
     margin-bottom: 0;
 }
@@ -320,6 +314,7 @@ scrollbar {
 .dropdown-menu>li>a {
     padding: 3px 10px;
 }
+
 .input-group-btn:last-child>.btn {
     margin-left: -2px;
 }
@@ -355,19 +350,19 @@ scrollbar {
     padding: 6px 12px;
     font-size: 14px;
     line-height: 1.42857143;
-    /* color: #555; */
     background-color: #fff;
     background-image: none;
     border: 1px solid #ccc;
     border-radius: 4px;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
-    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
+
 .input-group {
-        margin-top: 10px;
+    margin-top: 5px;
 }
 
 .media-left {
@@ -379,12 +374,21 @@ scrollbar {
     float: right;
 }
 
-.media-body, .media-left, .media-right {
+.media-body,
+.media-left,
+.media-right {
     display: inline-block;
     vertical-align: top;
 }
 
+
 /* try this to fix weird spacing */
+
 .panel-body {
-    padding: 15px 15px 0px 15px;
+    padding: 15px 15px 15px 15px;
+}
+
+.filterLabel {
+    margin-top: 10px;
+    margin-bottom: 0;
 }
