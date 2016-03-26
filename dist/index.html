@@ -2,11 +2,33 @@
 <html>
 
 <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <title>Maps</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--     <meta name="viewport" content="initial-scale= 1.0, user-scalable=no" />
+ -->    <title>Maps</title>
+      <style>
+.autocomplete-suggestions { border: 1px solid #999; background: #fff; cursor: default; overflow: auto; }
+.autocomplete-suggestion { padding: 10px 5px; font-size: 1em; white-space: nowrap; overflow: hidden; }
+.autocomplete-selected { background: #f0f0f0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399ff; }
+
+#searchfield { display: block; width: 100%; text-align: center; }
+
+#searchfield form {
+  margin: 5px 0 0 0;
+}
+
+.searchfield { display: block; width: 100%; text-align: center; }
+
+.searchfield form {
+  margin: 5px 0 0 0;
+}
+  </style>
+
+
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <script src="js/jquery.autocomplete.min.js"></script>
     <script src="js/knockout-3.4.0.js"></script>
     <!-- change to minified for production -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
@@ -27,28 +49,30 @@
 <body>
     <div class="row">
         <div class="col-md-3 col-lg-3 col-sm-3" data-bind="with: my.vm">
-            <form class="navbar-form navbar-left" role="search">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Search">
-                </div>
-                <button type="submit" class="btn btn-default">Submit</button>
-            </form>
             <div class="widget-pane-content-holder">
                 <div class="panel panel-default searchbar">
                     <img class="sf" src="img/sfLogo8.svg">
                     <div class="logo">
                         <h2 class="logo-font">SF Film Locations</h2></div>
                     <div class="panel-body">
-                        <input id="filmList" data-bind="value: requestedFilm, valueUpdate: ['blur']" list="filmSceneList" type="text" class="form-control" placeholder="Search for a film..." />
-                        <datalist id="filmSceneList" data-bind="foreach: uniqueTitles">
-                            <option data-bind="value: $data"></option>
-                        </datalist>
-                        <button class="btn btn-info pull-right" type="button" data-bind="click: codeAddress">Go!</button>
+                        <label for="filmList">
+                            <span>Type a letter to see film options</span>
+                        </label>
+
+                        <div id="content">
+                          <div id="searchfield">
+                            <form>
+                                <input type="text" class="form-control" id="autocomplete" placeholder="Godzilla...">
+                            </form>
+                          </div><!-- @end #searchfield -->
+                        </div><!-- @end #content -->
+
+                        <div class="filterLabel" data-bind="template: {name: 'filterTemplate'}"></div>
                     </div>
                     <div data-bind="template: {name: 'locationsTemplate'}"></div>
                 </div>
             </div>
-        </div>
+            </div>
         <!--TODO: figure out why this is so messed up on small screens, I think its the floats
             and the absolute positioning -->
         <div class="col-md-5 col-lg-5 col-sm-5">
@@ -66,25 +90,23 @@
     </div>
     <div id="googleMap" class="map-canvas"></div>
     <!--TEMPLATES STORED HERE!!!!!!!!!!!!!!!!-->
+    <!-- filter template, shows locations from filtered markers -->
+    <div id="filterTemplate" style="display: none">
+        <label data-bind="visible: currentTitle">
+            <span>Type a street to filter by location</span>
+        </label>
+        <div class="input-group" data-bind="visible: currentTitle">
+          <input type="text" class="form-control" id="autocomplete2" placeholder="Mission St..." data-bind="value: my.vm.query" >
+          <span class="input-group-btn">
+            <button class="btn btn-default" data-bind="click: filterReset" type="button">Reset</button>
+          </span>
+        </div>
+    </div>
+    <!-- filter template end -->
     <!-- locations template, shows locations from markers -->
     <div id="locationsTemplate" style="display: none">
         <table class="table">
             <thead>
-                <div class="input-group input-group-filter">
-                    <input class="form-control form-control-filter" placeholder="Filter by street..." type="search" data-bind="visible: currentTitle, value: query, valueUpdate: 'afterkeydown'" autocomplete="off">
-                    <div class="input-group-btn input-group-btn-filter dropup">
-                        <button data-bind="visible: currentTitle, click: filter" type="button" class="btn btn-default btn-default-filter">Filter
-                        </button>
-                        <button data-bind="visible: currentTitle" type="button" class="btn btn-default dropdown-toggle dropdown-toggle-filter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span data-bind="visible: currentTitle" class="caret"></span >
-                            <span class = "sr-only"></span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-right">
-                            <li>
-                                <a data-bind="visible: markerStore, click: filterReset" href="#">Reset</a>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
             </thead>
             <tbody data-bind="foreach: markers">

@@ -962,7 +962,7 @@ my.filmData = (function (my) {
     "film_location": "Hyde St Cable Car",
     "production_company": "Four Square Productions",
     "release_year": "1978",
-    "film_title": "Attack of the Killer Tomatoes",
+    "film_title": "Attack of the Killer Tomatoes!",
     "writer": "John DeBello"
   },
   {
@@ -1936,22 +1936,6 @@ my.filmData = (function (my) {
     "release_year": "2000",
     "film_title": "Boys and Girls",
     "writer": "The Drews"
-  },
-  {
-    "director": "Ryan K. Whiting",
-    "film_location": "Ina Coolbrith Park (1700 Taylor St)",
-    "production_company": "RKW Films",
-    "release_year": "2010",
-    "film_title": "Broken-A Modern Love Story ",
-    "writer": "Ryan K. Whiting"
-  },
-  {
-    "director": "Ryan K. Whiting",
-    "film_location": "0-100 block Halleck St",
-    "production_company": "RKW Films",
-    "release_year": "2010",
-    "film_title": "Broken-A Modern Love Story ",
-    "writer": "Ryan K. Whiting"
   },
   {
     "actor_1": "Steve McQueen",
