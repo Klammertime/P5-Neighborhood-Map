@@ -81,7 +81,6 @@ $(function() {
     function titleCheck(theData, resultsTitleProp, resultsDateProp, desiredTitle, desiredYear) {
         function justYear(longDate) {
             var match = /[^-]*/.exec(longDate);
-            console.log("match", match);
             return match[0];
         }
 
@@ -101,6 +100,7 @@ $(function() {
             requestedFilm = ko.observable(),
             pastFilm = ko.observable(),
             markers = ko.observableArray([]),
+            markerTitles = ko.observableArray([]),
             overview = ko.observable(),
             tagline = ko.observable(),
             trailerURL = ko.observable(),
@@ -142,10 +142,12 @@ $(function() {
                     lookup: my.vm.uniqueTitlesResults(),
                     showNoSuggestionNotice: true,
                     noSuggestionNotice: 'Sorry, no matching results',
-                    onSelect: function (suggestion) {
+                    onSelect: function(suggestion) {
                         my.vm.requestedFilm(suggestion.value);
                     }
-                 });
+                });
+
+
             },
 
             googleInit = function() {
@@ -283,6 +285,9 @@ $(function() {
             masterGeocoder = function(myGeocodeOptions, place, geocoder) {
                 var contentString,
                     marker;
+                    // my.vm.markerTitles().removeAll();
+                    console.log("my.vm.markerTitles()", my.vm.markerTitles());
+
                 geocoder.geocode(myGeocodeOptions, function(results, status) {
                     if (status == google.maps.GeocoderStatus.OK) {
                         map.setCenter(results[0].geometry.location);
@@ -302,6 +307,7 @@ $(function() {
                                 title: place + ", " + myGeocodeOptions.address, // intended address
                                 animation: google.maps.Animation.DROP
                             });
+                            markerTitles.push({value: place + ", " + myGeocodeOptions.address});
 
                         } else {
                             contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
@@ -315,6 +321,7 @@ $(function() {
                                 title: myGeocodeOptions.address, // intended address
                                 animation: google.maps.Animation.DROP
                             });
+                            markerTitles.push({value: myGeocodeOptions.address});
                         }
 
                         var infowindow = new google.maps.InfoWindow({
@@ -337,7 +344,9 @@ $(function() {
                         console.log("Geocode was not successful for the following reason: " + status);
                     }
                 });
+
                 my.vm.markerStore(my.vm.markers());
+
 
             },
 
@@ -356,7 +365,6 @@ $(function() {
             },
 
             codeAddress = function(newValue) {
-                console.log("codeAddress firing");
                 var address,
                     place,
                     matchedScene,
@@ -367,7 +375,6 @@ $(function() {
                     for (var j = 0, s = this.scenes().length; j < s; j++) {
                         if (requestedFilm().toLowerCase().trim() === this.scenes()[j].filmTitle().toLowerCase().trim()) {
                             matchedScene = this.scenes()[j];
-                            console.log("matchedScene", matchedScene);
                             matchedTitle = this.scenes()[j].filmTitle();
                             matchedYear = this.scenes()[j].year();
                             var geocoder = new google.maps.Geocoder();
@@ -386,6 +393,8 @@ $(function() {
                                     country: 'US'
                                 }
                             };
+
+
                             masterGeocoder(geocodeOptions, place, geocoder);
                         } // end of master if statement
                     }
@@ -399,6 +408,26 @@ $(function() {
                         currentActor3: matchedScene.actor3(),
                         currentStudio: matchedScene.studio()
                     });
+
+                $('#autocomplete2').autocomplete({
+                    lookup: my.vm.markerTitles(),
+                    onSelect: function (suggestion) {
+                        alert('You selected: ' + suggestion.value);
+                        my.vm.query(suggestion.value);
+                        console.log("my.vm.query()", my.vm.query());
+                        my.vm.filter();
+                    }
+                });
+
+
+                // $('#autocomplete2').autocomplete({
+                //     lookup: my.vm.markerTitles(),
+                //     showNoSuggestionNotice: true,
+                //     noSuggestionNotice: 'Sorry, no matching results',
+                //     onSelect: function(suggestion) {
+                //         my.vm.query(suggestion.value);
+                //     }
+                // });
 
                     this.currentTitle(matchedTitle);
                     console.time("loadNYTData");
@@ -415,13 +444,15 @@ $(function() {
                 my.vm.favLoc.push(value);
             },
 
-            filter = function(query) {
+            filter = function() {
                 var newArr = my.vm.markers.remove(function(item) {
-                    var markerTitle = item.marker.title || '';
+                    var markerTitle = item.marker.title;
+                    console.log("markerTitle", markerTitle);
+                    console.log("markerTitle.toLowerCase()", markerTitle.toLowerCase());
+
                     var queryMatches = markerTitle.toLowerCase().indexOf(my.vm.query().toLowerCase()) != -1;
                     return queryMatches;
                 });
-                console.log("newArr", newArr);
                 for (var i = 0, f = my.vm.markers().length; i < f; i++) {
                     my.vm.markers()[i].marker.setMap(null);
                 }
@@ -433,12 +464,20 @@ $(function() {
                 for (var i = 0; i < my.vm.markerStore().length; i++) {
                     my.vm.markers()[i].marker.setMap(map);
                 }
-                query(null);
+            },
+
+            filterMarkers = function() {
+                // $('#autocomplete2').autocomplete({
+                //     lookup: my.vm.markerTitles(),
+                //     showNoSuggestionNotice: true,
+                //     noSuggestionNotice: 'Sorry, no matching results',
+                //     onSelect: function(suggestion) {
+                //         my.vm.query(suggestion.value);
+                //     }
+                // });
             },
 
             clear = function() {
-                console.log("clear query observ");
-                query(null);
             };
 
         return {
@@ -467,7 +506,9 @@ $(function() {
             filmTest: filmTest,
             fav: fav,
             favLoc: favLoc,
-            uniqueTitlesResults: uniqueTitlesResults
+            uniqueTitlesResults: uniqueTitlesResults,
+            markerTitles: markerTitles,
+            filterMarkers: filterMarkers
         };
     }();
 
@@ -475,8 +516,11 @@ $(function() {
     ko.applyBindings(my.vm);
 
     my.vm.requestedFilm.subscribe(function(newValue) {
-        console.log("newValue", newValue);
         my.vm.codeAddress(newValue);
+    });
+
+    my.vm.query.subscribe(function(newValue) {
+        my.vm.filter();
     });
 
     ko.observable.fn.equalityComparer = function(a, b) {
@@ -486,4 +530,4 @@ $(function() {
 
 
 //TODO: do an alert for the wrong film, html binding? <div class="alert alert-danger" role="alert">...</div>
-// This page might help: https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/ch02s04.htm
+// This page might help: https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/ch02s04.ht

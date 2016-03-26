@@ -67,15 +67,14 @@ label {
     background-color: #FFF;
     width: 100%;
     z-index: 2;
-    margin-top: 6px;
     position: relative;
     background-color: none;
     z-index: 2;
     overflow: auto;
-    margin: 6px auto 0 auto;
-    max-height: 100vh;
-    top: -43px;
+/*    margin: 6px auto 0 auto;
+*/    max-height: 100vh;
     left: -7px;
+    top: 7px;
 }
 
 .filmInfoBox {
@@ -128,9 +127,7 @@ input {
     padding-top: 10px;
 }
 
-.media-body {
-    width: 50%;
-}
+
 
 .logo {
     color: none;
@@ -372,13 +369,22 @@ scrollbar {
 .input-group {
         margin-top: 10px;
 }
-/*.form-control {
-    margin-top: 10px;
-display: inline;
-    width: 73%;
-}*/
 
-/*.btn {
-    width: 22.5%;
-    display: inline;
-}*/
+.media-left {
+    max-width: 50%;
+}
+
+.media-body {
+    width: 50%;
+    float: right;
+}
+
+.media-body, .media-left, .media-right {
+    display: inline-block;
+    vertical-align: top;
+}
+
+/* try this to fix weird spacing */
+.panel-body {
+    padding: 15px 15px 0px 15px;
+}

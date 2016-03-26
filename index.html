@@ -92,8 +92,17 @@
         <table class="table">
             <thead>
                 <div class="input-group input-group-filter">
-                    <input class="form-control form-control-filter" placeholder="Filter by street..." type="search" data-bind="visible: currentTitle, value: query, valueUpdate: 'afterkeydown'" autocomplete="off">
-                    <div class="input-group-btn input-group-btn-filter dropup">
+                <!--     <input class="form-control form-control-filter" placeholder="Filter by street..." type="search" data-bind="visible: currentTitle, value: query, valueUpdate: 'afterkeydown'" autocomplete="off"> -->
+                <div id="content2">
+                      <div id="searchfield2">
+                    <form>
+                        <input type="text" class="form-control" id="autocomplete2" placeholder="Mission St...">
+                    </form>
+       </div><!-- @end #searchfield -->
+                    </div><!-- @end #content -->
+
+
+                    <!-- <div class="input-group-btn input-group-btn-filter dropup">
                         <button data-bind="visible: currentTitle, click: filter" type="button" class="btn btn-default btn-default-filter">Filter
                         </button>
                         <button data-bind="visible: currentTitle" type="button" class="btn btn-default dropdown-toggle dropdown-toggle-filter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -105,7 +114,7 @@
                                 <a data-bind="visible: markerStore, click: filterReset" href="#">Reset</a>
                             </li>
                         </ul>
-                    </div>
+                    </div> -->
                 </div>
             </thead>
             <tbody data-bind="foreach: markers">
