@@ -111,6 +111,7 @@ $(function() {
             markerStore = ko.observableArray([]),
             moviedb = ko.observable(),
             query = ko.observable(),
+            resetBool = true,
             loadSceneFM = function() {
                 // Returns everything before first parentheses, which is the place
                 function escapeRegExp(string) {
@@ -430,10 +431,9 @@ $(function() {
             },
 
             filter = function() {
+                resetBool = true;
                 var newArr = my.vm.markers.remove(function(item) {
                     var markerTitle = item.marker.title;
-                    console.log("markerTitle", markerTitle);
-                    console.log("markerTitle.toLowerCase()", markerTitle.toLowerCase());
 
                     var queryMatches = markerTitle.toLowerCase().indexOf(my.vm.query().toLowerCase()) != -1;
                     return queryMatches;
@@ -443,15 +443,18 @@ $(function() {
                 }
                 my.vm.markers(newArr);
             },
-
+            //TODO: when click reset it keeps adding filtered, find a way to stop this
             filterReset = function() {
-                var filtered = my.vm.markers()[0];
-                my.vm.markers(my.vm.markerStore());
-                my.vm.markers.push(filtered);
+                if(resetBool) {
+                    var filtered = ko.observable(my.vm.markers()[0]);
+                    my.vm.markers(my.vm.markerStore());
+                    my.vm.markers.push(filtered());
 
-                for (var i = 0, m = my.vm.markerStore().length; i < m; i++) {
-                    console.log("i in loop", i, " with my.vm.markers()[i]", my.vm.markers()[i]);
-                    my.vm.markers()[i].marker.setMap(map);
+                    for (var i = 0, m = my.vm.markerStore().length; i < m; i++) {
+                        console.log("i in loop", i, " with my.vm.markers()[i]", my.vm.markers()[i]);
+                        my.vm.markers()[i].marker.setMap(map);
+                    }
+                    resetBool = false;
                 }
             };
 
