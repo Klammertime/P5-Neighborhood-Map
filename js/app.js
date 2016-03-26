@@ -81,7 +81,6 @@ $(function() {
     function titleCheck(theData, resultsTitleProp, resultsDateProp, desiredTitle, desiredYear) {
         function justYear(longDate) {
             var match = /[^-]*/.exec(longDate);
-            console.log("match", match);
             return match[0];
         }
 
@@ -94,11 +93,14 @@ $(function() {
 
     my.vm = function() {
         var scenes = ko.observableArray([]),
+            uniqueTitlesResults = ko.observable(),
             filmTest = ko.observableArray([]),
+            favLoc = ko.observableArray([]),
             allTitles = ko.observableArray([]),
             requestedFilm = ko.observable(),
             pastFilm = ko.observable(),
             markers = ko.observableArray([]),
+            markerTitles = ko.observableArray([]),
             overview = ko.observable(),
             tagline = ko.observable(),
             trailerURL = ko.observable(),
@@ -109,6 +111,7 @@ $(function() {
             markerStore = ko.observableArray([]),
             moviedb = ko.observable(),
             query = ko.observable(),
+            resetBool = true,
             loadSceneFM = function() {
                 // Returns everything before first parentheses, which is the place
                 function escapeRegExp(string) {
@@ -129,11 +132,22 @@ $(function() {
                         allTitles.push(s.film_title);
                     }
                 });
-            },
 
-            uniqueTitles = ko.computed(function() {
-                return ko.utils.arrayGetDistinctValues(allTitles().sort());
-            }),
+                var uniqueTitles = ko.computed(function() {
+                    return ko.utils.arrayGetDistinctValues(allTitles().sort());
+                });
+
+                uniqueTitlesResults(uniqueTitles());
+
+                $('#autocomplete').autocomplete({
+                    lookup: my.vm.uniqueTitlesResults(),
+                    showNoSuggestionNotice: true,
+                    noSuggestionNotice: 'Sorry, no matching results',
+                    onSelect: function(suggestion) {
+                        my.vm.requestedFilm(suggestion.value);
+                    }
+                });
+            },
 
             googleInit = function() {
                 googleSuccess();
@@ -270,6 +284,9 @@ $(function() {
             masterGeocoder = function(myGeocodeOptions, place, geocoder) {
                 var contentString,
                     marker;
+                    // my.vm.markerTitles().removeAll();
+                    console.log("my.vm.markerTitles()", my.vm.markerTitles());
+
                 geocoder.geocode(myGeocodeOptions, function(results, status) {
                     if (status == google.maps.GeocoderStatus.OK) {
                         map.setCenter(results[0].geometry.location);
@@ -281,7 +298,7 @@ $(function() {
                             contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
                                 streetViewImage + '</a></div><div class="content-body"><p class="content-heading">' + place +
                                 '</p><p>' + results[0].formatted_address + '</p>' +
-                                '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
+                                '<span data-bind="click: $parent.fav" class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
 
                             marker = new google.maps.Marker({
                                 map: map,
@@ -289,12 +306,13 @@ $(function() {
                                 title: place + ", " + myGeocodeOptions.address, // intended address
                                 animation: google.maps.Animation.DROP
                             });
+                            markerTitles.push({value: place + ", " + myGeocodeOptions.address});
 
                         } else {
                             contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
                                 streetViewImage + '</a></div><div class="content-body"><p>' +
                                 results[0].formatted_address + '</p>' +
-                                '<span class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
+                                '<span data-bind="click: $parent.fav" class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
 
                             marker = new google.maps.Marker({
                                 map: map,
@@ -302,6 +320,7 @@ $(function() {
                                 title: myGeocodeOptions.address, // intended address
                                 animation: google.maps.Animation.DROP
                             });
+                            markerTitles.push({value: myGeocodeOptions.address});
                         }
 
                         var infowindow = new google.maps.InfoWindow({
@@ -324,8 +343,8 @@ $(function() {
                         console.log("Geocode was not successful for the following reason: " + status);
                     }
                 });
-                my.vm.markerStore(my.vm.markers());
 
+                my.vm.markerStore(my.vm.markers());
             },
 
             checkReset = function() {
@@ -342,7 +361,7 @@ $(function() {
                 }
             },
 
-            codeAddress = function() {
+            codeAddress = function(newValue) {
                 var address,
                     place,
                     matchedScene,
@@ -371,6 +390,7 @@ $(function() {
                                     country: 'US'
                                 }
                             };
+
                             masterGeocoder(geocodeOptions, place, geocoder);
                         } // end of master if statement
                     }
@@ -385,6 +405,16 @@ $(function() {
                         currentStudio: matchedScene.studio()
                     });
 
+                $('#autocomplete2').autocomplete({
+                    lookup: my.vm.markerTitles(),
+                    showNoSuggestionNotice: true,
+                    noSuggestionNotice: 'Sorry, no matching results',
+                    onSelect: function (suggestion) {
+                        my.vm.query(suggestion.value);
+                        my.vm.filter();
+                    }
+                });
+
                     this.currentTitle(matchedTitle);
                     console.time("loadNYTData");
                     loadNYTData(encodeURIComponent(matchedTitle), matchedTitle, matchedYear);
@@ -396,36 +426,42 @@ $(function() {
                 }
             },
 
-            filter = function(query) {
+            fav = function(value) {
+                my.vm.favLoc.push(value);
+            },
+
+            filter = function() {
+                resetBool = true;
                 var newArr = my.vm.markers.remove(function(item) {
-                    var markerTitle = item.marker.title || '';
+                    var markerTitle = item.marker.title;
+
                     var queryMatches = markerTitle.toLowerCase().indexOf(my.vm.query().toLowerCase()) != -1;
                     return queryMatches;
                 });
-                console.log("newArr", newArr);
                 for (var i = 0, f = my.vm.markers().length; i < f; i++) {
                     my.vm.markers()[i].marker.setMap(null);
                 }
                 my.vm.markers(newArr);
             },
-
+            //TODO: when click reset it keeps adding filtered, find a way to stop this
             filterReset = function() {
-                my.vm.markers(my.vm.markerStore());
-                for (var i = 0; i < my.vm.markerStore().length; i++) {
-                    my.vm.markers()[i].marker.setMap(map);
-                }
-                query(null);
-            },
+                if(resetBool) {
+                    var filtered = ko.observable(my.vm.markers()[0]);
+                    my.vm.markers(my.vm.markerStore());
+                    my.vm.markers.push(filtered());
 
-            clear = function() {
-                console.log("clear query observ");
-                query(null);
+                    for (var i = 0, m = my.vm.markerStore().length; i < m; i++) {
+                        console.log("i in loop", i, " with my.vm.markers()[i]", my.vm.markers()[i]);
+                        my.vm.markers()[i].marker.setMap(map);
+                    }
+                    resetBool = false;
+                }
+                my.vm.query('');
             };
 
         return {
             scenes: scenes,
             loadSceneFM: loadSceneFM,
-            uniqueTitles: uniqueTitles,
             allTitles: allTitles,
             requestedFilm: requestedFilm,
             codeAddress: codeAddress,
@@ -445,13 +481,20 @@ $(function() {
             filter: filter,
             filterReset: filterReset,
             markerStore: markerStore,
-            clear: clear,
-            filmTest: filmTest
+            filmTest: filmTest,
+            fav: fav,
+            favLoc: favLoc,
+            uniqueTitlesResults: uniqueTitlesResults,
+            markerTitles: markerTitles
         };
     }();
 
     my.vm.loadSceneFM();
     ko.applyBindings(my.vm);
+
+    my.vm.requestedFilm.subscribe(function(newValue) {
+        my.vm.codeAddress(newValue);
+    });
 
     ko.observable.fn.equalityComparer = function(a, b) {
         return a === b;
@@ -460,4 +503,4 @@ $(function() {
 
 
 //TODO: do an alert for the wrong film, html binding? <div class="alert alert-danger" role="alert">...</div>
-// This page might help: https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/ch02s04.htm
+// This page might help: https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/ch02s04.ht

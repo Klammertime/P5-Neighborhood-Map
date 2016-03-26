@@ -35,7 +35,6 @@ h3 {
     text-transform: uppercase;
     margin-bottom: 15px;
     letter-spacing: 1.5px;
-
 }
 
 h5 {
@@ -59,24 +58,21 @@ h5 {
     font-weight: 600;
 }
 
-.form-control {
-    display: inline-block;
-    width: 75%;
+label {
+    display: inline;
 }
 
 .searchbar {
     background-color: #FFF;
     width: 100%;
     z-index: 2;
-    margin-top: 6px;
     position: relative;
     background-color: none;
     z-index: 2;
     overflow: auto;
-    margin: 6px auto 0 auto;
     max-height: 100vh;
-    top: -43px;
     left: -7px;
+    top: 7px;
 }
 
 .filmInfoBox {
@@ -98,10 +94,6 @@ h5 {
 
 .icon-group {
     display: inline;
-}
-
-.btn {
-    width: 22.5%;
 }
 
 .panel {
@@ -127,14 +119,8 @@ input {
     font-family: inherit;
 }
 
-
-
 .btn-group {
     padding-top: 10px;
-}
-
-.media-body {
-    width: 50%;
 }
 
 .logo {
@@ -277,9 +263,8 @@ input {
 }
 
 .overview {
-  margin: 5px 0 23px 0;
+    margin: 5px 0 23px 0;
 }
-
 
 scrollbar {
     -webkit-appearance: none;
@@ -289,6 +274,7 @@ scrollbar {
 ::-webkit-scrollbar-thumb {
     background-color: RGBA(42, 100, 150, .8);
 }
+
 .table {
     margin-bottom: 0;
 }
@@ -328,6 +314,7 @@ scrollbar {
 .dropdown-menu>li>a {
     padding: 3px 10px;
 }
+
 .input-group-btn:last-child>.btn {
     margin-left: -2px;
 }
@@ -354,4 +341,54 @@ scrollbar {
 
 .btn-default-filter {
     width: 60%;
+}
+
+.form-control-film {
+    display: inline;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
+.input-group {
+    margin-top: 5px;
+}
+
+.media-left {
+    max-width: 50%;
+}
+
+.media-body {
+    width: 50%;
+    float: right;
+}
+
+.media-body,
+.media-left,
+.media-right {
+    display: inline-block;
+    vertical-align: top;
+}
+
+
+/* try this to fix weird spacing */
+
+.panel-body {
+    padding: 15px 15px 15px 15px;
+}
+
+.filterLabel {
+    margin-top: 10px;
+    margin-bottom: 0;
 }
