@@ -16,6 +16,12 @@
 #searchfield form {
   margin: 5px 0 0 0;
 }
+
+.searchfield { display: block; width: 100%; text-align: center; }
+
+.searchfield form {
+  margin: 5px 0 0 0;
+}
   </style>
 
 
@@ -103,8 +109,11 @@
 
 
 
-    <div class="input-group">
-      <input type="text" class="form-control" id="autocomplete2" placeholder="Mission St...">
+    <div class="input-group" data-bind="visible: currentTitle">
+
+      <input type="text" class="form-control"  id="autocomplete2" placeholder="Mission St...">
+
+
       <span class="input-group-btn">
         <button class="btn btn-default" data-bind="click: filterReset" type="button">Reset</button>
       </span>

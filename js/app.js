@@ -457,11 +457,22 @@ $(function() {
                     my.vm.markers()[i].marker.setMap(null);
                 }
                 my.vm.markers(newArr);
+
             },
 
             filterReset = function() {
+                console.log("my.vm.markers() in filterReset before resetting", my.vm.markers());
+                console.log("my.vm.markerStore() in filterReset before resetting", my.vm.markerStore());
+                var filtered = my.vm.markers()[0];
+                console.log("filtered", filtered);
                 my.vm.markers(my.vm.markerStore());
-                for (var i = 0; i < my.vm.markerStore().length; i++) {
+                my.vm.markers.push(filtered);
+                console.log("my.vm.markers() in filterReset after resetting", my.vm.markers());
+                console.log("my.vm.markerStore() in filterReset after resetting", my.vm.markerStore());
+
+
+                for (var i = 0, m = my.vm.markerStore().length; i < m; i++) {
+                    console.log("i in loop", i, " with my.vm.markers()[i]", my.vm.markers()[i]);
                     my.vm.markers()[i].marker.setMap(map);
                 }
             },
