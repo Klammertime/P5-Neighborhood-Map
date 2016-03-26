@@ -96,7 +96,7 @@
             <span>Type a street to filter by location</span>
         </label>
         <div class="input-group" data-bind="visible: currentTitle">
-          <input type="text" class="form-control"  id="autocomplete2" placeholder="Mission St...">
+          <input type="text" class="form-control" id="autocomplete2" placeholder="Mission St..." data-bind="value: my.vm.query" >
           <span class="input-group-btn">
             <button class="btn btn-default" data-bind="click: filterReset" type="button">Reset</button>
           </span>

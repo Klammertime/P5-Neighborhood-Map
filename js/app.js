@@ -456,6 +456,7 @@ $(function() {
                     }
                     resetBool = false;
                 }
+                my.vm.query('');
             };
 
         return {
@@ -493,10 +494,6 @@ $(function() {
 
     my.vm.requestedFilm.subscribe(function(newValue) {
         my.vm.codeAddress(newValue);
-    });
-
-    my.vm.query.subscribe(function(newValue) {
-        my.vm.filter();
     });
 
     ko.observable.fn.equalityComparer = function(a, b) {
