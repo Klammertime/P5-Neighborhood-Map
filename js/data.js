@@ -152,7 +152,7 @@ my.filmData = (function (my) {
     "film_location": "Embarcadero Freeway",
     "production_company": "Liberty Film",
     "release_year": "1978",
-    "film_title": "A Night Full of Rain",
+    "film_title": "La fine del mondo nel nostro solito letto in una notte piena di pioggia",
     "writer": "Lina Wertmuller"
   },
   {
@@ -164,7 +164,7 @@ my.filmData = (function (my) {
     "film_location": "Fairmont Hotel (950 Mason St)",
     "production_company": "Liberty Film",
     "release_year": "1978",
-    "film_title": "A Night Full of Rain",
+    "film_title": "La fine del mondo nel nostro solito letto in una notte piena di pioggia",
     "writer": "Lina Wertmuller"
   },
   {
@@ -176,7 +176,7 @@ my.filmData = (function (my) {
     "film_location": "San Francisco Chronicle (901 Mission St)",
     "production_company": "Liberty Film",
     "release_year": "1978",
-    "film_title": "A Night Full of Rain",
+    "film_title": "La fine del mondo nel nostro solito letto in una notte piena di pioggia",
     "writer": "Lina Wertmuller"
   },
   {
@@ -187,7 +187,7 @@ my.filmData = (function (my) {
     "film_location": "Broadway, North Beach",
     "production_company": "Liberty Film",
     "release_year": "1978",
-    "film_title": "A Night Full of Rain",
+    "film_title": "La fine del mondo nel nostro solito letto in una notte piena di pioggia",
     "writer": "Lina Wertmuller"
   },
   {
