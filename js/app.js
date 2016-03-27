@@ -91,6 +91,35 @@ $(function() {
         }
     }
 
+    function strConverter(theStr){
+        var re = /&rdquo;/gi;
+        var str = theStr;
+        str = str.replace(re, '”');
+
+        re = /&ldquo;/gi;
+        str = str.replace(re, '“');
+
+        var re = /&rsquo;/gi;
+        str = str.replace(re, '’');
+
+        var re = /&lsquo;/gi;
+        str = str.replace(re, '‘');
+        return str;
+    }
+
+    function titleCheck(theData, resultsTitleProp, resultsDateProp, desiredTitle, desiredYear) {
+        function justYear(longDate) {
+            var match = /[^-]*/.exec(longDate);
+            return match[0];
+        }
+
+        for (var i = 0, r = theData.results.length; i < r; i++) {
+            if (((theData.results[i][resultsTitleProp]) === desiredTitle) && (justYear(theData.results[i][resultsDateProp]) === desiredYear)) {
+                return i;
+            }
+        }
+    }
+
     my.vm = function() {
         var scenes = ko.observableArray([]),
             uniqueTitlesResults = ko.observable(),
@@ -195,12 +224,12 @@ $(function() {
 
                         //TODO: should each of those be observable arrays?
                         nytInfo({
-                            title: data.results[index].display_title,
-                            capsuleReview: data.results[index].capsule_review,
-                            summary: data.results[index].summary_short,
+                            title: strConverter(data.results[index].display_title),
+                            capsuleReview: strConverter(data.results[index].capsule_review),
+                            summary: strConverter(data.results[index].summary_short),
                             reviewURL: domain(data.results[index].link.url),
                             byline: data.results[index].byline,
-                            headline: data.results[index].headline,
+                            headline: strConverter(data.results[index].headline),
                             releaseYear: data.results[index].publication_date,
                             suggestedLinkText: data.results[index].link.suggested_link_text
                         });
