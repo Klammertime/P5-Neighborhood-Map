@@ -24,7 +24,6 @@
 }
   </style>
 
-
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
@@ -150,9 +149,9 @@
                     </span>
                 </p>
                 <p>
-                    <span class="itemHeader">Actors: </span>
+                    <span data-bind="visible: currentActor1" class="itemHeader">Actors: </span>
                     <!--ko text: currentActor1-->
-                    <!--/ko-->,
+                    <!--/ko--><span data-bind="visible: currentActor2">, </span>
                     <!--ko text: currentActor2-->
                     <!--/ko--><span data-bind="visible: currentActor3">, </span>
                     <!--ko text: currentActor3-->

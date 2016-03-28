@@ -200,8 +200,8 @@ $(function() {
                 // Without this it still works but doesn't open the infowindow, it goes to it and drops the marker
                 map.panTo(clickedLocation.marker.getPosition());
                 // Bounce once
-                clickedLocation.marker.setAnimation(google.maps.Animation.BOUNCE);
-                clickedLocation.marker.setAnimation(null);
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+                marker.setAnimation(null);
                 // Without this, it doesn't work
                 clickedLocation.infowindow.open(map, clickedLocation.marker);
             },
@@ -355,7 +355,7 @@ $(function() {
                                 position: results[0].geometry.location,
                                 title: myGeocodeOptions.address, // intended address
                                 animation: google.maps.Animation.DROP,
-                                optimized: false
+
                             });
                             markerTitles.push({ value: myGeocodeOptions.address });
                         }
@@ -472,7 +472,8 @@ $(function() {
                 resetBool = true;
                 var newArr = this.markers.remove(function(item) {
                     var markerTitle = item.marker.title;
-                    var queryMatches = markerTitle.toLowerCase().indexOf(this.query().toLowerCase()) != -1;
+                    //Dont change my.vm.query() to this, it breaks it.
+                    var queryMatches = markerTitle.toLowerCase().indexOf(my.vm.query().toLowerCase()) != -1;
                     return queryMatches;
                 });
                 for (var i = 0, f = this.markers().length; i < f; i++) {

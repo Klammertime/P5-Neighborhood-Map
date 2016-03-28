@@ -91,7 +91,7 @@ $(function() {
         }
     }
 
-    function strConverter(theStr){
+    function strConverter(theStr) {
         var re = /&rdquo;/gi;
         var str = theStr;
         str = str.replace(re, '”');
@@ -99,24 +99,31 @@ $(function() {
         re = /&ldquo;/gi;
         str = str.replace(re, '“');
 
-        var re = /&rsquo;/gi;
+        re = /&rsquo;/gi;
         str = str.replace(re, '’');
 
-        var re = /&lsquo;/gi;
+        re = /&lsquo;/gi;
         str = str.replace(re, '‘');
         return str;
     }
 
-    function titleCheck(theData, resultsTitleProp, resultsDateProp, desiredTitle, desiredYear) {
-        function justYear(longDate) {
-            var match = /[^-]*/.exec(longDate);
-            return match[0];
-        }
+    function capitalizeName(name) {
+        var idx,
+            lastIdx,
+            first,
+            last;
 
-        for (var i = 0, r = theData.results.length; i < r; i++) {
-            if (((theData.results[i][resultsTitleProp]) === desiredTitle) && (justYear(theData.results[i][resultsDateProp]) === desiredYear)) {
-                return i;
-            }
+        idx = name.indexOf(" ");
+        lastIdx = name.lastIndexOf(" ");
+        if (idx === lastIdx) {
+            name = name.toLowerCase();
+            first = name.substring(0, idx);
+            last = name.substring(idx + 1);
+            first = first[0].toUpperCase() + first.substring(1);
+            last = last[0].toUpperCase() + last.substring(1);
+            return first + " " + last;
+        } else {
+            return name;
         }
     }
 
@@ -192,13 +199,16 @@ $(function() {
                 prev_infowindow = clickedLocation.infowindow;
                 // Without this it still works but doesn't open the infowindow, it goes to it and drops the marker
                 map.panTo(clickedLocation.marker.getPosition());
+                // Bounce once
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+                marker.setAnimation(null);
                 // Without this, it doesn't work
                 clickedLocation.infowindow.open(map, clickedLocation.marker);
             },
 
             loadNYTData = function(encodedFilm, nonEncodedFilm, releaseYear) {
                 var index;
-                nytInfo(undefined);
+                nytInfo(null);
 
                 function domain(fullUrl) {
                     var match = /\.(.*)$/.exec(fullUrl);
@@ -220,15 +230,13 @@ $(function() {
                         } else {
                             index = titleCheck(data, 'display_title', 'publication_date', nonEncodedFilm, releaseYear);
                         }
-                        console.log("data.results[index].link.suggested_link_text", data.results[index].link.suggested_link_text);
 
-                        //TODO: should each of those be observable arrays?
                         nytInfo({
                             title: strConverter(data.results[index].display_title),
                             capsuleReview: strConverter(data.results[index].capsule_review),
                             summary: strConverter(data.results[index].summary_short),
                             reviewURL: domain(data.results[index].link.url),
-                            byline: data.results[index].byline,
+                            byline: capitalizeName(data.results[index].byline),
                             headline: strConverter(data.results[index].headline),
                             releaseYear: data.results[index].publication_date,
                             suggestedLinkText: data.results[index].link.suggested_link_text
@@ -242,10 +250,10 @@ $(function() {
             },
 
             loadMovieDbData = function(encodedFilm, nonEncodedFilm, releaseYear) {
-                posterSRC(null); //TODO: is there a diff. btwn using null and undefined here?
+                posterSRC(null);
                 overview(null);
-                tagline(undefined);
-                trailerURL(undefined);
+                tagline(null);
+                trailerURL(null);
                 var filmID,
                     index;
 
@@ -313,8 +321,6 @@ $(function() {
             masterGeocoder = function(myGeocodeOptions, place, geocoder) {
                 var contentString,
                     marker;
-                    // my.vm.markerTitles().removeAll();
-                    console.log("my.vm.markerTitles()", my.vm.markerTitles());
 
                 geocoder.geocode(myGeocodeOptions, function(results, status) {
                     if (status == google.maps.GeocoderStatus.OK) {
@@ -333,9 +339,10 @@ $(function() {
                                 map: map,
                                 position: results[0].geometry.location,
                                 title: place + ", " + myGeocodeOptions.address, // intended address
-                                animation: google.maps.Animation.DROP
+                                animation: google.maps.Animation.DROP,
+                                optimized: false
                             });
-                            markerTitles.push({value: place + ", " + myGeocodeOptions.address});
+                            markerTitles.push({ value: place + ", " + myGeocodeOptions.address });
 
                         } else {
                             contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
@@ -347,9 +354,10 @@ $(function() {
                                 map: map,
                                 position: results[0].geometry.location,
                                 title: myGeocodeOptions.address, // intended address
-                                animation: google.maps.Animation.DROP
+                                animation: google.maps.Animation.DROP,
+
                             });
-                            markerTitles.push({value: myGeocodeOptions.address});
+                            markerTitles.push({ value: myGeocodeOptions.address });
                         }
 
                         var infowindow = new google.maps.InfoWindow({
@@ -372,6 +380,7 @@ $(function() {
                         console.log("Geocode was not successful for the following reason: " + status);
                     }
                 });
+                console.log("this in masterGeocoder", this);
 
                 my.vm.markerStore(my.vm.markers());
             },
@@ -410,7 +419,7 @@ $(function() {
                                 place = this.scenes()[j].place();
                             } else {
                                 address = this.scenes()[j].fullAddress();
-                                place = undefined;
+                                place = null;
                             }
 
                             var geocodeOptions = {
@@ -434,15 +443,15 @@ $(function() {
                         currentStudio: matchedScene.studio()
                     });
 
-                $('#autocomplete2').autocomplete({
-                    lookup: my.vm.markerTitles(),
-                    showNoSuggestionNotice: true,
-                    noSuggestionNotice: 'Sorry, no matching results',
-                    onSelect: function (suggestion) {
-                        my.vm.query(suggestion.value);
-                        my.vm.filter();
-                    }
-                });
+                    $('#autocomplete2').autocomplete({
+                        lookup: my.vm.markerTitles(),
+                        showNoSuggestionNotice: true,
+                        noSuggestionNotice: 'Sorry, no matching results',
+                        onSelect: function(suggestion) {
+                            my.vm.query(suggestion.value);
+                            my.vm.filter();
+                        }
+                    });
 
                     this.currentTitle(matchedTitle);
                     console.time("loadNYTData");
@@ -456,36 +465,34 @@ $(function() {
             },
 
             fav = function(value) {
-                my.vm.favLoc.push(value);
+                this.favLoc.push(value);
             },
 
             filter = function() {
                 resetBool = true;
-                var newArr = my.vm.markers.remove(function(item) {
+                var newArr = this.markers.remove(function(item) {
                     var markerTitle = item.marker.title;
-
+                    //Dont change my.vm.query() to this, it breaks it.
                     var queryMatches = markerTitle.toLowerCase().indexOf(my.vm.query().toLowerCase()) != -1;
                     return queryMatches;
                 });
-                for (var i = 0, f = my.vm.markers().length; i < f; i++) {
-                    my.vm.markers()[i].marker.setMap(null);
+                for (var i = 0, f = this.markers().length; i < f; i++) {
+                    this.markers()[i].marker.setMap(null);
                 }
-                my.vm.markers(newArr);
+                this.markers(newArr);
             },
-            //TODO: when click reset it keeps adding filtered, find a way to stop this
-            filterReset = function() {
-                if(resetBool) {
-                    var filtered = ko.observable(my.vm.markers()[0]);
-                    my.vm.markers(my.vm.markerStore());
-                    my.vm.markers.push(filtered());
 
-                    for (var i = 0, m = my.vm.markerStore().length; i < m; i++) {
-                        console.log("i in loop", i, " with my.vm.markers()[i]", my.vm.markers()[i]);
-                        my.vm.markers()[i].marker.setMap(map);
+            filterReset = function() {
+                if (resetBool) {
+                    var filtered = ko.observable(this.markers()[0]);
+                    this.markers(this.markerStore());
+                    this.markers.push(filtered());
+                    for (var i = 0, m = this.markerStore().length; i < m; i++) {
+                        this.markers()[i].marker.setMap(map);
                     }
                     resetBool = false;
                 }
-                my.vm.query('');
+                this.query('');
             };
 
         return {
@@ -532,4 +539,4 @@ $(function() {
 
 
 //TODO: do an alert for the wrong film, html binding? <div class="alert alert-danger" role="alert">...</div>
-// This page might help: https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/ch02s04.ht
+// This page might help: https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/ch02s04.h
