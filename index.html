@@ -23,8 +23,6 @@
   margin: 5px 0 0 0;
 }
   </style>
-
-
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
@@ -59,12 +57,15 @@
                             <span>Type a letter to see film options</span>
                         </label>
 
+
                         <div id="content">
                           <div id="searchfield">
-                            <form>
-                                <input type="text" class="form-control" id="autocomplete" placeholder="Godzilla...">
-                            </form>
-                          </div><!-- @end #searchfield -->
+<!--                             <form class="navbar-form navbar-left">
+ -->                                <div class="form-group">
+                                    <input type="text" class="form-control" id="autocomplete" placeholder="Godzilla...">
+                                </div>
+<!--                             </form>
+ -->                          </div><!-- @end #searchfield -->
                         </div><!-- @end #content -->
 
                         <div class="filterLabel" data-bind="template: {name: 'filterTemplate'}"></div>

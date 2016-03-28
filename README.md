@@ -98,4 +98,5 @@ But in your case, if you want to pass a URL into a GET parameter of other page, 
 
 See Stack Overflow question Best practice: escape, or encodeURI / encodeURIComponent for further discussion."
 
-
+Format and Add
+http://designshack.net/articles/javascript/create-a-simple-autocomplete-with-html5-jquery/
