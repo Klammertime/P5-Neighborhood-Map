@@ -57,7 +57,7 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
+<!--         <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
         <li><a href="#">Link</a></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
@@ -71,13 +71,13 @@
             <li><a href="#">One more separated link</a></li>
           </ul>
         </li>
-      </ul>
+      </ul> -->
       <form class="navbar-form navbar-left" role="search">
         <div class="form-group">
             <input type="text" class="form-control film-autocomplete" id="autocomplete" placeholder="Type a letter to see film options...">
         </div>
-            <button type="submit" class="btn btn-default">Submit</button>
-      </form>
+<!--             <button type="submit" class="btn btn-default">Submit</button>
+ -->      </form>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="#">Link</a></li>
         <li class="dropdown">
@@ -96,13 +96,13 @@
 </nav>
     <div class="row">
         <div class="col-md-3 col-lg-3 col-sm-3" data-bind="with: my.vm">
-            <div class="widget-pane-content-holder">
+            <div class="widget-pane-content-holder" data-bind="visible: currentTitle">
                 <div class="panel panel-default searchbar">
 <!--                     <img class="sf" src="img/sfLogo8.svg">
  -->              <!--       <div class="logo">
                         <h2 class="logo-font">SF Film Locations</h2>
                     </div> -->
-                    <div class="panel-body">
+                    <!-- <div class="panel-body"> -->
                <!--          <label for="filmList">
                             <span>Type a letter to see film options</span>
                         </label> -->
@@ -116,7 +116,8 @@
                         </div> -->
 
 <!--                         <div class="filterLabel" data-bind="template: {name: 'filterTemplate'}"></div>
- -->                    </div>
+ -->
+  <!-- </div> -->
                     <div data-bind="template: {name: 'locationsTemplate'}"></div>
                 </div>
             </div>
@@ -152,18 +153,33 @@
     <div id="locationsTemplate" style="display: none">
         <table class="table">
             <thead>
-<div class="test-block test-image-min-size">
-                <a data-bind="visible: my.vm.backdropSRC" href="#" class="thumbnail media-object">
+<div class="test-block test-image-min-size" data-bind="visible: my.vm.backdropSRC">
+                <a data-bind="visible: my.vm.backdropSRC" href="#" class="media-object">
                     <div class="pickgradient">
                         <img data-bind="attr: { src: my.vm.backdropSRC }" width="300" height="169">
                     </div>
 
 
                     <div class="testFont">
-                        <h4> Test </h4>
+                        <h4 data-bind="visible: my.vm.currentTitle, text: my.vm.currentTitle"></h4>
                     </div>
                 </a>
 </div>
+
+
+<div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
+    <a href="#" class="btn btnIcon iconText" role="button">
+        <span class="glyphicon glyphicon-search" aria-hidden="true"></span><div class="glyphText"> Trailer</div>
+    </a>
+    <a href="#" class="btn btnIcon iconText" role="button">
+        <span class="glyphicon glyphicon-search" aria-hidden="true"></span><div class="glyphText"> Overview</div>
+    </a>
+    <a href="#" class="btn btnIcon iconText" role="button">
+        <span class="glyphicon glyphicon-search" aria-hidden="true"></span><div class="glyphText"> Review</div>
+    </a>
+</div>
+
+
         <div class="input-group" data-bind="visible: currentTitle">
           <input type="text" class="form-control" id="autocomplete2" placeholder="Mission St..." data-bind="value: my.vm.query" >
           <span class="input-group-btn">

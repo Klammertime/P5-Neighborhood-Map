@@ -68,11 +68,14 @@ label {
     z-index: 2;
     position: relative;
     background-color: none;
-    z-index: 2;
+    z-index: 1;
     overflow: auto;
     max-height: 100vh;
-    left: -7px;
-    top: 7px;
+/*    left: -7px;
+    top: 7px;*/
+
+    left: -17px;
+    top: -25px;
 }
 
 .filmInfoBox {
@@ -277,9 +280,11 @@ scrollbar {
 }
 
 .btn-default {
+/*    border: none;*/
     background-color: #fff;
     border-color: #ccc;
     color: #333;
+    width: 100%;
 }
 
 .input-group-btn:last-child>.btn {
@@ -337,7 +342,7 @@ scrollbar {
 }
 
 .input-group {
-    margin-top: 5px;
+padding: 15px;
 }
 
 .media-left {
@@ -380,9 +385,6 @@ scrollbar {
     width: 100%;
 }
 
-.btn-default {
-    width: 23%;
-}
 
 .form-group {
     width: 75%;
@@ -472,8 +474,8 @@ h4 {
     overflow: hidden;
     position: relative;
     max-height: 200px;
-    margin-bottom: 15px;
-    border-radius: 6px;
+/*    margin-bottom: 15px;
+*/    border-radius: 6px;
     z-index: 1;
 }
 
@@ -500,3 +502,18 @@ h4 {
     display: block;
     padding: 5px 35px 0px 75px;
     text-shadow: 3px 3px 0 #F48C91, -1px -1px 0 #F48C91, 1px -1px 0 #F48C91, -1px 1px 0 #F48C91, 1px 1px 0 #F48C91;
+}
+
+
+.thumbnail {
+     margin-bottom: 0px;
+}
+
+.iconText {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+a.btnIcon {
+        color: #999999;
+}

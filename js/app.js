@@ -271,9 +271,13 @@ $(function() {
                     }
                     console.log("moviedb().results", moviedb().results);
                     //put in img html width="300" height="169"
-                    backdropSRC('https://image.tmdb.org/t/p/w300' + moviedb().results[index].backdrop_path);
+                    if(moviedb().results[index].backdrop_path){
+                        backdropSRC('https://image.tmdb.org/t/p/w500' + moviedb().results[index].backdrop_path);
+                    }
                     // <img itemprop="image" id="upload_poster" alt="The Divergent Series: Allegiant Poster" title="The Divergent Series: Allegiant Poster" class="shadow" src="https://image.tmdb.org/t/p/w185/i9LuBG9cx9BW7fFepeCVrvJ8XRP.jpg" width="185" height="278">
-                    posterSRC('https://image.tmdb.org/t/p/w370' + moviedb().results[index].poster_path);
+                    if(moviedb().results[index].poster_path) {
+                        posterSRC('https://image.tmdb.org/t/p/w370' + moviedb().results[index].poster_path);
+                    }
                     overview(moviedb().results[index].overview);
                     filmID = moviedb().results[index].id;
 
@@ -516,7 +520,7 @@ $(function() {
             checkReset: checkReset,
             trailerURL: trailerURL,
             backdropSRC: backdropSRC,
-            posterSR: posterSRC,
+            posterSRC: posterSRC,
             nytInfo: nytInfo,
             movieDBInfo: movieDBInfo,
             testDB: testDB,
