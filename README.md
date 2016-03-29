@@ -100,3 +100,5 @@ See Stack Overflow question Best practice: escape, or encodeURI / encodeURICompo
 
 Format and Add
 http://designshack.net/articles/javascript/create-a-simple-autocomplete-with-html5-jquery/
+
+http://stackoverflow.com/questions/23935758/gradient-over-img-tag-using-css

@@ -123,31 +123,6 @@ input {
     padding-top: 10px;
 }
 
-.logo {
-    color: none;
-    background-color: none;
-    border-color: none;
-    top: -6px;
-    left: 19px;
-    letter-spacing: initial;
-    position: absolute;
-}
-
-.sf {
-    opacity: 0.7;
-}
-
-.logo-font {
-    font-size: 15px;
-    margin-top: 20px;
-    color: #454545;
-    font-weight: 900;
-    line-height: 34px;
-    margin-bottom: 0px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
 .btn-info {
     background-color: #999999;
     border: 1px solid #999;
@@ -392,3 +367,136 @@ scrollbar {
     margin-top: 10px;
     margin-bottom: 0;
 }
+
+.navbar {
+    z-index: 2;
+}
+
+.navbar-form {
+    width: 350px;
+}
+
+.navbar-form .film-autocomplete {
+    width: 100%;
+}
+
+.btn-default {
+    width: 23%;
+}
+
+.form-group {
+    width: 75%;
+}
+
+@media (min-width: 768px) {
+    .navbar-form .film-autocomplete {
+        width: 100%;
+    }
+}
+
+.navbar-brand {
+    padding: 0;
+}
+
+.bridgeLogo {
+    margin-top: 5px;
+}
+
+.pickgradient {
+    position: relative;
+    display: inline-block;
+}
+
+.pickgradient:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    background: -moz-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.65) 100%);
+    /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(0, 0, 0, 0.65)), color-stop(100%, rgba(0, 0, 0, 0)));
+    /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.65) 100%);
+    /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.65) 100%);
+    /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.65) 100%);
+    /* IE10+ */
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.65) 100%);
+    /* W3C */
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000', GradientType=0);
+    /* IE6-9 */
+}
+
+img {
+    display: block;
+}
+
+.testFont > h4 {
+    left: 0;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    top: 45%;
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 33px;
+    margin: 0px;
+    text-shadow: 1px 1px #333;
+    letter-spacing: 3px;
+}
+
+.testFont {
+    position: absolute;
+    top: 0%;
+    width: 100%;
+    height: 100%;
+}
+
+h4 {
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.test-block.test-image-min-size a img {
+    width: 100%;
+    height: auto;
+    position: relative;
+    bottom: 0px;
+}
+
+.test-block {
+    overflow: hidden;
+    position: relative;
+    max-height: 200px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    z-index: 1;
+}
+
+.logo {
+    color: none;
+    background-color: none;
+    border-color: none;
+    top: -6px;
+    left: 19px;
+    letter-spacing: initial;
+    position: absolute;
+}
+
+.sf {
+    opacity: 0.7;
+    margin-top: 5px;
+}
+
+.logo-font {
+    font-family: "bello-pro", sans-serif;
+    font-size: 25px;
+    color: #fff;
+    position: relative;
+    display: block;
+    padding: 5px 35px 0px 75px;
+    text-shadow: 3px 3px 0 #F48C91, -1px -1px 0 #F48C91, 1px -1px 0 #F48C91, -1px 1px 0 #F48C91, 1px 1px 0 #F48C91;

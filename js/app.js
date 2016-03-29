@@ -3,7 +3,8 @@ $(function() {
     var prev_infowindow = false,
         geocoder,
         map,
-        infowindow;
+        infowindow,
+        marker;
 
     function googleSuccess() {
         var center,
@@ -141,6 +142,7 @@ $(function() {
             tagline = ko.observable(),
             trailerURL = ko.observable(),
             currentTitle = ko.observable(),
+            backdropSRC = ko.observable(),
             posterSRC = ko.observable(),
             nytInfo = ko.observableArray([]),
             movieDBInfo = ko.observableArray([]),
@@ -250,6 +252,7 @@ $(function() {
             },
 
             loadMovieDbData = function(encodedFilm, nonEncodedFilm, releaseYear) {
+                backdropSRC(null);
                 posterSRC(null);
                 overview(null);
                 tagline(null);
@@ -266,7 +269,10 @@ $(function() {
                     } else {
                         index = titleCheck(dbStore, 'original_title', 'release_date', nonEncodedFilm, releaseYear);
                     }
-
+                    console.log("moviedb().results", moviedb().results);
+                    //put in img html width="300" height="169"
+                    backdropSRC('https://image.tmdb.org/t/p/w300' + moviedb().results[index].backdrop_path);
+                    // <img itemprop="image" id="upload_poster" alt="The Divergent Series: Allegiant Poster" title="The Divergent Series: Allegiant Poster" class="shadow" src="https://image.tmdb.org/t/p/w185/i9LuBG9cx9BW7fFepeCVrvJ8XRP.jpg" width="185" height="278">
                     posterSRC('https://image.tmdb.org/t/p/w370' + moviedb().results[index].poster_path);
                     overview(moviedb().results[index].overview);
                     filmID = moviedb().results[index].id;
@@ -319,8 +325,8 @@ $(function() {
             },
 
             masterGeocoder = function(myGeocodeOptions, place, geocoder) {
-                var contentString,
-                    marker;
+                var contentString;
+
 
                 geocoder.geocode(myGeocodeOptions, function(results, status) {
                     if (status == google.maps.GeocoderStatus.OK) {
@@ -509,7 +515,8 @@ $(function() {
             tagline: tagline,
             checkReset: checkReset,
             trailerURL: trailerURL,
-            posterSRC: posterSRC,
+            backdropSRC: backdropSRC,
+            posterSR: posterSRC,
             nytInfo: nytInfo,
             movieDBInfo: movieDBInfo,
             testDB: testDB,
