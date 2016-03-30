@@ -326,7 +326,7 @@ scrollbar
     .navbar-form .film-autocomplete
     {
         width: 100%;
-        min-width: 350px;
+        min-width: 255px;;
     }
 }
 

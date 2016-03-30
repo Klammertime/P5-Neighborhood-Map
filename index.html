@@ -44,13 +44,12 @@
 
                 <!-- Favorite Badge -->
                 <ul class="nav nav-pills pull-right" role="tablist">
-                    <li role="presentation"><a href="#">Profile</a></li>
                     <li role="presentation"><a href="#">Favorite Films <span class="badge">3</span></a></li>
                 </ul>
                 <!-- Favorite Badge End -->
 
                 <!-- Film Search -->
-                <form class="navbar-form navbar-left" role="search">
+                <form class="navbar-left" role="search">
                     <div class="form-group">
                         <input type="text" class="form-control film-autocomplete" id="autocomplete" placeholder="Type a letter to see film options...">
                     </div>
@@ -58,8 +57,8 @@
                 <!-- Film Search End-->
 
                 <!-- Film Pane Toggle -->
-                <ul class="nav navbar-nav">
-                    <li class="dropdown visible-xs visible-sm hidden-md hidden-lg">
+                <ul class="nav navbar-nav visible-xs hidden-sm hidden-md hidden-lg">
+                    <li class="dropdown" data-bind="visible: my.vm.currentTitle">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Toggle Film Pane<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <div class="navbar-text col-sm-12 col-xs-12" data-bind="with: my.vm">
@@ -77,8 +76,8 @@
     </nav>
     <div class="row">
         <!-- empty placeholder -->
-        <div class="col-md-9 col-lg-9 col-sm-8"></div>
-        <div class="hidden-xs col-md-3 col-lg-3 hidden-sm" data-bind="with: my.vm">
+        <div class="hidden-xs col-sm-8 col-md-8 col-lg-9"></div>
+        <div class="hidden-xs col-sm-4 col-md-4 col-lg-3" data-bind="with: my.vm">
             <div class="widget-pane-content-holder" data-bind="visible: currentTitle">
                 <div class="panel panel-default searchbar">
                     <div data-bind="template: {name: 'locationsTemplate'}"></div>
@@ -105,9 +104,7 @@
                     <div class data-bind="ifnot: backdropSRC">
                         <div data-bind="if: posterSRC">
                             <a data-bind="visible: posterSRC" href="#" class="media-object">
-                                <div class="pickgradient">
-                                    <img class="poster" data-bind="attr: { src: posterSRC }">
-                                </div>
+                                <img class="poster" data-bind="attr: { src: posterSRC }">
                             </a>
                         </div>
                     </div>
