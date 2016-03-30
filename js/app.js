@@ -14,7 +14,7 @@ $(function() {
 
         var mapOptions = {
             center: myLatLng,
-            zoom: 13,
+            zoom: 12,
             disableDefaultUI: true,
             zoomControl: true,
             zoomControlOptions: {
@@ -212,7 +212,7 @@ $(function() {
                 clickedLocation.marker.setAnimation(google.maps.Animation.BOUNCE);
 
                 setTimeout(function() {
-                    clickedLocation.marker.setAnimation(null)
+                    clickedLocation.marker.setAnimation(null);
                 }, 500);
 
 
@@ -254,8 +254,17 @@ $(function() {
                             byline: capitalizeName(data.results[index].byline),
                             headline: strConverter(data.results[index].headline),
                             releaseYear: data.results[index].publication_date,
-                            suggestedLinkText: data.results[index].link.suggested_link_text
+                            suggestedLinkText: data.results[index].link.suggested_link_text,
+                            overview: [data.results[index].related_urls[0].suggested_link_text,
+                                                data.results[index].related_urls[0].url],
+                            castCreditsAwards:[data.results[index].related_urls[2].suggested_link_text,
+                                                data.results[index].related_urls[2].url],
+                            readerReviews: [data.results[index].related_urls[3].suggested_link_text,
+                                                data.results[index].related_urls[3].url],
+                            trailersAndClips: [data.results[index].related_urls[4].suggested_link_text,
+                                                data.results[index].related_urls[4].url]
                         });
+console.log("nytInfo().title", nytInfo().title);
 
                     },
                     fail: function(jqxhr, textStatus, error) {
@@ -285,11 +294,11 @@ $(function() {
                     console.log("moviedb().results", moviedb().results);
                     //put in img html width="300" height="169"
                     if (moviedb().results[index].backdrop_path) {
-                        backdropSRC('https://image.tmdb.org/t/p/w500' + moviedb().results[index].backdrop_path);
+                        backdropSRC('https://image.tmdb.org/t/p/w780' + moviedb().results[index].backdrop_path);
                     }
                     // <img itemprop="image" id="upload_poster" alt="The Divergent Series: Allegiant Poster" title="The Divergent Series: Allegiant Poster" class="shadow" src="https://image.tmdb.org/t/p/w185/i9LuBG9cx9BW7fFepeCVrvJ8XRP.jpg" width="185" height="278">
                     if (moviedb().results[index].poster_path) {
-                        posterSRC('https://image.tmdb.org/t/p/w370' + moviedb().results[index].poster_path);
+                        posterSRC('https://image.tmdb.org/t/p/w1280' + moviedb().results[index].poster_path);
                     }
                     overview(moviedb().results[index].overview);
                     filmID = moviedb().results[index].id;
@@ -299,7 +308,7 @@ $(function() {
                 }
 
                 function errorCB() {
-                    console.log("you fail!"); //TODO: find the proper error
+                    console.log("Sorry, MovieDb did not return any results."); //TODO: find the proper error
                 }
                 // How it works:
                 // theMovieDb.movies.getById({"id":76203 }, successCB, errorCB)
@@ -313,7 +322,7 @@ $(function() {
                 }
 
                 function errorCB() {
-                    console.log("you fail!"); //TODO: find the proper error
+                    console.log("Sorry, MovieDb did not return any tagline results."); //TODO: find the proper error
                 }
                 theMovieDb.movies.getById({ "id": foundfilmID }, successCB, errorCB);
             },
@@ -325,7 +334,7 @@ $(function() {
                 }
 
                 function errorCB() {
-                    console.log("you fail!"); //TODO: find the proper error
+                    console.log("Sorry, MovieDb did not return any results."); //TODO: find the proper error
                 }
 
                 theMovieDb.movies.getTrailers({ "id": foundfilmID2 }, successCB, errorCB);

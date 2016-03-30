@@ -62,21 +62,34 @@
             </div>
         </div>
         <div id="googleMap" class="map-canvas"></div>
+
         <!--TEMPLATES STORED HERE!!!!!!!!!!!!!!!!-->
         <!-- locations template, shows locations from markers -->
         <div id="locationsTemplate" style="display: none">
-            <table class="table">
+            <table class="table" data-bind="with: my.vm">
                 <thead>
-                    <div class="backdrop-block backdrop-image-min-size" data-bind="visible: my.vm.backdropSRC">
-                        <a data-bind="visible: my.vm.backdropSRC" href="#" class="media-object">
+                    <div class="backdrop-block backdrop-image-min-size" data-bind="visible: backdropSRC">
+                        <a data-bind="visible: backdropSRC" href="#" class="media-object">
                             <div class="pickgradient">
-                                <img data-bind="attr: { src: my.vm.backdropSRC }" width="300" height="169">
+                                <img data-bind="attr: { src: backdropSRC }" width="300" height="169">
                             </div>
                             <div class="overlay-font">
-                                <h4 data-bind="visible: my.vm.currentTitle, text: my.vm.currentTitle"></h4>
+                                <h4 data-bind="visible: currentTitle, text: currentTitle"></h4>
                             </div>
                         </a>
                     </div>
+                    <!--If there isn't a backdrop img, I want some image, so use poster-->
+                    <div class data-bind="ifnot: backdropSRC">
+                        <div data-bind="if: posterSRC">
+                            <a data-bind="visible: posterSRC" href="#" class="media-object">
+                                <div class="pickgradient">
+                                    <img class="poster" data-bind="attr: { src: posterSRC }">
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+
                     <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
                         <a href="#" class="btn btnIcon iconText" role="button" data-toggle="modal" data-target="#myModal1">
                             <span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>
@@ -132,6 +145,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
+                        <span class="nytTitle" data-bind="visible: currentTitle, text: currentTitle"></span>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>
                     <div data-bind="template: {name: 'nytTemplate'}"></div>
@@ -155,7 +169,7 @@
             <div class="media" data-bind="with: my.vm">
                 <div class="media-left">
                     <a data-bind="visible: posterSRC" href="#" class="thumbnail media-object">
-                        <img data-bind="attr: { src: posterSRC }">
+                        <img class="poster" data-bind="attr: { src: posterSRC }">
                     </a>
                 </div>
                 <div class="media-body">

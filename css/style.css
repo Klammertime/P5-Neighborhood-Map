@@ -386,7 +386,8 @@ img
     line-height: 33px;
 
     position: absolute;
-    top: 45%;
+    /*top: 45%;*/
+    top: 63%;
     left: 0;
 
     width: 100%;
@@ -477,8 +478,7 @@ a.btnIcon:hover
     width: 600px;
     width: 100%;
     margin-top: 100px;
-/*    margin-left: 150px;
-*/}
+}
 
 .modal-backdrop
 {
@@ -495,7 +495,8 @@ a.btnIcon:hover
     background: #fff;
 }
 
-.autocomplete-suggestion
+.autocomplete-suggestion,
+.autocomplete-no-suggestion
 {
     font-size: 1em;
 
@@ -517,3 +518,18 @@ a.btnIcon:hover
 
     color: #39f;
 }
+
+.poster {
+    width: 100%;
+    height: auto;
+}
+
+.nytTitle {
+    font-family: 'bello-pro', sans-serif;
+    color: #f48c91;
+    font-size: 32px;
+}
+
+
+
+
