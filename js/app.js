@@ -256,16 +256,18 @@ $(function() {
                             releaseYear: data.results[index].publication_date,
                             suggestedLinkText: data.results[index].link.suggested_link_text,
                             overview: [data.results[index].related_urls[0].suggested_link_text,
-                                                data.results[index].related_urls[0].url],
-                            castCreditsAwards:[data.results[index].related_urls[2].suggested_link_text,
-                                                data.results[index].related_urls[2].url],
+                                data.results[index].related_urls[0].url
+                            ],
+                            castCreditsAwards: [data.results[index].related_urls[2].suggested_link_text,
+                                data.results[index].related_urls[2].url
+                            ],
                             readerReviews: [data.results[index].related_urls[3].suggested_link_text,
-                                                data.results[index].related_urls[3].url],
+                                data.results[index].related_urls[3].url
+                            ],
                             trailersAndClips: [data.results[index].related_urls[4].suggested_link_text,
-                                                data.results[index].related_urls[4].url]
+                                data.results[index].related_urls[4].url
+                            ]
                         });
-console.log("nytInfo().title", nytInfo().title);
-
                     },
                     fail: function(jqxhr, textStatus, error) {
                         console.log("New York Times Article Could Not Be Loaded: ", error);
@@ -330,7 +332,7 @@ console.log("nytInfo().title", nytInfo().title);
             getTrailer = function(foundfilmID2) {
                 function successCB(data) {
                     var theTrailer = JSON.parse(data);
-                    trailerURL(theTrailer.youtube.length > 0 ? ('https://www.youtube.com/embed/' + theTrailer.youtube[0].source + '?rel=0&amp;showinfo=0') : undefined);
+                    trailerURL(theTrailer.youtube.length > 0 ? ('https://www.youtube.com/embed/' + theTrailer.youtube[0].source + '?rel=0&amp;controls=0&amp;showinfo=0') : undefined);
                 }
 
                 function errorCB() {
@@ -338,6 +340,7 @@ console.log("nytInfo().title", nytInfo().title);
                 }
 
                 theMovieDb.movies.getTrailers({ "id": foundfilmID2 }, successCB, errorCB);
+
             },
 
             testDB = function() {
@@ -573,4 +576,4 @@ console.log("nytInfo().title", nytInfo().title);
 
 
 //TODO: do an alert for the wrong film, html binding? <div class="alert alert-danger" role="alert">...</div>
-// This page might help: https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/ch02s04.
+// This page might help: https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/ch02s04

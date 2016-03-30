@@ -128,13 +128,16 @@ input
     color: #666;
 }
 
-.glyphicon
-{
+.glyphicon {
     font-size: 15px;
-
     margin: 5px;
+    color: #F48C91;
+}
 
+.glyphicon-map-marker {
     color: #999;
+    font-size: 15px;
+    margin: 5px;
 }
 
 .glyphicon:hover,
@@ -461,9 +464,8 @@ img
     text-transform: uppercase;
 }
 
-a.iconText
-{
-    color: #999;
+a.iconText {
+    color: #f48c91;
 }
 
 a.btnIcon:hover
@@ -524,12 +526,53 @@ a.btnIcon:hover
     height: auto;
 }
 
-.nytTitle {
+.fancyTitle {
     font-family: 'bello-pro', sans-serif;
     color: #f48c91;
     font-size: 32px;
 }
 
+.badge {
+    background-color: #F48C91;
+}
 
+.nav-pills a {
+    color: #999;
+}
 
+.glyphicon-nyt {
+    margin-left: 20px;
+    margin-right: 12px;
+}
 
+.nyt-link {
+    color: #999;
+}
+
+.media-object {
+    margin-bottom: 6px;
+}
+
+blockquote {
+    margin: 0;
+}
+
+.modal-header-trailer {
+    background-color: #000;
+    border-bottom: none;
+
+}
+
+.close {
+    color: #f48c91;
+    text-shadow: none;
+    opacity: 1;
+}
+
+.close:focus,
+.close:hover {
+    color: #ff5a5f;
+    text-decoration: none;
+    cursor: pointer;
+    opacity: 1
+}
