@@ -9,25 +9,28 @@ $(function() {
     function googleSuccess() {
         var center,
             myLatLng = new google.maps.LatLng(37.77493, -122.419416);
+        // using great highway center
+        // myLatLng = new google.maps.LatLng(37.789437981475004, -122.54802703857422);
+
         var mapOptions = {
             center: myLatLng,
-            zoom: 12,
+            zoom: 13,
             disableDefaultUI: true,
             zoomControl: true,
             zoomControlOptions: {
-                position: google.maps.ControlPosition.RIGHT_TOP,
+                position: google.maps.ControlPosition.LEFT_BOTTOM,
                 style: 'SMALL'
             },
             panControl: true,
             mapTypeControl: false,
             mapTypeControlOptions: {
                 style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-                position: google.maps.ControlPosition.TOP_RIGHT
+                position: google.maps.ControlPosition.LEFT_BOTTOM
             },
             scaleControl: true,
             streetViewControl: true,
             streetViewControlOptions: {
-                position: google.maps.ControlPosition.RIGHT_TOP
+                position: google.maps.ControlPosition.LEFT_BOTTOM
             },
             rotateControl: true,
             overviewMapControl: true,
@@ -149,6 +152,8 @@ $(function() {
             markerStore = ko.observableArray([]),
             moviedb = ko.observable(),
             query = ko.observable(),
+            favFilms = ko.observableArray([]),
+            favLocations = ko.observableArray([]),
             resetBool = true,
             loadSceneFM = function() {
                 // Returns everything before first parentheses, which is the place
@@ -194,18 +199,26 @@ $(function() {
             // The current item will be passed as the first parameter
             panToMarker = function(clickedLocation) {
                 // Makes it so when click on item in list of locations takes you to marker and opens infowindow
+
                 if (prev_infowindow) {
                     prev_infowindow.close();
                 }
 
                 prev_infowindow = clickedLocation.infowindow;
                 // Without this it still works but doesn't open the infowindow, it goes to it and drops the marker
+
                 map.panTo(clickedLocation.marker.getPosition());
                 // Bounce once
-                marker.setAnimation(google.maps.Animation.BOUNCE);
-                marker.setAnimation(null);
+                clickedLocation.marker.setAnimation(google.maps.Animation.BOUNCE);
+
+                setTimeout(function() {
+                    clickedLocation.marker.setAnimation(null)
+                }, 500);
+
+
                 // Without this, it doesn't work
                 clickedLocation.infowindow.open(map, clickedLocation.marker);
+
             },
 
             loadNYTData = function(encodedFilm, nonEncodedFilm, releaseYear) {
@@ -252,13 +265,13 @@ $(function() {
             },
 
             loadMovieDbData = function(encodedFilm, nonEncodedFilm, releaseYear) {
+                var filmID,
+                    index;
                 backdropSRC(null);
                 posterSRC(null);
                 overview(null);
                 tagline(null);
                 trailerURL(null);
-                var filmID,
-                    index;
 
                 function successCB(data) {
                     var dbStore = JSON.parse(data);
@@ -271,11 +284,11 @@ $(function() {
                     }
                     console.log("moviedb().results", moviedb().results);
                     //put in img html width="300" height="169"
-                    if(moviedb().results[index].backdrop_path){
+                    if (moviedb().results[index].backdrop_path) {
                         backdropSRC('https://image.tmdb.org/t/p/w500' + moviedb().results[index].backdrop_path);
                     }
                     // <img itemprop="image" id="upload_poster" alt="The Divergent Series: Allegiant Poster" title="The Divergent Series: Allegiant Poster" class="shadow" src="https://image.tmdb.org/t/p/w185/i9LuBG9cx9BW7fFepeCVrvJ8XRP.jpg" width="185" height="278">
-                    if(moviedb().results[index].poster_path) {
+                    if (moviedb().results[index].poster_path) {
                         posterSRC('https://image.tmdb.org/t/p/w370' + moviedb().results[index].poster_path);
                     }
                     overview(moviedb().results[index].overview);
@@ -390,7 +403,6 @@ $(function() {
                         console.log("Geocode was not successful for the following reason: " + status);
                     }
                 });
-                console.log("this in masterGeocoder", this);
 
                 my.vm.markerStore(my.vm.markers());
             },
@@ -530,6 +542,8 @@ $(function() {
             markerStore: markerStore,
             filmTest: filmTest,
             fav: fav,
+            favFilms: favFilms,
+            favLocations: favLocations,
             favLoc: favLoc,
             uniqueTitlesResults: uniqueTitlesResults,
             markerTitles: markerTitles
@@ -550,4 +564,4 @@ $(function() {
 
 
 //TODO: do an alert for the wrong film, html binding? <div class="alert alert-danger" role="alert">...</div>
-// This page might help: https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/ch02s04.h
+// This page might help: https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/ch02s04.

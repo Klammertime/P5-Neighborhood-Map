@@ -3,27 +3,7 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-<!--     <meta name="viewport" content="initial-scale= 1.0, user-scalable=no" />
- -->    <title>Maps</title>
-      <style>
-.autocomplete-suggestions { border: 1px solid #999; background: #fff; cursor: default; overflow: auto; }
-.autocomplete-suggestion { padding: 10px 5px; font-size: 1em; white-space: nowrap; overflow: hidden; }
-.autocomplete-selected { background: #f0f0f0; }
-.autocomplete-suggestions strong { font-weight: normal; color: #3399ff; }
-
-#searchfield { display: block; width: 100%; text-align: center; }
-
-#searchfield form {
-  margin: 5px 0 0 0;
-}
-
-.searchfield { display: block; width: 100%; text-align: center; }
-
-.searchfield form {
-  margin: 5px 0 0 0;
-}
-  </style>
-
+    <title>SF Film Map</title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
@@ -35,263 +15,231 @@
     <script src="js/themoviedb.js"></script>
     <script src="js/base.js"></script>
     <script src="js/app.js"></script>
-<script src="https://use.typekit.net/mmc7znj.js"></script>
-<script>try{Typekit.load({ async: true });}catch(e){}</script>
-
+    <script src="https://use.typekit.net/mmc7znj.js"></script>
+    <script>
+    try {
+        Typekit.load({
+            async: true
+        });
+    } catch (e) {}
+    </script>
 </head>
 
 <body>
     <nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#"><img class="bridgeLogo" src="img/bridge1.png" height="40px"></a><span class="logo-font">SF Film Map</span>
-    </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-<!--         <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">Link</a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">One more separated link</a></li>
-          </ul>
-        </li>
-      </ul> -->
-      <form class="navbar-form navbar-left" role="search">
-        <div class="form-group">
-            <input type="text" class="form-control film-autocomplete" id="autocomplete" placeholder="Type a letter to see film options...">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#"><img class="bridgeLogo" src="img/bridge1.png" height="40px"></a><span class="logo-font">SF Film Map</span>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <form class="navbar-form navbar-left" role="search">
+                        <div class="form-group">
+                            <input type="text" class="form-control film-autocomplete" id="autocomplete" placeholder="Type a letter to see film options...">
+                        </div>
+                    </form>
+            </div>
+            <!-- /.navbar-collapse -->
         </div>
-<!--             <button type="submit" class="btn btn-default">Submit</button>
- -->      </form>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">Link</a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
+        <!-- /.container-fluid -->
+    </nav>
     <div class="row">
-        <div class="col-md-3 col-lg-3 col-sm-3" data-bind="with: my.vm">
+        <!-- empty placeholder -->
+        <div class="col-md-9 col-lg-9 col-sm-8"></div>
+        <div class="col-md-3 col-lg-3 col-sm-4" data-bind="with: my.vm">
             <div class="widget-pane-content-holder" data-bind="visible: currentTitle">
                 <div class="panel panel-default searchbar">
-<!--                     <img class="sf" src="img/sfLogo8.svg">
- -->              <!--       <div class="logo">
-                        <h2 class="logo-font">SF Film Locations</h2>
-                    </div> -->
-                    <!-- <div class="panel-body"> -->
-               <!--          <label for="filmList">
-                            <span>Type a letter to see film options</span>
-                        </label> -->
-
-                      <!--   <div id="content">
-                          <div id="searchfield">
-                            <form>
-                                <input type="text" class="form-control" id="autocomplete" placeholder="Godzilla...">
-                            </form>
-                          </div>
-                        </div> -->
-
-<!--                         <div class="filterLabel" data-bind="template: {name: 'filterTemplate'}"></div>
- -->
-  <!-- </div> -->
                     <div data-bind="template: {name: 'locationsTemplate'}"></div>
                 </div>
             </div>
-            </div>
-        <!--TODO: figure out why this is so messed up on small screens, I think its the floats
-            and the absolute positioning -->
-        <div class="col-md-5 col-lg-5 col-sm-5">
         </div>
-        <div class="col-md-4 col-lg-4 col-sm-4" data-bind="with: my.vm, visible: currentTitle">
-            <div class="panel panel-default filmInfoBox" data-bind="visible: currentTitle">
-                <h3 data-bind="visible: currentTitle, text: currentTitle"></h3>
-                <h5 class="media-heading" data-bind="visible: tagline, text: tagline"></h5>
-                <div data-bind="template: {name: 'filmInfoTemplate'}, visible: currentTitle"></div>
-                <div data-bind="template: {name: 'nytTemplate'}"></div>
-                <div data-bind="template: {name: 'overviewTemplate'}"></div>
-                <div data-bind="template: {name: 'trailerTemplate'}"></div>
-            </div>
-        </div>
-    </div>
-    <div id="googleMap" class="map-canvas"></div>
-    <!--TEMPLATES STORED HERE!!!!!!!!!!!!!!!!-->
-    <!-- filter template, shows locations from filtered markers -->
-<!--     <div id="filterTemplate" style="display: none">
-        <div class="input-group" data-bind="visible: currentTitle">
-          <input type="text" class="form-control" id="autocomplete2" placeholder="Mission St..." data-bind="value: my.vm.query" >
-          <span class="input-group-btn">
+        <div id="googleMap" class="map-canvas"></div>
+        <!--TEMPLATES STORED HERE!!!!!!!!!!!!!!!!-->
+        <!-- locations template, shows locations from markers -->
+        <div id="locationsTemplate" style="display: none">
+            <table class="table">
+                <thead>
+                    <div class="backdrop-block backdrop-image-min-size" data-bind="visible: my.vm.backdropSRC">
+                        <a data-bind="visible: my.vm.backdropSRC" href="#" class="media-object">
+                            <div class="pickgradient">
+                                <img data-bind="attr: { src: my.vm.backdropSRC }" width="300" height="169">
+                            </div>
+                            <div class="overlay-font">
+                                <h4 data-bind="visible: my.vm.currentTitle, text: my.vm.currentTitle"></h4>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
+                        <a href="#" class="btn btnIcon iconText" role="button" data-toggle="modal" data-target="#myModal1">
+                            <span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>
+                            <div class="glyphText"> Trailer</div>
+                        </a>
+                        <a href="#" class="btn btnIcon iconText" role="button" data-toggle="modal" data-target="#myModal2">
+                            <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+                            <div class="glyphText"> Overview</div>
+                        </a>
+                        <a href="#" class="btn btnIcon iconText" role="button" data-toggle="modal" data-target="#myModal3">
+                            <span class="glyphicon glyphicon-film" aria-hidden="true"></span>
+                            <div class="glyphText"> Review</div>
+                        </a>
+                        <a href="#" class="btn btnIcon iconText" role="button" data-toggle="modal" data-target="#myModal4">
+                            <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+                            <div class="glyphText"> Favorite</div>
+                        </a>
+                    </div>
+                    <div class="input-group" data-bind="visible: currentTitle">
+                        <input type="text" class="form-control" id="autocomplete2" placeholder="Filter by street..." data-bind="value: my.vm.query">
+                        <span class="input-group-btn">
             <button class="btn btn-default" data-bind="click: filterReset" type="button">Reset</button>
           </span>
-        </div>
-    </div> -->
-    <!-- filter template end -->
-    <!-- locations template, shows locations from markers -->
-    <div id="locationsTemplate" style="display: none">
-        <table class="table">
-            <thead>
-<div class="test-block test-image-min-size" data-bind="visible: my.vm.backdropSRC">
-                <a data-bind="visible: my.vm.backdropSRC" href="#" class="media-object">
-                    <div class="pickgradient">
-                        <img data-bind="attr: { src: my.vm.backdropSRC }" width="300" height="169">
                     </div>
-
-
-                    <div class="testFont">
-                        <h4 data-bind="visible: my.vm.currentTitle, text: my.vm.currentTitle"></h4>
-                    </div>
-                </a>
-</div>
-
-
-<div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
-    <a href="#" class="btn btnIcon iconText" role="button">
-        <span class="glyphicon glyphicon-search" aria-hidden="true"></span><div class="glyphText"> Trailer</div>
-    </a>
-    <a href="#" class="btn btnIcon iconText" role="button">
-        <span class="glyphicon glyphicon-search" aria-hidden="true"></span><div class="glyphText"> Overview</div>
-    </a>
-    <a href="#" class="btn btnIcon iconText" role="button">
-        <span class="glyphicon glyphicon-search" aria-hidden="true"></span><div class="glyphText"> Review</div>
-    </a>
-</div>
-
-
-        <div class="input-group" data-bind="visible: currentTitle">
-          <input type="text" class="form-control" id="autocomplete2" placeholder="Mission St..." data-bind="value: my.vm.query" >
-          <span class="input-group-btn">
-            <button class="btn btn-default" data-bind="click: filterReset" type="button">Reset</button>
-          </span>
+                </thead>
+                <tbody data-bind="foreach: markers">
+                    <tr>
+                        <td>
+                            <a class="icon"><span class="glyphicon glyphicon-map-marker" aria-hidden="true" data-bind="click: $parent.panToMarker"></span></a>
+                        </td>
+                        <td>
+                            <p class="locationLink" data-bind="text: $data.marker.title, click: $parent.panToMarker"></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-            </thead>
-            <tbody data-bind="foreach: markers">
-                <tr>
-                    <td>
-                        <a class="icon"><span class="glyphicon glyphicon-map-marker" aria-hidden="true" data-bind="click: $parent.panToMarker"></span></a>
-                    </td>
-                    <td>
-                        <p class="locationLink" data-bind="text: $data.marker.title, click: $parent.panToMarker"></p>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <!-- locations template end -->
-    <!-- filmInfo template, shows info from SFData in data.js -->
-    <div id="filmInfoTemplate" style="display: none">
-        <div class="media" data-bind="with: my.vm">
-            <div class="media-left">
-                <a data-bind="visible: posterSRC" href="#" class="thumbnail media-object">
-                    <img data-bind="attr: { src: posterSRC }">
-                </a>
-            </div>
-            <div class="media-body" data-bind="foreach: filmTest">
-                <p><span class="itemHeader">Year: </span>
-                    <!--ko text: currentYear-->
-                    <!--/ko-->
-                </p>
-                <p><span class="itemHeader">Production Company: </span>
-                    <!--ko text: currentStudio-->
-                    <!--/ko-->
-                </p>
-                <p><span class="itemHeader">Director: </span>
-                    <!--ko text: currentDirector-->
-                    <!--/ko-->
-                    </span>
-                </p>
-                <p><span class="itemHeader">Writer: </span>
-                    <!--ko text: currentWriter-->
-                    <!--/ko-->
-                    </span>
-                </p>
-                <p>
-                    <span data-bind="visible: currentActor1" class="itemHeader">Actors: </span>
-                    <!--ko text: currentActor1-->
-                    <!--/ko--><span data-bind="visible: currentActor2">, </span>
-                    <!--ko text: currentActor2-->
-                    <!--/ko--><span data-bind="visible: currentActor3">, </span>
-                    <!--ko text: currentActor3-->
-                    <!--/ko-->
-                </p>
+        <!-- Modals here for now then move -->
+        <!-- Modal - overview -->
+        <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-bind="with: my.vm">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div data-bind="template: {name: 'filmInfoTemplate'}, visible: currentTitle"></div>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- filmInfo template end -->
-    <!-- nyt template, shows blockquote from nyt API -->
-    <div id="nytTemplate" style="display: none">
-        <blockquote data-bind="visible: nytInfo, foreach: nytInfo">
-            <div class data-bind="ifnot: summary">
-                <div data-bind="if: capsuleReview">
-                    <p data-bind="text: capsuleReview"></p>
+        <!-- Modal - review -->
+        <div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-bind="with: my.vm">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div data-bind="template: {name: 'nytTemplate'}"></div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal - review -->
+        <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-bind="with: my.vm">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div data-bind="template: {name: 'trailerTemplate'}"></div>
+                </div>
+            </div>
+        </div>
+        <!-- locations template end -->
+        <!-- filmInfo template, shows info from SFData in data.js -->
+        <div id="filmInfoTemplate" style="display: none">
+            <div class="media" data-bind="with: my.vm">
+                <div class="media-left">
+                    <a data-bind="visible: posterSRC" href="#" class="thumbnail media-object">
+                        <img data-bind="attr: { src: posterSRC }">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h5 class="media-heading" data-bind="visible: tagline, text: tagline"></h5>
+
+                    <div data-bind="foreach: filmTest">
+                        <p><span class="itemHeader">Year: </span>
+                            <!--ko text: currentYear-->
+                            <!--/ko-->
+                        </p>
+                        <p><span class="itemHeader">Production Company: </span>
+                            <!--ko text: currentStudio-->
+                            <!--/ko-->
+                        </p>
+                        <p><span class="itemHeader">Director: </span>
+                            <!--ko text: currentDirector-->
+                            <!--/ko-->
+                            </span>
+                        </p>
+                        <p><span class="itemHeader">Writer: </span>
+                            <!--ko text: currentWriter-->
+                            <!--/ko-->
+                            </span>
+                        </p>
+                        <p>
+                            <span data-bind="visible: currentActor1" class="itemHeader">Actors: </span>
+                            <!--ko text: currentActor1-->
+                            <!--/ko--><span data-bind="visible: currentActor2">, </span>
+                            <!--ko text: currentActor2-->
+                            <!--/ko--><span data-bind="visible: currentActor3">, </span>
+                            <!--ko text: currentActor3-->
+                            <!--/ko-->
+                        </p>
+                    </div>
+                    <h4 class="itemHeader uppercase" data-bind="visible: overview">Overview</h4>
+                    <p class="overview" data-bind="visible: overview, text: overview"></p>
+                </div>
+            </div>
+        </div>
+        <!-- filmInfo template end -->
+        <!-- nyt template, shows blockquote from nyt API -->
+        <div id="nytTemplate" style="display: none">
+            <blockquote data-bind="visible: nytInfo, foreach: nytInfo">
+                <div class data-bind="ifnot: summary">
+                    <div data-bind="if: capsuleReview">
+                        <p data-bind="text: capsuleReview"></p>
+                        <!--ko text: byline-->
+                        <!--/ko-->,
+                        <cite title="Source Title"><a target="_blank" data-bind="attr: { href: reviewURL }, visible: reviewURL">The New York Times</a></cite>
+                    </div>
+                </div>
+                <div class data-bind="ifnot: summary">
+                    <div data-bind="if: headline">
+                        <p class="headline" data-bind="text: headline"></p>
+                        <!--ko text: byline-->
+                        <!--/ko-->,
+                        <cite title="Source Title"><a target="_blank" data-bind="attr: { href: reviewURL }, visible: reviewURL">The New York Times</a></cite>
+                    </div>
+                </div>
+                <div data-bind="if: summary">
+                    <p data-bind="text: summary"></p>
                     <!--ko text: byline-->
                     <!--/ko-->,
                     <cite title="Source Title"><a target="_blank" data-bind="attr: { href: reviewURL }, visible: reviewURL">The New York Times</a></cite>
                 </div>
-            </div>
-            <div class data-bind="ifnot: summary">
-                <div data-bind="if: headline">
-                    <p class="headline" data-bind="text: headline"></p>
-                    <!--ko text: byline-->
-                    <!--/ko-->,
-                    <cite title="Source Title"><a target="_blank" data-bind="attr: { href: reviewURL }, visible: reviewURL">The New York Times</a></cite>
-                </div>
-            </div>
-            <div data-bind="if: summary">
-                <p data-bind="text: summary"></p>
-                <!--ko text: byline-->
-                <!--/ko-->,
-                <cite title="Source Title"><a target="_blank" data-bind="attr: { href: reviewURL }, visible: reviewURL">The New York Times</a></cite>
-            </div>
-            <div data-bind="ifnot: summary">
-                <div data-bind="ifnot: headline">
-                    <div data-bind="ifnot: capsuleReview">
-                        <div data-bind="if: suggestedLinkText">
-                            <cite title="Source Title">
-                                <a target="_blank" data-bind="attr: { href: reviewURL }, visible: reviewURL">
-                                    <!--ko text: suggestedLinkText-->
+                <div data-bind="ifnot: summary">
+                    <div data-bind="ifnot: headline">
+                        <div data-bind="ifnot: capsuleReview">
+                            <div data-bind="if: suggestedLinkText">
+                                <cite title="Source Title">
+                                    <a target="_blank" data-bind="attr: { href: reviewURL }, visible: reviewURL">
+                                        <!--ko text: suggestedLinkText-->
+                                        <!--/ko-->
+                                    </a> by
+                                    <!--ko text: byline-->
                                     <!--/ko-->
-                                </a> by
-                                <!--ko text: byline-->
-                                <!--/ko-->
-                            </cite>
+                                </cite>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-    </div>
-    <p>
-        </blockquote>
+            </blockquote>
         </div>
         <!-- nyt template end -->
-        <!-- overview template, shows overview from TMDb API -->
-        <div id="overviewTemplate" style="display: none">
-            <h4 class="itemHeader uppercase" data-bind="visible: overview">Overview</h4>
-            <p class="overview" data-bind="visible: overview, text: overview"></p>
-        </div>
-        <!-- overview template end -->
         <!-- trailer template, shows trailer from TMDb API -->
         <div id="trailerTemplate" style="display: none">
             <div data-bind="visible: trailerURL" class="embed-responsive embed-responsive-16by9">
@@ -302,4 +250,5 @@
         <!-- trailer template end -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiFWUDeNqeIgmx7njjzjJAVWwC2t9hNP0&libraries=places&callback=my.vm.googleInit" async defer></script>
 </body>
-</
+
+</html
