@@ -347,7 +347,15 @@ a.iconText {
     color: #f48c91;
 }
 
-a.btnIcon:hover {
+a.btnIcon:hover,
+a.btnIcon:active,
+a.btnIcon:visited,
+a.btnIcon:focus,
+a.iconText:hover,
+a.iconText:active,
+a.iconText:visited,
+a.iconText:focus
+ {
     color: #ff5a5f;
 }
 
@@ -445,3 +453,8 @@ blockquote {
     overflow-y: scroll;
     height: 100vh;
     scroll-behavior: smooth;
+}
+
+.nav>li>a.favorites {
+    padding: 15px 15px;
+}
