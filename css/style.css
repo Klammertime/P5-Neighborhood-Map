@@ -193,6 +193,10 @@ scrollbar {
     margin-left: -2px;
 }
 
+.input-group-btn {
+    min-width: 60px;
+}
+
 .input-group {
     padding: 15px;
 }
@@ -239,7 +243,6 @@ scrollbar {
     .navbar-form .film-autocomplete {
         width: 100%;
         min-width: 255px;
-        ;
     }
 }
 
@@ -448,12 +451,6 @@ blockquote {
     color: #ff5a5f;
 }
 
-.scroll-allow {
-    overflow-y: scroll;
-    height: 100vh;
-    scroll-behavior: smooth;
-}
-
 .nav>li>a.favorites {
     padding: 15px 15px;
 }
@@ -476,4 +473,15 @@ blockquote {
     border-radius: 0 4px 4px 0px;
 }
 
+.scroll-allow {
+    overflow-y: scroll;
+    height: 72vh;
+    scroll-behavior: smooth;
+}
 
+/* Small devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    .scroll-allow {
+        height: 94vh;
+    }
+}

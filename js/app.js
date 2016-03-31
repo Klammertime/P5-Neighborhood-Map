@@ -407,8 +407,6 @@ $(function() {
                             map.setZoom(14);
                             map.setCenter(marker.getPosition());
 
-
-
                             map.panTo(marker.getPosition());
                             infowindow.open(map, marker);
                         });
@@ -520,6 +518,7 @@ $(function() {
             },
 
             filter = function() {
+                var tempMarker;
                 // resetBool = boolVal;
                 if ((my.vm.query() !== '') && (my.vm.query() !== null) && (my.vm.query() !== undefined)) {
                     var newArr = this.markers.remove(function(item) {
@@ -533,6 +532,9 @@ $(function() {
                     }
                     my.vm.markers(newArr);
                     my.vm.filtered(newArr);
+
+                    tempMarker = newArr[0].marker;
+                    map.panTo(tempMarker.getPosition());
                     my.vm.query(null);
                 }
             },
