@@ -366,8 +366,7 @@ $(function() {
                         if (place) {
                             contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
                                 streetViewImage + '</a></div><div class="content-body"><p class="content-heading">' + place +
-                                '</p><p>' + results[0].formatted_address + '</p>' +
-                                '<span data-bind="click: $parent.fav" class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
+                                '</p><p>' + results[0].formatted_address + '</p></div></div>';
 
                             marker = new google.maps.Marker({
                                 map: map,
@@ -381,8 +380,7 @@ $(function() {
                         } else {
                             contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
                                 streetViewImage + '</a></div><div class="content-body"><p>' +
-                                results[0].formatted_address + '</p>' +
-                                '<span data-bind="click: $parent.fav" class="glyphicon glyphicon-heart" aria-hidden="true"></span></div></div>';
+                                results[0].formatted_address + '</p></div></div>';
 
                             marker = new google.maps.Marker({
                                 map: map,
