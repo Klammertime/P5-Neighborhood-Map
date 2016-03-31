@@ -132,8 +132,7 @@ $(function() {
     my.vm = function() {
         var scenes = ko.observableArray([]),
             uniqueTitlesResults = ko.observable(),
-            filmTest = ko.observableArray([]),
-            favLoc = ko.observableArray([]),
+            currentFilmObj = ko.observableArray([]),
             allTitles = ko.observableArray([]),
             requestedFilm = ko.observable(),
             pastFilm = ko.observable(),
@@ -155,8 +154,6 @@ $(function() {
             favFilms = ko.observableArray([]),
             filtered = ko.observableArray([]),
             favFilmMsg = ko.observable(),
-            favLocations = ko.observableArray([]),
-            resetBool = true,
             loadSceneFM = function() {
                 // Returns everything before first parentheses, which is the place
                 function escapeRegExp(string) {
@@ -164,8 +161,7 @@ $(function() {
                     return matches ? matches[0] : undefined;
                 }
 
-                // Returns everything between the parentheses, which is the street address
-                // and is the format Google Maps JS API for Geolocation prefers
+                // Returns info between parentheses, the street address and format Geolocation prefers
                 function escapeRegExp2(string) {
                     var matches = /\(([^)]+)\)/.exec(string);
                     return matches ? matches[1] : undefined;
@@ -206,12 +202,9 @@ $(function() {
                 }
 
                 prev_infowindow = clickedLocation.infowindow;
-
                 map.setZoom(14);
                 map.setCenter(clickedLocation.marker.getPosition());
-
                 map.panTo(clickedLocation.marker.getPosition());
-
                 // Bounce once or twice
                 clickedLocation.marker.setAnimation(google.maps.Animation.BOUNCE);
 
@@ -219,7 +212,6 @@ $(function() {
                     clickedLocation.marker.setAnimation(null);
                 }, 800);
 
-                // Without this, it doesn't work
                 clickedLocation.infowindow.open(map, clickedLocation.marker);
             },
 
@@ -229,7 +221,7 @@ $(function() {
 
                 function domain(fullUrl) {
                     var match = /\.(.*)$/.exec(fullUrl);
-                    return 'http://www.' + match[1]; //it works just not while on local server
+                    return 'http://www.' + match[1];
                 }
 
                 $.ajax({
@@ -241,7 +233,6 @@ $(function() {
                     beforeSend: function() {},
                     complete: function() {},
                     success: function(data) {
-                        console.log("data from NYTimes", data);
                         if ((data.results[0].display_title === nonEncodedFilm) || (data.results[0].display_title === 'The ' + nonEncodedFilm)) {
                             index = 0;
                         } else {
@@ -295,7 +286,6 @@ $(function() {
                     } else {
                         index = titleCheck(dbStore, 'original_title', 'release_date', nonEncodedFilm, releaseYear);
                     }
-                    console.log("moviedb().results", moviedb().results);
                     if (moviedb().results[index].backdrop_path) {
                         backdropSRC('https://image.tmdb.org/t/p/w780' + moviedb().results[index].backdrop_path);
                     }
@@ -342,16 +332,6 @@ $(function() {
                 theMovieDb.movies.getTrailers({ "id": foundfilmID2 }, successCB, errorCB);
             },
 
-            testDB = function() {
-                // http://api.themoviedb.org/3/search/multi
-                // https://api.themoviedb.org/3/movie/63?api_key=###&append_to_response=credits,images
-                function successCB(data) {}
-
-                function errorCB(data) {}
-
-                theMovieDb.collections.getCollection({ "id": 10, "append_to_response": "trailers" }, successCB, errorCB);
-            },
-
             masterGeocoder = function(myGeocodeOptions, place, geocoder) {
                 var contentString,
                     marker;
@@ -360,8 +340,8 @@ $(function() {
                     if (status == google.maps.GeocoderStatus.OK) {
                         map.setCenter(results[0].geometry.location);
 
-                        var streetViewImage = '<img class="streetView media-object" src="https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
-                            results[0].geometry.location + '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetView">';
+                        var streetViewImage = '<img class="streetview-image media-object" src="https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
+                            results[0].geometry.location + '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetview-image">';
 
                         if (place) {
                             contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
@@ -408,8 +388,6 @@ $(function() {
                             map.panTo(marker.getPosition());
                             infowindow.open(map, marker);
                         });
-
-
 
                         markers.push({ marker: marker, infowindow: infowindow });
 
@@ -465,9 +443,9 @@ $(function() {
                             };
 
                             masterGeocoder(geocodeOptions, place, geocoder);
-                        } // end of master if statement
+                        }
                     }
-                    filmTest({
+                    currentFilmObj({
                         currentTitle: matchedTitle,
                         currentYear: matchedYear,
                         currentDirector: matchedScene.director(),
@@ -478,22 +456,16 @@ $(function() {
                         currentStudio: matchedScene.studio()
                     });
 
-
                     this.currentTitle(matchedTitle);
-                    this.currentFilm(this.filmTest());
-                    console.time("loadNYTData");
+                    this.currentFilm(this.currentFilmObj());
                     loadNYTData(encodeURIComponent(matchedTitle), matchedTitle, matchedYear);
-                    console.timeEnd("loadNYTData");
-                    console.time("loadMovieDbData");
                     loadMovieDbData(encodeURIComponent(matchedTitle), matchedTitle, matchedYear);
-                    console.timeEnd("loadMovieDbData");
                     pastFilm(requestedFilm());
                 }
             },
 
             fav = function(value) {
                 var canFavorite = true;
-                console.log("value", value);
                 if (this.favFilms().length === 0) {
                     this.favFilmMsg("This film has been added to your favorites list.");
                     this.favFilms.push(value.currentFilm());
@@ -512,16 +484,13 @@ $(function() {
                         this.favFilms.push(value.currentFilm());
                     }
                 }
-                console.log("this.favFilms()", this.favFilms());
             },
 
             filter = function() {
                 var tempMarker;
-                // resetBool = boolVal;
                 if ((my.vm.query() !== '') && (my.vm.query() !== null) && (my.vm.query() !== undefined)) {
                     var newArr = this.markers.remove(function(item) {
                         var markerTitle = item.marker.title;
-                        //Dont change my.vm.query() to this, it breaks it.
                         var queryMatches = markerTitle.toLowerCase().indexOf(my.vm.query().toLowerCase()) != -1;
                         return queryMatches;
                     });
@@ -530,7 +499,6 @@ $(function() {
                     }
                     my.vm.markers(newArr);
                     my.vm.filtered(newArr);
-
                     tempMarker = newArr[0].marker;
                     map.panTo(tempMarker.getPosition());
                     my.vm.query(null);
@@ -539,13 +507,11 @@ $(function() {
 
             filterReset = function() {
                 if (!my.vm.query()) {
-
                     this.markers(this.markerStore());
 
                     for (var f = 0; f < my.vm.filtered().length; f++) {
                         this.markers.push(my.vm.filtered()[f]);
                     }
-
 
                     for (var v = 0, m = this.markerStore().length; v < m; v++) {
                         this.markers()[v].marker.setMap(map);
@@ -573,17 +539,14 @@ $(function() {
             nytInfo: nytInfo,
             nytReviewMsg: nytReviewMsg,
             movieDBInfo: movieDBInfo,
-            testDB: testDB,
             query: query,
             filter: filter,
             filterReset: filterReset,
             markerStore: markerStore,
-            filmTest: filmTest,
+            currentFilmObj: currentFilmObj,
             fav: fav,
             favFilms: favFilms,
             favFilmMsg: favFilmMsg,
-            favLocations: favLocations,
-            favLoc: favLoc,
             filtered: filtered,
             uniqueTitlesResults: uniqueTitlesResults,
             markerTitles: markerTitles
@@ -597,9 +560,7 @@ $(function() {
         my.vm.codeAddress(newValue);
     });
 
-
     ko.observable.fn.equalityComparer = function(a, b) {
         return a === b;
     };
 });
-

@@ -43,11 +43,11 @@ h5 {
     text-transform: none;
 }
 
-.itemHeader {
+.film-info-header {
     font-weight: 600;
 }
 
-.searchbar {
+.film-results-panel {
     position: absolute;
     z-index: 1;
     top: -22px;
@@ -147,7 +147,7 @@ input {
     color: #666;
 }
 
-.streetView {
+.streetview-image {
     width: 80px;
     height: auto;
     border-radius: 100%;
@@ -225,7 +225,7 @@ input {
     padding: 0;
 }
 
-.bridgeLogo {
+.main-logo {
     margin-top: 5px;
 }
 
@@ -314,22 +314,22 @@ img {
     margin-bottom: 0;
 }
 
-.iconText {
+.icon-text {
     font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
 }
 
-a.iconText {
+a.icon-text {
     color: #f48c91;
 }
 
 a.btnIcon:hover,
 a.btnIcon:active,
 a.btnIcon:focus,
-a.iconText:hover,
-a.iconText:active,
-a.iconText:focus {
+a.icon-text:hover,
+a.icon-text:active,
+a.icon-text:focus {
     color: #ff5a5f;
 }
 
@@ -424,7 +424,7 @@ blockquote {
     padding: 15px;
 }
 
-.favFilm {
+.favorite-film-item {
     width: 7%;
 }
 

@@ -12,16 +12,14 @@ https://data.sfgov.org/Culture-and-Recreation/Film-Locations-in-San-Francisco/yi
 
 ####Film Trailers, Images, and Reviews
 
-* Right now I am exploring https://www.themoviedb.org which
+* I'm using https://www.themoviedb.org which
 appears to be the most promising. I'm using this library created by Franco Cavestri: https://github.com/cavestri/themoviedb-javascript-library/wiki
 
 Other APIs I tried:
 * IMDB is not free anymore. They provide the most comprehensive film information,
 including film IDs which can then be used to get images etc. using x api.
 
-* Rotten Tomatoes is free but they said they can take up to 60 days
-to activate your API and a week later I still haven't gotten it
-approved, so I am not using it right now.
+* Rotten Tomatoes is free for 6 months but they approved my API too late to use for this project, will add it as a TODO item.
 
 * omdbapi.com is free but has very limited data.
 
@@ -75,7 +73,7 @@ did. He's a good teacher.
 
 * [Treehouse - Adding a Dynamic Map by Andrew Chalkey](https://teamtreehouse.com/library/build-an-interactive-website/google-maps-integration/adding-a-dynamic-map-2)
 
-This tutorial is also helpful but old.
+* This tutorial is also helpful but old.
 Video -  Adding a Dynamic Map:
 This showed me how to make the map responsive and move its center based on the window resize event. When the map is idle, the current center is stored.  
 
@@ -84,19 +82,7 @@ JS Fiddle
 
 * stackoverflow
 
-Encode URL in JavaScript -
 http://stackoverflow.com/questions/332872/encode-url-in-javascript
-"You have three options:
-
-escape() will not encode: @*/+
-
-encodeURI() will not encode: ~!@#$&*()=:/,;?+'
-
-encodeURIComponent() will not encode: ~!*()'
-
-But in your case, if you want to pass a URL into a GET parameter of other page, you should use escape or encodeURIComponent, but not encodeURI.
-
-See Stack Overflow question Best practice: escape, or encodeURI / encodeURIComponent for further discussion."
 
 Format and Add
 http://designshack.net/articles/javascript/create-a-simple-autocomplete-with-html5-jquery/
@@ -105,4 +91,16 @@ http://stackoverflow.com/questions/23935758/gradient-over-img-tag-using-css
 
 Future Plans:
 
-Make it possible to favorite locations. Add this to content string on infowindows: <span data-bind="click: $parent.fav" class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+* Make it possible to favorite locations. Add this to content string on infowindows: <span data-bind="click: $parent.fav" class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+
+* Take advantage of this more encompassing API Call:
+* testDB = function() {
+                // http://api.themoviedb.org/3/search/multi
+                // https://api.themoviedb.org/3/movie/63?api_key=###&append_to_response=credits,images
+                function successCB(data) {}
+
+                function errorCB(data) {}
+
+                theMovieDb.collections.getCollection({ "id": 10, "append_to_response": "trailers" }, successCB, errorCB);
+},
+

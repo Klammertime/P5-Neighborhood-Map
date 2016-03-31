@@ -36,7 +36,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#"><img class="bridgeLogo" src="img/bridge1.png" height="40px"></a><span class="logo-font">SF Film Map</span>
+                <a class="navbar-brand" href="#"><img class="main-logo" src="img/bridge1.png" height="40px"></a><span class="logo-font">SF Film Map</span>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -74,7 +74,7 @@
         <div class="hidden-xs col-sm-7 col-md-8 col-lg-9"></div>
         <div class="hidden-xs col-sm-5 col-md-4 col-lg-3" data-bind="with: my.vm">
             <div class="widget-pane-content-holder" data-bind="visible: currentTitle">
-                <div class="panel panel-default searchbar scroll-allow">
+                <div class="panel panel-default film-results-panel scroll-allow">
                     <div data-bind="template: {name: 'locationsTemplate'}"></div>
                 </div>
             </div>
@@ -86,7 +86,7 @@
             <table class="table" data-bind="with: my.vm">
                 <thead>
                     <div class="backdrop-block backdrop-image-min-size" data-bind="visible: backdropSRC">
-                        <a data-bind="visible: backdropSRC" href="#" class="media-object">
+                        <a data-bind="visible: backdropSRC" href="#" class="media-object" data-toggle="modal" data-target="#myModal2">
                             <div class="pickgradient">
                                 <img data-bind="attr: { src: backdropSRC }" width="300" height="169">
                             </div>
@@ -98,34 +98,32 @@
                     <!--If there isn't a backdrop img, I want some image, so use poster-->
                     <div class data-bind="ifnot: backdropSRC">
                         <div data-bind="if: posterSRC">
-                            <a data-bind="visible: posterSRC" href="#" class="media-object">
+                            <a data-bind="visible: posterSRC" href="#" class="media-object" data-toggle="modal" data-target="#myModal2">
                                 <img class="poster" data-bind="attr: { src: posterSRC }">
                             </a>
                         </div>
                     </div>
                     <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
-                        <a href="#" class="btn btnIcon iconText" role="button" data-toggle="modal" data-target="#myModal1">
+                        <a href="#" class="btn btnIcon icon-text" role="button" data-toggle="modal" data-target="#myModal1">
                             <span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>
                             <div class="glyphText"> Trailer</div>
                         </a>
-                        <a href="#" class="btn btnIcon iconText" role="button" data-toggle="modal" data-target="#myModal2">
+                        <a href="#" class="btn btnIcon icon-text" role="button" data-toggle="modal" data-target="#myModal2">
                             <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
                             <div class="glyphText"> Overview</div>
                         </a>
-                        <a href="#" class="btn btnIcon iconText" role="button" data-toggle="modal" data-target="#myModal3">
+                        <a href="#" class="btn btnIcon icon-text" role="button" data-toggle="modal" data-target="#myModal3">
                             <span class="glyphicon glyphicon-film" aria-hidden="true"></span>
                             <div class="glyphText"> Review</div>
                         </a>
-                        <a href="#" class="btn btnIcon iconText" role="button" data-toggle="modal" data-target="#myModal4" data-bind="click: my.vm.fav">
+                        <a href="#" class="btn btnIcon icon-text" role="button" data-toggle="modal" data-target="#myModal4" data-bind="click: my.vm.fav">
                             <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
                             <div class="glyphText"> Favorite</div>
                         </a>
                     </div>
                     <div class="input-group" data-bind="visible: currentTitle">
-
                         <input type="text" class="form-control" placeholder="Filter by street..." data-bind="value: my.vm.query" autocomplete="off">
-
-                       <span class="input-group-btn">
+                        <span class="input-group-btn">
                             <button class="btn btn-default filter-btn" data-bind="click: filter" type="button">Filter</button>
                         </span>
                         <span class="input-group-btn">
@@ -160,7 +158,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Modal - review -->
         <div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-bind="with: my.vm">
             <div class="modal-dialog" role="document">
@@ -170,14 +167,12 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>
                     <div data-bind="ifnot: nytInfo">
-                            <p data-bind="text: nytReviewMsg"></p>
+                        <p data-bind="text: nytReviewMsg"></p>
                     </div>
-
                     <div data-bind="template: {name: 'nytTemplate'}"></div>
                 </div>
             </div>
         </div>
-
         <!-- Modal - review -->
         <div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-bind="with: my.vm">
             <div class="modal-dialog" role="document">
@@ -189,7 +184,7 @@
                     <table class="table">
                         <tbody data-bind="foreach: favFilms">
                             <tr>
-                                <td class="favFilm">
+                                <td class="favorite-film-item">
                                     <a class="icon"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span></a>
                                 </td>
                                 <td>
@@ -204,7 +199,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Modal - trailer -->
         <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-bind="with: my.vm">
             <div class="modal-dialog" role="document">
@@ -227,27 +221,27 @@
                     </a>
                 </div>
                 <div class="media-body">
-                    <div data-bind="foreach: filmTest">
-                        <p><span class="itemHeader">Year: </span>
+                    <div data-bind="foreach: currentFilmObj">
+                        <p><span class="film-info-header">Year: </span>
                             <!--ko text: currentYear-->
                             <!--/ko-->
                         </p>
-                        <p><span class="itemHeader">Production Company: </span>
+                        <p><span class="film-info-header">Production Company: </span>
                             <!--ko text: currentStudio-->
                             <!--/ko-->
                         </p>
-                        <p><span class="itemHeader">Director: </span>
+                        <p><span class="film-info-header">Director: </span>
                             <!--ko text: currentDirector-->
                             <!--/ko-->
                             </span>
                         </p>
-                        <p><span class="itemHeader">Writer: </span>
+                        <p><span class="film-info-header">Writer: </span>
                             <!--ko text: currentWriter-->
                             <!--/ko-->
                             </span>
                         </p>
                         <p>
-                            <span data-bind="visible: currentActor1" class="itemHeader">Actors: </span>
+                            <span data-bind="visible: currentActor1" class="film-info-header">Actors: </span>
                             <!--ko text: currentActor1-->
                             <!--/ko--><span data-bind="visible: currentActor2">, </span>
                             <!--ko text: currentActor2-->
@@ -338,4 +332,5 @@
         <!-- trailer template end -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiFWUDeNqeIgmx7njjzjJAVWwC2t9hNP0&libraries=places&callback=my.vm.googleInit" async defer></script>
 </body>
+
 </html>
