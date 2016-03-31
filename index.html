@@ -38,16 +38,13 @@
                 </button>
                 <a class="navbar-brand" href="#"><img class="bridgeLogo" src="img/bridge1.png" height="40px"></a><span class="logo-font">SF Film Map</span>
             </div>
-
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
                 <!-- Favorite Badge -->
                 <ul class="nav nav-pills pull-right" role="tablist">
                     <li role="presentation"><a href="#">Favorite Films <span class="badge">3</span></a></li>
                 </ul>
                 <!-- Favorite Badge End -->
-
                 <!-- Film Search -->
                 <form class="navbar-left navbar-form" role="search">
                     <div class="form-group">
@@ -55,20 +52,18 @@
                     </div>
                 </form>
                 <!-- Film Search End-->
-
                 <!-- Film Pane Toggle -->
                 <ul class="nav navbar-nav visible-xs hidden-sm hidden-md hidden-lg">
                     <li class="dropdown" data-bind="visible: my.vm.currentTitle">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Toggle Film Pane<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <div class="navbar-text col-sm-12 col-xs-12" data-bind="with: my.vm">
-                                <div data-bind="template: {name: 'locationsTemplate'}"></div>
+                                <div class="scroll-allow" data-bind="template: {name: 'locationsTemplate'}"></div>
                             </div>
                         </ul>
                     </li>
                 </ul>
                 <!-- Film Pane Toggle End -->
-
             </div>
             <!-- /.navbar-collapse -->
         </div>
@@ -79,7 +74,7 @@
         <div class="hidden-xs col-sm-8 col-md-8 col-lg-9"></div>
         <div class="hidden-xs col-sm-4 col-md-4 col-lg-3" data-bind="with: my.vm">
             <div class="widget-pane-content-holder" data-bind="visible: currentTitle">
-                <div class="panel panel-default searchbar">
+                <div class="panel panel-default searchbar scroll-allow">
                     <div data-bind="template: {name: 'locationsTemplate'}"></div>
                 </div>
             </div>
@@ -305,4 +300,4 @@
         <!-- trailer template end -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiFWUDeNqeIgmx7njjzjJAVWwC2t9hNP0&libraries=places&callback=my.vm.googleInit" async defer></script>
 </body>
-</htm
+</ht

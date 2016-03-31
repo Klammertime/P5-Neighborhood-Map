@@ -576,4 +576,4 @@ $(function() {
 
 
 //TODO: do an alert for the wrong film, html binding? <div class="alert alert-danger" role="alert">...</div>
-// This page might help: https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/ch02s04
+// This page might help: https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/ch02s0
