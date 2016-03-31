@@ -289,8 +289,7 @@ img {
     font-weight: 900;
     line-height: 33px;
     position: absolute;
-    /*top: 45%;*/
-    top: 63%;
+    top: 55%;
     left: 0;
     width: 100%;
     margin: 0;
@@ -458,3 +457,23 @@ blockquote {
 .nav>li>a.favorites {
     padding: 15px 15px;
 }
+
+.favFilm{
+    width: 7%;
+}
+
+.test-btn {
+    width: 30px;
+}
+
+
+.filter-btn {
+    border-radius: 0;
+    border-left: none;
+}
+
+.reset-btn {
+    border-radius: 0 4px 4px 0px;
+}
+
+

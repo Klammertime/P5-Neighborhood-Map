@@ -42,7 +42,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <!-- Favorite Badge -->
                 <ul class="nav nav-pills pull-right" role="tablist">
-                    <li role="presentation"><a class="favorites" href="#">Favorite Films <span class="badge">3</span></a></li>
+                    <li role="presentation"><a class="favorites" href="#">Favorite Films <span class="badge"> <!--ko text: my.vm.favFilms().length--><!--/ko--></span></a></li>
                 </ul>
                 <!-- Favorite Badge End -->
                 <!-- Film Search -->
@@ -71,8 +71,8 @@
     </nav>
     <div class="row">
         <!-- empty placeholder -->
-        <div class="hidden-xs col-sm-8 col-md-8 col-lg-9"></div>
-        <div class="hidden-xs col-sm-4 col-md-4 col-lg-3" data-bind="with: my.vm">
+        <div class="hidden-xs col-sm-7 col-md-8 col-lg-9"></div>
+        <div class="hidden-xs col-sm-5 col-md-4 col-lg-3" data-bind="with: my.vm">
             <div class="widget-pane-content-holder" data-bind="visible: currentTitle">
                 <div class="panel panel-default searchbar scroll-allow">
                     <div data-bind="template: {name: 'locationsTemplate'}"></div>
@@ -116,15 +116,20 @@
                             <span class="glyphicon glyphicon-film" aria-hidden="true"></span>
                             <div class="glyphText"> Review</div>
                         </a>
-                        <a href="#" class="btn btnIcon iconText" role="button" data-toggle="modal" data-target="#myModal4">
+                        <a href="#" class="btn btnIcon iconText" role="button" data-toggle="modal" data-target="#myModal4" data-bind="click: my.vm.fav">
                             <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
                             <div class="glyphText"> Favorite</div>
                         </a>
                     </div>
                     <div class="input-group" data-bind="visible: currentTitle">
-                        <input type="text" class="form-control" id="autocomplete2" placeholder="Filter by street..." data-bind="value: my.vm.query">
+
+                        <input type="text" class="form-control" placeholder="Filter by street..." data-bind="value: my.vm.query" autocomplete="off">
+
+                       <span class="input-group-btn">
+                            <button class="btn btn-default filter-btn" data-bind="click: filter" type="button">Filter</button>
+                        </span>
                         <span class="input-group-btn">
-                            <button class="btn btn-default" data-bind="click: filterReset" type="button">Reset</button>
+                            <button class="btn btn-default reset-btn" data-bind="click: filterReset" type="button">Reset</button>
                         </span>
                     </div>
                 </thead>
@@ -155,6 +160,7 @@
                 </div>
             </div>
         </div>
+
         <!-- Modal - review -->
         <div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-bind="with: my.vm">
             <div class="modal-dialog" role="document">
@@ -163,11 +169,43 @@
                         <span class="fancyTitle" data-bind="visible: currentTitle, text: currentTitle"></span>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>
+                    <div data-bind="ifnot: nytInfo">
+                            <p data-bind="text: nytReviewMsg"></p>
+                    </div>
+
                     <div data-bind="template: {name: 'nytTemplate'}"></div>
                 </div>
             </div>
         </div>
+
         <!-- Modal - review -->
+        <div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-bind="with: my.vm">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="fancyTitle" data-bind="visible: currentTitle, text: currentTitle"></span>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <table class="table">
+                        <tbody data-bind="foreach: favFilms">
+                            <tr>
+                                <td class="favFilm">
+                                    <a class="icon"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span></a>
+                                </td>
+                                <td>
+                                    <p>
+                                        <!--ko text: currentTitle-->
+                                        <!--/ko-->
+                                    </p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal - trailer -->
         <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-bind="with: my.vm">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -300,4 +338,4 @@
         <!-- trailer template end -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiFWUDeNqeIgmx7njjzjJAVWwC2t9hNP0&libraries=places&callback=my.vm.googleInit" async defer></script>
 </body>
-</ht
+</html>
