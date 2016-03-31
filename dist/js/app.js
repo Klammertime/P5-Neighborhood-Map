@@ -4,29 +4,32 @@ $(function() {
         geocoder,
         map,
         infowindow;
+    // Don't make marker global or you'll break the panning essentially opening
+    // the infowindow on the current marker each time
 
     function googleSuccess() {
         var center,
             myLatLng = new google.maps.LatLng(37.77493, -122.419416);
+
         var mapOptions = {
             center: myLatLng,
             zoom: 12,
             disableDefaultUI: true,
             zoomControl: true,
             zoomControlOptions: {
-                position: google.maps.ControlPosition.RIGHT_TOP,
+                position: google.maps.ControlPosition.LEFT_BOTTOM,
                 style: 'SMALL'
             },
             panControl: true,
             mapTypeControl: false,
             mapTypeControlOptions: {
                 style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-                position: google.maps.ControlPosition.TOP_RIGHT
+                position: google.maps.ControlPosition.LEFT_BOTTOM
             },
             scaleControl: true,
             streetViewControl: true,
             streetViewControlOptions: {
-                position: google.maps.ControlPosition.RIGHT_TOP
+                position: google.maps.ControlPosition.LEFT_BOTTOM
             },
             rotateControl: true,
             overviewMapControl: true,
@@ -43,6 +46,10 @@ $(function() {
             center = map.getCenter();
         });
 
+        google.maps.event.addListener(map, 'click', function() {
+            center = map.getCenter();
+        });
+
         // when right click, go back to initial center
         function addGoToInitialExtent(map, initialCenter, initialZoom) {
             google.maps.event.addListener(map, 'rightclick', function() {
@@ -54,11 +61,6 @@ $(function() {
         window.addEventListener('resize', (function() {
             map.setCenter(center);
         }), false);
-
-
-        google.maps.event.addListener(map, 'click', function() {
-            center = map.getCenter();
-        });
     }
 
     // Location construction
@@ -141,12 +143,19 @@ $(function() {
             tagline = ko.observable(),
             trailerURL = ko.observable(),
             currentTitle = ko.observable(),
+            currentFilm = ko.observableArray(),
+            backdropSRC = ko.observable(),
             posterSRC = ko.observable(),
+            nytReviewMsg = ko.observable("We are unable to find the review for this film."),
             nytInfo = ko.observableArray([]),
             movieDBInfo = ko.observableArray([]),
             markerStore = ko.observableArray([]),
             moviedb = ko.observable(),
-            query = ko.observable(),
+            query = ko.observable(null),
+            favFilms = ko.observableArray([]),
+            filtered = ko.observableArray([]),
+            favFilmMsg = ko.observable(),
+            favLocations = ko.observableArray([]),
             resetBool = true,
             loadSceneFM = function() {
                 // Returns everything before first parentheses, which is the place
@@ -178,7 +187,7 @@ $(function() {
                 $('#autocomplete').autocomplete({
                     lookup: my.vm.uniqueTitlesResults(),
                     showNoSuggestionNotice: true,
-                    noSuggestionNotice: 'Sorry, no matching results',
+                    noSuggestionNotice: 'Sorry, no matching results.',
                     onSelect: function(suggestion) {
                         my.vm.requestedFilm(suggestion.value);
                     }
@@ -191,17 +200,25 @@ $(function() {
 
             // The current item will be passed as the first parameter
             panToMarker = function(clickedLocation) {
-                // Makes it so when click on item in list of locations takes you to marker and opens infowindow
+                // When click on item in list of locations takes you to marker and opens infowindow
                 if (prev_infowindow) {
                     prev_infowindow.close();
                 }
 
                 prev_infowindow = clickedLocation.infowindow;
-                // Without this it still works but doesn't open the infowindow, it goes to it and drops the marker
+
+                map.setZoom(14);
+                map.setCenter(clickedLocation.marker.getPosition());
+
                 map.panTo(clickedLocation.marker.getPosition());
-                // Bounce once
-                marker.setAnimation(google.maps.Animation.BOUNCE);
-                marker.setAnimation(null);
+
+                // Bounce once or twice
+                clickedLocation.marker.setAnimation(google.maps.Animation.BOUNCE);
+
+                setTimeout(function() {
+                    clickedLocation.marker.setAnimation(null);
+                }, 800);
+
                 // Without this, it doesn't work
                 clickedLocation.infowindow.open(map, clickedLocation.marker);
             },
@@ -239,9 +256,20 @@ $(function() {
                             byline: capitalizeName(data.results[index].byline),
                             headline: strConverter(data.results[index].headline),
                             releaseYear: data.results[index].publication_date,
-                            suggestedLinkText: data.results[index].link.suggested_link_text
+                            suggestedLinkText: data.results[index].link.suggested_link_text,
+                            overview: [data.results[index].related_urls[0].suggested_link_text,
+                                data.results[index].related_urls[0].url
+                            ],
+                            castCreditsAwards: [data.results[index].related_urls[2].suggested_link_text,
+                                data.results[index].related_urls[2].url
+                            ],
+                            readerReviews: [data.results[index].related_urls[3].suggested_link_text,
+                                data.results[index].related_urls[3].url
+                            ],
+                            trailersAndClips: [data.results[index].related_urls[4].suggested_link_text,
+                                data.results[index].related_urls[4].url
+                            ]
                         });
-
                     },
                     fail: function(jqxhr, textStatus, error) {
                         console.log("New York Times Article Could Not Be Loaded: ", error);
@@ -250,12 +278,13 @@ $(function() {
             },
 
             loadMovieDbData = function(encodedFilm, nonEncodedFilm, releaseYear) {
+                var filmID,
+                    index;
+                backdropSRC(null);
                 posterSRC(null);
                 overview(null);
                 tagline(null);
                 trailerURL(null);
-                var filmID,
-                    index;
 
                 function successCB(data) {
                     var dbStore = JSON.parse(data);
@@ -266,8 +295,14 @@ $(function() {
                     } else {
                         index = titleCheck(dbStore, 'original_title', 'release_date', nonEncodedFilm, releaseYear);
                     }
+                    console.log("moviedb().results", moviedb().results);
+                    if (moviedb().results[index].backdrop_path) {
+                        backdropSRC('https://image.tmdb.org/t/p/w780' + moviedb().results[index].backdrop_path);
+                    }
 
-                    posterSRC('https://image.tmdb.org/t/p/w370' + moviedb().results[index].poster_path);
+                    if (moviedb().results[index].poster_path) {
+                        posterSRC('https://image.tmdb.org/t/p/w1280' + moviedb().results[index].poster_path);
+                    }
                     overview(moviedb().results[index].overview);
                     filmID = moviedb().results[index].id;
 
@@ -276,10 +311,9 @@ $(function() {
                 }
 
                 function errorCB() {
-                    console.log("you fail!"); //TODO: find the proper error
+                    console.log("Sorry, MovieDb did not return any results.");
                 }
-                // How it works:
-                // theMovieDb.movies.getById({"id":76203 }, successCB, errorCB)
+
                 theMovieDb.search.getMovie({ "query": encodedFilm }, successCB, errorCB);
             },
 
@@ -290,7 +324,7 @@ $(function() {
                 }
 
                 function errorCB() {
-                    console.log("you fail!"); //TODO: find the proper error
+                    console.log("Sorry, MovieDb did not return any tagline results.");
                 }
                 theMovieDb.movies.getById({ "id": foundfilmID }, successCB, errorCB);
             },
@@ -298,11 +332,11 @@ $(function() {
             getTrailer = function(foundfilmID2) {
                 function successCB(data) {
                     var theTrailer = JSON.parse(data);
-                    trailerURL(theTrailer.youtube.length > 0 ? ('https://www.youtube.com/embed/' + theTrailer.youtube[0].source + '?rel=0&amp;showinfo=0') : undefined);
+                    trailerURL(theTrailer.youtube.length > 0 ? ('https://www.youtube.com/embed/' + theTrailer.youtube[0].source + '?rel=0&amp;controls=0&amp;showinfo=0') : undefined);
                 }
 
                 function errorCB() {
-                    console.log("you fail!"); //TODO: find the proper error
+                    console.log("Sorry, MovieDb did not return any results.");
                 }
 
                 theMovieDb.movies.getTrailers({ "id": foundfilmID2 }, successCB, errorCB);
@@ -370,9 +404,14 @@ $(function() {
                             }
 
                             prev_infowindow = infowindow;
+                            map.setZoom(14);
+                            map.setCenter(marker.getPosition());
+
                             map.panTo(marker.getPosition());
                             infowindow.open(map, marker);
                         });
+
+
 
                         markers.push({ marker: marker, infowindow: infowindow });
 
@@ -380,8 +419,6 @@ $(function() {
                         console.log("Geocode was not successful for the following reason: " + status);
                     }
                 });
-                console.log("this in masterGeocoder", this);
-
                 my.vm.markerStore(my.vm.markers());
             },
 
@@ -443,17 +480,9 @@ $(function() {
                         currentStudio: matchedScene.studio()
                     });
 
-                    $('#autocomplete2').autocomplete({
-                        lookup: my.vm.markerTitles(),
-                        showNoSuggestionNotice: true,
-                        noSuggestionNotice: 'Sorry, no matching results',
-                        onSelect: function(suggestion) {
-                            my.vm.query(suggestion.value);
-                            my.vm.filter();
-                        }
-                    });
 
                     this.currentTitle(matchedTitle);
+                    this.currentFilm(this.filmTest());
                     console.time("loadNYTData");
                     loadNYTData(encodeURIComponent(matchedTitle), matchedTitle, matchedYear);
                     console.timeEnd("loadNYTData");
@@ -465,34 +494,65 @@ $(function() {
             },
 
             fav = function(value) {
-                this.favLoc.push(value);
+                var canFavorite = true;
+                console.log("value", value);
+                if (this.favFilms().length === 0) {
+                    this.favFilmMsg("This film has been added to your favorites list.");
+                    this.favFilms.push(value.currentFilm());
+                } else {
+                    for (var z = 0, x = this.favFilms().length; z < x; z++) {
+                        if (value.currentFilm().currentTitle !== this.favFilms()[z].currentTitle) {
+                            canFavorite = true;
+                        } else {
+                            canFavorite = false;
+                            this.favFilmMsg("This film is already in your favorites list.");
+                            return canFavorite;
+                        }
+                    }
+                    if (canFavorite) {
+                        this.favFilmMsg("This film is already in your favorites list.");
+                        this.favFilms.push(value.currentFilm());
+                    }
+                }
+                console.log("this.favFilms()", this.favFilms());
             },
 
             filter = function() {
-                resetBool = true;
-                var newArr = this.markers.remove(function(item) {
-                    var markerTitle = item.marker.title;
-                    //Dont change my.vm.query() to this, it breaks it.
-                    var queryMatches = markerTitle.toLowerCase().indexOf(my.vm.query().toLowerCase()) != -1;
-                    return queryMatches;
-                });
-                for (var i = 0, f = this.markers().length; i < f; i++) {
-                    this.markers()[i].marker.setMap(null);
+                var tempMarker;
+                // resetBool = boolVal;
+                if ((my.vm.query() !== '') && (my.vm.query() !== null) && (my.vm.query() !== undefined)) {
+                    var newArr = this.markers.remove(function(item) {
+                        var markerTitle = item.marker.title;
+                        //Dont change my.vm.query() to this, it breaks it.
+                        var queryMatches = markerTitle.toLowerCase().indexOf(my.vm.query().toLowerCase()) != -1;
+                        return queryMatches;
+                    });
+                    for (var i = 0, f = my.vm.markers().length; i < f; i++) {
+                        my.vm.markers()[i].marker.setMap(null);
+                    }
+                    my.vm.markers(newArr);
+                    my.vm.filtered(newArr);
+
+                    tempMarker = newArr[0].marker;
+                    map.panTo(tempMarker.getPosition());
+                    my.vm.query(null);
                 }
-                this.markers(newArr);
             },
 
             filterReset = function() {
-                if (resetBool) {
-                    var filtered = ko.observable(this.markers()[0]);
+                if (!my.vm.query()) {
+
                     this.markers(this.markerStore());
-                    this.markers.push(filtered());
-                    for (var i = 0, m = this.markerStore().length; i < m; i++) {
-                        this.markers()[i].marker.setMap(map);
+
+                    for (var f = 0; f < my.vm.filtered().length; f++) {
+                        this.markers.push(my.vm.filtered()[f]);
                     }
-                    resetBool = false;
+
+
+                    for (var v = 0, m = this.markerStore().length; v < m; v++) {
+                        this.markers()[v].marker.setMap(map);
+                    }
                 }
-                this.query('');
             };
 
         return {
@@ -506,11 +566,14 @@ $(function() {
             overview: overview,
             googleInit: googleInit,
             currentTitle: currentTitle,
+            currentFilm: currentFilm,
             tagline: tagline,
             checkReset: checkReset,
             trailerURL: trailerURL,
+            backdropSRC: backdropSRC,
             posterSRC: posterSRC,
             nytInfo: nytInfo,
+            nytReviewMsg: nytReviewMsg,
             movieDBInfo: movieDBInfo,
             testDB: testDB,
             query: query,
@@ -519,7 +582,11 @@ $(function() {
             markerStore: markerStore,
             filmTest: filmTest,
             fav: fav,
+            favFilms: favFilms,
+            favFilmMsg: favFilmMsg,
+            favLocations: favLocations,
             favLoc: favLoc,
+            filtered: filtered,
             uniqueTitlesResults: uniqueTitlesResults,
             markerTitles: markerTitles
         };
@@ -532,11 +599,9 @@ $(function() {
         my.vm.codeAddress(newValue);
     });
 
+
     ko.observable.fn.equalityComparer = function(a, b) {
         return a === b;
     };
 });
 
-
-//TODO: do an alert for the wrong film, html binding? <div class="alert alert-danger" role="alert">...</div>
-// This page might help: https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/ch02s04.h

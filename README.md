@@ -102,3 +102,7 @@ Format and Add
 http://designshack.net/articles/javascript/create-a-simple-autocomplete-with-html5-jquery/
 
 http://stackoverflow.com/questions/23935758/gradient-over-img-tag-using-css
+
+Future Plans:
+
+Make it possible to favorite locations. Add this to content string on infowindows: <span data-bind="click: $parent.fav" class="glyphicon glyphicon-heart" aria-hidden="true"></span>
