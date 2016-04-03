@@ -40,11 +40,7 @@
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <!-- Favorite Badge -->
-                <ul class="nav nav-pills pull-right" role="tablist">
-                    <li role="presentation"><a class="favorites" href="#" data-toggle="modal" data-target="#myModal4">Favorite Films <span class="badge"> <!--ko text: my.vm.favFilms().length--><!--/ko--></span></a></li>
-                </ul>
-                <!-- Favorite Badge End -->
+
                 <!-- Film Search -->
                 <form class="navbar-left navbar-form" role="search">
                     <div class="form-group">
@@ -64,6 +60,11 @@
                     </li>
                 </ul>
                 <!-- Film Pane Toggle End -->
+                <!-- Favorite Badge -->
+                <ul class="nav nav-pills pull-right" role="tablist">
+                    <li role="presentation"><a class="favorites" href="#" data-toggle="modal" data-target="#myModal4">Favorite Films <span class="badge"> <!--ko text: my.vm.favFilms().length--><!--/ko--></span></a></li>
+                </ul>
+                <!-- Favorite Badge End -->
             </div>
             <!-- /.navbar-collapse -->
         </div>
@@ -71,8 +72,8 @@
     </nav>
     <div class="row">
         <!-- empty placeholder -->
-        <div class="hidden-xs col-sm-7 col-md-8 col-lg-9"></div>
-        <div class="hidden-xs col-sm-5 col-md-4 col-lg-3" data-bind="with: my.vm">
+        <div class="hidden-xs col-sm-8 col-md-9 col-lg-9"></div>
+        <div class="hidden-xs col-sm-4 col-md-3 col-lg-3" data-bind="with: my.vm">
             <div class="widget-pane-content-holder" data-bind="visible: currentTitle">
                 <div class="panel panel-default film-results-panel scroll-allow">
                     <div data-bind="template: {name: 'locationsTemplate'}"></div>
@@ -90,7 +91,7 @@
                             <div class="pickgradient">
                                 <img data-bind="attr: { src: backdropSRC }" width="300" height="169">
                             </div>
-                            <div class="overlay-font">
+                            <div class="overlay-font overlay-font-backdrop">
                                 <h4 data-bind="visible: currentTitle, text: currentTitle"></h4>
                             </div>
                         </a>
@@ -99,7 +100,14 @@
                     <div class data-bind="ifnot: backdropSRC">
                         <div data-bind="if: posterSRC">
                             <a data-bind="visible: posterSRC" href="#" class="media-object" data-toggle="modal" data-target="#myModal2">
-                                <img class="poster" data-bind="attr: { src: posterSRC }">
+                                <div class="pickgradient">
+                                    <div class="center-cropped">
+                                        <img class="poster" data-bind="attr: { src: posterSRC }">
+                                    </div>
+                                </div>
+                                <div class="overlay-font overlay-font-poster">
+                                    <h4 data-bind="visible: currentTitle, text: currentTitle"></h4>
+                                </div>
                             </a>
                         </div>
                     </div>
@@ -217,7 +225,7 @@
             <div class="media" data-bind="with: my.vm">
                 <div class="media-left">
                     <a data-bind="visible: posterSRC" href="#" class="thumbnail media-object">
-                        <img class="poster" data-bind="attr: { src: posterSRC }">
+                        <img class="poster-overview" data-bind="attr: { src: posterSRC }">
                     </a>
                 </div>
                 <div class="media-body">

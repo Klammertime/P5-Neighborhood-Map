@@ -46,9 +46,9 @@ $(function() {
             center = map.getCenter();
         });
 
-        google.maps.event.addListener(map, 'click', function() {
-            center = map.getCenter();
-        });
+        // google.maps.event.addListener(map, 'click', function() {
+        //     center = map.getCenter();
+        // });
 
         // when right click, go back to initial center
         function addGoToInitialExtent(map, initialCenter, initialZoom) {
@@ -203,14 +203,14 @@ $(function() {
 
                 prev_infowindow = clickedLocation.infowindow;
                 map.setZoom(14);
-                map.setCenter(clickedLocation.marker.getPosition());
-                map.panTo(clickedLocation.marker.getPosition());
+                                // map.setCenter(clickedLocation.marker.getPosition());
+                                map.panTo(clickedLocation.marker.getPosition());
                 // Bounce once or twice
                 clickedLocation.marker.setAnimation(google.maps.Animation.BOUNCE);
 
                 setTimeout(function() {
                     clickedLocation.marker.setAnimation(null);
-                }, 800);
+                }, 700);
 
                 clickedLocation.infowindow.open(map, clickedLocation.marker);
             },
@@ -340,7 +340,7 @@ $(function() {
                     if (status == google.maps.GeocoderStatus.OK) {
                         map.setCenter(results[0].geometry.location);
 
-                        var streetViewImage = '<img class="streetview-image media-object" src="https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
+                        var streetViewImage = '<img class="streetview-image" src="https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
                             results[0].geometry.location + '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetview-image">';
 
                         if (place) {
@@ -383,7 +383,7 @@ $(function() {
 
                             prev_infowindow = infowindow;
                             map.setZoom(14);
-                            map.setCenter(marker.getPosition());
+                            // map.setCenter(marker.getPosition());
 
                             map.panTo(marker.getPosition());
                             infowindow.open(map, marker);
