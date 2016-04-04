@@ -1,11 +1,20 @@
 html,
-body,
-.map-canvas {
-    position: absolute;
+body {
+    position: relative;
     top: 0;
     overflow: hidden;
     width: 100%;
     height: 100%;
+    transform: translateZ(0px);
+    background-color: rgb(229, 227, 223);
+}
+
+.map-canvas {
+    position: absolute;
+    top: 47px;
+    overflow: hidden;
+    width: 100%;
+    height: 94%;
     transform: translateZ(0px);
     background-color: rgb(229, 227, 223);
 }
@@ -124,13 +133,16 @@ input {
 
 .content-body {
     display: table-cell;
-    padding-left: 5px;
-    vertical-align: top;
+    vertical-align: middle;
 }
 
 .contentString {
-    width: 270px;
-    padding-top: 10px;
+    max-width: 21em;
+}
+
+.content-body p {
+    line-height: 1.4;
+    margin: 0 0 0;
 }
 
 .content-heading {
@@ -148,7 +160,7 @@ input {
 }
 
 .streetview-image {
-    width: 80px;
+    width: 70px;
     height: auto;
     border-radius: 100%;
 }
@@ -267,7 +279,6 @@ img {
     font-weight: 900;
     line-height: 33px;
     position: absolute;
-    top: 55%;
     left: 0;
     width: 100%;
     margin: 0;
@@ -368,7 +379,11 @@ a.icon-text:focus {
     color: #39f;
 }
 
-.poster {
+/*.poster {
+    display: none;
+}*/
+
+.poster-overview {
     width: 100%;
     height: auto;
 }
@@ -420,8 +435,8 @@ blockquote {
     color: #ff5a5f;
 }
 
-.favorites {
-    padding: 15px;
+.nav > li > a.favorites {
+    padding: 8px;
 }
 
 .favorite-film-item {
@@ -443,8 +458,27 @@ blockquote {
     scroll-behavior: smooth;
 }
 
+.center-cropped {
+    position: relative;
+    overflow: hidden;
+    max-width: 100%;
+    height: 300px;
+    margin: 0 auto;
+}
 
-/* Small devices (tablets, 768px and up) */
+.overlay-font-poster > h4 {
+    top: 30%;
+}
+
+.overlay-font-backdrop > h4 {
+    top: 55%;
+}
+
+.navbar-nav>li>a {
+    padding-top: 0;
+    padding-bottom: 5px;
+    line-height: 20px;
+}
 
 @media (min-width: 768px) {
     .scroll-allow {
@@ -454,4 +488,46 @@ blockquote {
         width: 100%;
         min-width: 255px;
     }
+    .center-cropped {
+        width: 386px;
+    }
+    .map-canvas {
+        top: 0;
+        height: 100%;
+    }
+    .center-cropped img {
+        position: absolute;
+        top: 126%;
+        left: 80%;
+        -webkit-transform: translate(-80%, -80%);
+        -moz-transform: translate(-80%, -80%);
+        -ms-transform: translate(-80%, -80%);
+        -o-transform: translate(-80%, -80%);
+        transform: translate(-80%, -80%);
+    }
+
+    .poster {
+        display: block;
+        width: 100%;
+    }
+    .poster-overview {
+        width: 100%;
+    }
+
+    .nav > li > a.favorites {
+    padding: 15px;
+}
+
+
+}
+
+@media (max-width: 767px) {
+    .visible-xs {
+        display: inline-block!important;
+    }
+}
+
+.nav > li {
+    position: relative;
+    display: inline-block;
 }

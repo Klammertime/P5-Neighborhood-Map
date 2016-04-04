@@ -46,9 +46,9 @@ $(function() {
             center = map.getCenter();
         });
 
-        google.maps.event.addListener(map, 'click', function() {
-            center = map.getCenter();
-        });
+        // google.maps.event.addListener(map, 'click', function() {
+        //     center = map.getCenter();
+        // });
 
         // when right click, go back to initial center
         function addGoToInitialExtent(map, initialCenter, initialZoom) {
@@ -81,33 +81,21 @@ $(function() {
     });
 
     function titleCheck(theData, resultsTitleProp, resultsDateProp, desiredTitle, desiredYear) {
+        console.log("theData", theData);
         function justYear(longDate) {
             var match = /[^-]*/.exec(longDate);
             return match[0];
         }
 
-        for (var i = 0, r = theData.results.length; i < r; i++) {
-            if (((theData.results[i][resultsTitleProp]) === desiredTitle) && (justYear(theData.results[i][resultsDateProp]) === desiredYear)) {
-                return i;
+        for (var t = 0, u = theData.results.length; t < u; t++) {
+            if (((theData.results[t][resultsTitleProp]) === desiredTitle) && (justYear(theData.results[t][resultsDateProp]) === desiredYear)) {
+                console.log("t", t);
+                return t;
             }
         }
     }
 
-    function strConverter(theStr) {
-        var re = /&rdquo;/gi;
-        var str = theStr;
-        str = str.replace(re, '”');
 
-        re = /&ldquo;/gi;
-        str = str.replace(re, '“');
-
-        re = /&rsquo;/gi;
-        str = str.replace(re, '’');
-
-        re = /&lsquo;/gi;
-        str = str.replace(re, '‘');
-        return str;
-    }
 
     function capitalizeName(name) {
         var idx,
@@ -203,21 +191,23 @@ $(function() {
 
                 prev_infowindow = clickedLocation.infowindow;
                 map.setZoom(14);
-                map.setCenter(clickedLocation.marker.getPosition());
-                map.panTo(clickedLocation.marker.getPosition());
+                                // map.setCenter(clickedLocation.marker.getPosition());
+                                map.panTo(clickedLocation.marker.getPosition());
                 // Bounce once or twice
                 clickedLocation.marker.setAnimation(google.maps.Animation.BOUNCE);
 
                 setTimeout(function() {
                     clickedLocation.marker.setAnimation(null);
-                }, 800);
+                }, 700);
 
                 clickedLocation.infowindow.open(map, clickedLocation.marker);
             },
 
             loadNYTData = function(encodedFilm, nonEncodedFilm, releaseYear) {
                 var index;
-                nytInfo(null);
+
+
+                nytInfo(undefined);
 
                 function domain(fullUrl) {
                     var match = /\.(.*)$/.exec(fullUrl);
@@ -226,40 +216,59 @@ $(function() {
 
                 $.ajax({
                     type: "GET",
-                    url: 'http://api.nytimes.com/svc/movies/v2/reviews/search.json?query="' +
-                        encodedFilm + '"&api-key=70f203863d9c8555f9b345f32ec442e8:10:59953537',
+                    url: 'http://api.nytimes.com/svc/movies/v2/reviews/search.json?query=' +
+                        encodedFilm + '&order=by-title&api-key=70f203863d9c8555f9b345f32ec442e8:10:59953537',
                     timeout: 2000,
                     dataType: "json",
                     beforeSend: function() {},
                     complete: function() {},
                     success: function(data) {
+                        console.log("data", data);
+                        console.log("data.results", data.results);
                         if ((data.results[0].display_title === nonEncodedFilm) || (data.results[0].display_title === 'The ' + nonEncodedFilm)) {
                             index = 0;
                         } else {
                             index = titleCheck(data, 'display_title', 'publication_date', nonEncodedFilm, releaseYear);
                         }
 
+                        function strConverter(theStr) {
+                            // var store = theStr;
+                            // store = store.replace(/&rdquo;/gi, '”');
+
+                            // re = /&ldquo;/gi;
+                            // str = str.replace(re, '“');
+
+                            // re = /&rsquo;/gi;
+                            // str = str.replace(re, '’');
+
+                            // re = /&lsquo;/gi;
+                            // str = str.replace(re, '‘');
+                            console.log("theStr", theStr);
+
+                            return theStr;
+                        }
+
                         nytInfo({
-                            title: strConverter(data.results[index].display_title),
-                            capsuleReview: strConverter(data.results[index].capsule_review),
-                            summary: strConverter(data.results[index].summary_short),
+                            title: data.results[index].display_title,
+                            capsuleReview: data.results[index].capsule_review,
+                            summary: data.results[index].summary_short,
                             reviewURL: domain(data.results[index].link.url),
                             byline: capitalizeName(data.results[index].byline),
-                            headline: strConverter(data.results[index].headline),
+                            headline: data.results[index].headline,
                             releaseYear: data.results[index].publication_date,
-                            suggestedLinkText: data.results[index].link.suggested_link_text,
-                            overview: [data.results[index].related_urls[0].suggested_link_text,
-                                data.results[index].related_urls[0].url
-                            ],
-                            castCreditsAwards: [data.results[index].related_urls[2].suggested_link_text,
-                                data.results[index].related_urls[2].url
-                            ],
-                            readerReviews: [data.results[index].related_urls[3].suggested_link_text,
-                                data.results[index].related_urls[3].url
-                            ],
-                            trailersAndClips: [data.results[index].related_urls[4].suggested_link_text,
-                                data.results[index].related_urls[4].url
-                            ]
+                            suggestedLinkText: data.results[index].link.suggested_link_text
+                            // overview: [data.results[index].related_urls[0].suggested_link_text,
+                            //     data.results[index].related_urls[0].url
+                            // ],
+                            // castCreditsAwards: [data.results[index].related_urls[2].suggested_link_text,
+                            //     data.results[index].related_urls[2].url
+                            // ],
+                            // readerReviews: [data.results[index].related_urls[3].suggested_link_text,
+                            //     data.results[index].related_urls[3].url
+                            // ],
+                            // trailersAndClips: [data.results[index].related_urls[4].suggested_link_text,
+                            //     data.results[index].related_urls[4].url
+                            // ]
                         });
                     },
                     fail: function(jqxhr, textStatus, error) {
@@ -340,7 +349,7 @@ $(function() {
                     if (status == google.maps.GeocoderStatus.OK) {
                         map.setCenter(results[0].geometry.location);
 
-                        var streetViewImage = '<img class="streetview-image media-object" src="https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
+                        var streetViewImage = '<img class="streetview-image" src="https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
                             results[0].geometry.location + '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetview-image">';
 
                         if (place) {
@@ -383,7 +392,7 @@ $(function() {
 
                             prev_infowindow = infowindow;
                             map.setZoom(14);
-                            map.setCenter(marker.getPosition());
+                            // map.setCenter(marker.getPosition());
 
                             map.panTo(marker.getPosition());
                             infowindow.open(map, marker);
@@ -418,6 +427,11 @@ $(function() {
                     matchedScene,
                     matchedTitle,
                     matchedYear;
+
+                function replaceSpace(str){
+                   var replaced = str.replace(/ /g, '+');
+                   return replaced;
+                }
 
                 if (this.checkReset()) {
                     for (var j = 0, s = this.scenes().length; j < s; j++) {
@@ -458,7 +472,8 @@ $(function() {
 
                     this.currentTitle(matchedTitle);
                     this.currentFilm(this.currentFilmObj());
-                    loadNYTData(encodeURIComponent(matchedTitle), matchedTitle, matchedYear);
+                    loadNYTData(replaceSpace(matchedTitle), matchedTitle, matchedYear);
+                    console.log("replaceSpace(matchedTitle)", replaceSpace(matchedTitle));
                     loadMovieDbData(encodeURIComponent(matchedTitle), matchedTitle, matchedYear);
                     pastFilm(requestedFilm());
                 }

@@ -379,8 +379,12 @@ a.icon-text:focus {
     color: #39f;
 }
 
-.poster {
-    width: 50%;
+/*.poster {
+    display: none;
+}*/
+
+.poster-overview {
+    width: 100%;
     height: auto;
 }
 
@@ -432,7 +436,7 @@ blockquote {
 }
 
 .nav > li > a.favorites {
-    padding: 15px;
+    padding: 8px;
 }
 
 .favorite-film-item {
@@ -470,6 +474,12 @@ blockquote {
     top: 55%;
 }
 
+.navbar-nav>li>a {
+    padding-top: 0;
+    padding-bottom: 5px;
+    line-height: 20px;
+}
+
 @media (min-width: 768px) {
     .scroll-allow {
         height: 94vh;
@@ -497,9 +507,18 @@ blockquote {
     }
 
     .poster {
+        display: block;
         width: 100%;
-        float: left;
     }
+    .poster-overview {
+        width: 100%;
+    }
+
+    .nav > li > a.favorites {
+    padding: 15px;
+}
+
+
 }
 
 @media (max-width: 767px) {
