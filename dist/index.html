@@ -269,7 +269,7 @@
                 <blockquote>
                     <div class data-bind="ifnot: summary">
                         <div data-bind="if: capsuleReview">
-                            <p data-bind="text: capsuleReview"></p>
+                            <p data-bind="html: capsuleReview"></p>
                             <!--ko text: byline-->
                             <!--/ko-->,
                             <cite title="Source Title"><a target="_blank" data-bind="attr: { href: reviewURL }, visible: reviewURL">The New York Times</a></cite>
@@ -284,7 +284,7 @@
                         </div>
                     </div>
                     <div data-bind="if: summary">
-                        <p data-bind="text: summary"></p>
+                        <p data-bind="html: summary"></p>
                         <!--ko text: byline-->
                         <!--/ko-->,
                         <cite title="Source Title"><a target="_blank" data-bind="attr: { href: reviewURL }, visible: reviewURL">The New York Times</a></cite>
@@ -306,27 +306,6 @@
                         </div>
                     </div>
                 </blockquote>
-                <!-- put overview, cast credits, reader reviews, trailers and clips -->
-<!--                 <div class="media">
-                    <div class="media-left">
-                        <div class="media-object">
-                            <span class="glyphicon glyphicon-nyt glyphicon-pencil" aria-hidden="true"></span>
-                            <a class="nyt-link" target="_blank" data-bind="attr: { href: overview[1] }, visible: overview">Overview</a>
-                        </div>
-                        <div class="media-object">
-                            <span class="glyphicon glyphicon-nyt glyphicon-user" aria-hidden="true"></span>
-                            <a class="nyt-link" target="_blank" data-bind="attr: { href: castCreditsAwards[1] }, visible: castCreditsAwards">Cast, Credits, & Awards</a>
-                        </div>
-                        <div class="media-object">
-                            <span class="glyphicon glyphicon-nyt glyphicon-comment" aria-hidden="true"></span>
-                            <a class="nyt-link" target="_blank" data-bind="attr: { href: readerReviews[1] }, visible: readerReviews">Reader Reviews</a>
-                        </div>
-                        <div class="media-object">
-                            <span class="glyphicon glyphicon-nyt glyphicon-play-circle" aria-hidden="true"></span>
-                            <a class="nyt-link" target="_blank" data-bind="attr: { href: trailersAndClips[1] }, visible: trailersAndClips">Trailers & Clips</a>
-                        </div>
-                    </div>
-                </div> -->
             </div>
         </div>
         <!-- nyt template end -->

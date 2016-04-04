@@ -206,7 +206,6 @@ $(function() {
             loadNYTData = function(encodedFilm, nonEncodedFilm, releaseYear) {
                 var index;
 
-
                 nytInfo(undefined);
 
                 function domain(fullUrl) {
@@ -224,29 +223,17 @@ $(function() {
                     complete: function() {},
                     success: function(data) {
                         console.log("data", data);
-                        console.log("data.results", data.results);
                         if ((data.results[0].display_title === nonEncodedFilm) || (data.results[0].display_title === 'The ' + nonEncodedFilm)) {
                             index = 0;
                         } else {
                             index = titleCheck(data, 'display_title', 'publication_date', nonEncodedFilm, releaseYear);
                         }
 
-                        function strConverter(theStr) {
-                            // var store = theStr;
-                            // store = store.replace(/&rdquo;/gi, '”');
-
-                            // re = /&ldquo;/gi;
-                            // str = str.replace(re, '“');
-
-                            // re = /&rsquo;/gi;
-                            // str = str.replace(re, '’');
-
-                            // re = /&lsquo;/gi;
-                            // str = str.replace(re, '‘');
-                            console.log("theStr", theStr);
-
-                            return theStr;
-                        }
+                // Returns info between parentheses, the street address and format Geolocation prefers
+                function escapeRegExp2(string) {
+                    var matches = /\(([^)]+)\)/.exec(string);
+                    return matches ? matches[1] : undefined;
+                }
 
                         nytInfo({
                             title: data.results[index].display_title,
@@ -257,18 +244,6 @@ $(function() {
                             headline: data.results[index].headline,
                             releaseYear: data.results[index].publication_date,
                             suggestedLinkText: data.results[index].link.suggested_link_text
-                            // overview: [data.results[index].related_urls[0].suggested_link_text,
-                            //     data.results[index].related_urls[0].url
-                            // ],
-                            // castCreditsAwards: [data.results[index].related_urls[2].suggested_link_text,
-                            //     data.results[index].related_urls[2].url
-                            // ],
-                            // readerReviews: [data.results[index].related_urls[3].suggested_link_text,
-                            //     data.results[index].related_urls[3].url
-                            // ],
-                            // trailersAndClips: [data.results[index].related_urls[4].suggested_link_text,
-                            //     data.results[index].related_urls[4].url
-                            // ]
                         });
                     },
                     fail: function(jqxhr, textStatus, error) {
