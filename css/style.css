@@ -217,20 +217,33 @@ input {
 .navbar {
     z-index: 5;
 }
-
+/*
 .navbar-form {
     margin: 8px 0;
     padding: 0 15px;
     border: none;
-}
+}*/
 
 .navbar-toggle {
     z-index: 5;
 }
 
-.navbar-form .film-autocomplete,
+/*.navbar-form .film-autocomplete,
 .form-group {
     width: 100%;
+}*/
+
+.navbar-form {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    padding: 0 15px;
+    border: none;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+.form-control {
+    color: #999;
 }
 
 .navbar-brand {
