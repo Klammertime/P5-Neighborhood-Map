@@ -40,7 +40,6 @@
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
                 <!-- Film Search -->
                 <form class="navbar-left navbar-form" role="search">
                     <div class="form-group">
@@ -100,13 +99,10 @@
                     <div class data-bind="ifnot: backdropSRC">
                         <div data-bind="if: posterSRC">
                             <a data-bind="visible: posterSRC" href="#" class="media-object" data-toggle="modal" data-target="#myModal2">
-                                <div class="pickgradient">
+                                <div class="pickgradient hidden-sm hidden-xs">
                                     <div class="center-cropped">
                                         <img class="poster" data-bind="attr: { src: posterSRC }">
                                     </div>
-                                </div>
-                                <div class="overlay-font overlay-font-poster">
-                                    <h4 data-bind="visible: currentTitle, text: currentTitle"></h4>
                                 </div>
                             </a>
                         </div>
