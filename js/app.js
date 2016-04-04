@@ -82,6 +82,7 @@ $(function() {
 
     function titleCheck(theData, resultsTitleProp, resultsDateProp, desiredTitle, desiredYear) {
         console.log("theData", theData);
+
         function justYear(longDate) {
             var match = /[^-]*/.exec(longDate);
             return match[0];
@@ -227,11 +228,11 @@ $(function() {
                             index = titleCheck(data, 'display_title', 'publication_date', nonEncodedFilm, releaseYear);
                         }
 
-                // Returns info between parentheses, the street address and format Geolocation prefers
-                function escapeRegExp2(string) {
-                    var matches = /\(([^)]+)\)/.exec(string);
-                    return matches ? matches[1] : undefined;
-                }
+                        // Returns info between parentheses, the street address and format Geolocation prefers
+                        function escapeRegExp2(string) {
+                            var matches = /\(([^)]+)\)/.exec(string);
+                            return matches ? matches[1] : undefined;
+                        }
 
                         nytInfo({
                             title: data.results[index].display_title,
@@ -401,9 +402,9 @@ $(function() {
                     matchedTitle,
                     matchedYear;
 
-                function replaceSpace(str){
-                   var replaced = str.replace(/ /g, '+');
-                   return replaced;
+                function replaceSpace(str) {
+                    var replaced = str.replace(/ /g, '+');
+                    return replaced;
                 }
 
                 if (this.checkReset()) {

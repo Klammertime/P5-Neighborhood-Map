@@ -379,6 +379,7 @@ a.icon-text:focus {
     color: #39f;
 }
 
+
 /*.poster {
     display: none;
 }*/
@@ -436,7 +437,7 @@ blockquote {
 }
 
 .nav > li > a.favorites {
-    padding: 8px;
+    padding: 12px;
 }
 
 .favorite-film-item {
@@ -471,11 +472,11 @@ blockquote {
 }
 
 .overlay-font-backdrop > h4 {
-    top: 55%;
+    top: 50%;
 }
 
 .navbar-nav>li>a {
-    padding-top: 0;
+    padding-top: 5px;
     padding-bottom: 5px;
     line-height: 20px;
 }
@@ -505,7 +506,6 @@ blockquote {
         -o-transform: translate(-80%, -80%);
         transform: translate(-80%, -80%);
     }
-
     .poster {
         display: block;
         width: 100%;
@@ -513,12 +513,9 @@ blockquote {
     .poster-overview {
         width: 100%;
     }
-
     .nav > li > a.favorites {
-    padding: 15px;
-}
-
-
+        padding: 15px;
+    }
 }
 
 @media (max-width: 767px) {
@@ -533,21 +530,35 @@ blockquote {
 }
 
 ::-webkit-scrollbar {
-      width: 10px;
-} /* this targets the default scrollbar (compulsory) */
+    width: 10px;
+}
+
+
+/* this targets the default scrollbar (compulsory) */
 
 ::-webkit-scrollbar-track {
     background-color: #F8F8F8;
-} /* the new scrollbar will have a flat appearance with the set background color */
+}
+
+
+/* the new scrollbar will have a flat appearance with the set background color */
 
 ::-webkit-scrollbar-thumb {
-    background-color: rgba(244, 140, 145, .3);
-} /* this will style the thumb, ignoring the track */
+    background-color: rgb(231, 231, 231);
+}
+
+/* this will style the thumb, ignoring the track */
 
 ::-webkit-scrollbar-button {
     background-color: #F8F8F8;
-} /* optionally, you can style the top and the bottom buttons (left and right for horizontal bars) */
+}
+
+
+/* optionally, you can style the top and the bottom buttons (left and right for horizontal bars) */
 
 ::-webkit-scrollbar-corner {
-      background-color: black;
-} /* if both the vertical and the horizon
+    background-color: black;
+}
+
+
+/* if both the vertical and the horizon
