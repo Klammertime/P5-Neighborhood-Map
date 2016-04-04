@@ -95,8 +95,6 @@ $(function() {
         }
     }
 
-
-
     function capitalizeName(name) {
         var idx,
             lastIdx,
@@ -190,9 +188,9 @@ $(function() {
                 }
 
                 prev_infowindow = clickedLocation.infowindow;
-                map.setZoom(14);
-                                // map.setCenter(clickedLocation.marker.getPosition());
-                                map.panTo(clickedLocation.marker.getPosition());
+                map.setZoom(13);
+                // map.setCenter(clickedLocation.marker.getPosition());
+                map.panTo(clickedLocation.marker.getPosition());
                 // Bounce once or twice
                 clickedLocation.marker.setAnimation(google.maps.Animation.BOUNCE);
 
@@ -448,7 +446,6 @@ $(function() {
                     this.currentTitle(matchedTitle);
                     this.currentFilm(this.currentFilmObj());
                     loadNYTData(replaceSpace(matchedTitle), matchedTitle, matchedYear);
-                    console.log("replaceSpace(matchedTitle)", replaceSpace(matchedTitle));
                     loadMovieDbData(encodeURIComponent(matchedTitle), matchedTitle, matchedYear);
                     pastFilm(requestedFilm());
                 }
