@@ -46,9 +46,9 @@ $(function() {
             center = map.getCenter();
         });
 
-        // google.maps.event.addListener(map, 'click', function() {
-        //     center = map.getCenter();
-        // });
+        google.maps.event.addListener(map, 'click', function() {
+            center = map.getCenter();
+        });
 
         // when right click, go back to initial center
         function addGoToInitialExtent(map, initialCenter, initialZoom) {
@@ -114,6 +114,12 @@ $(function() {
         } else {
             return name;
         }
+    }
+
+        // Returns info between parentheses, the street address and format Geolocation prefers
+    function escapeRegExp2(string) {
+        var matches = /\(([^)]+)\)/.exec(string);
+        return matches ? matches[1] : undefined;
     }
 
     my.vm = function() {
@@ -190,7 +196,7 @@ $(function() {
 
                 prev_infowindow = clickedLocation.infowindow;
                 map.setZoom(13);
-                // map.setCenter(clickedLocation.marker.getPosition());
+                map.setCenter(clickedLocation.marker.getPosition());
                 map.panTo(clickedLocation.marker.getPosition());
                 // Bounce once or twice
                 clickedLocation.marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -321,10 +327,17 @@ $(function() {
 
                 geocoder.geocode(myGeocodeOptions, function(results, status) {
                     if (status == google.maps.GeocoderStatus.OK) {
+
                         map.setCenter(results[0].geometry.location);
 
-                        var streetViewImage = '<img class="streetview-image" src="https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
-                            results[0].geometry.location + '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetview-image">';
+                        var latLngString = escapeRegExp2(results[0].geometry.location);
+                        console.log("latLngString", latLngString);
+
+                         var streetViewImage = '<img class="streetView media-object" src="https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
+                            latLngString + '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetview-image">';
+
+                        console.log("streetViewImage", streetViewImage);
+
 
                         if (place) {
                             contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
@@ -431,6 +444,7 @@ $(function() {
                             };
 
                             masterGeocoder(geocodeOptions, place, geocoder);
+                            console.log("geocodeOptions", geocodeOptions, "place", place);
                         }
                     }
                     currentFilmObj({

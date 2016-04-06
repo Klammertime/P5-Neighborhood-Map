@@ -3,8 +3,7 @@
 
 <head>
 
- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>SF Film Map</title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
@@ -221,42 +220,48 @@
         <!-- filmInfo template, shows info from SFData in data.js -->
         <div id="filmInfoTemplate" style="display: none">
             <div class="media" data-bind="with: my.vm">
-                <div class="media-left">
+    <!--             <div class="media-left">
                     <a data-bind="visible: posterSRC" href="#" class="thumbnail media-object">
                         <img class="poster-overview" data-bind="attr: { src: posterSRC }">
                     </a>
-                </div>
-                <div class="media-body">
-                    <div data-bind="foreach: currentFilmObj">
-                        <p><span class="film-info-header">Year: </span>
-                            <!--ko text: currentYear-->
-                            <!--/ko-->
-                        </p>
-                        <p><span class="film-info-header">Production Company: </span>
-                            <!--ko text: currentStudio-->
-                            <!--/ko-->
-                        </p>
-                        <p><span class="film-info-header">Director: </span>
-                            <!--ko text: currentDirector-->
-                            <!--/ko-->
-                            </span>
-                        </p>
-                        <p><span class="film-info-header">Writer: </span>
-                            <!--ko text: currentWriter-->
-                            <!--/ko-->
-                            </span>
-                        </p>
-                        <p>
-                            <span data-bind="visible: currentActor1" class="film-info-header">Actors: </span>
-                            <!--ko text: currentActor1-->
-                            <!--/ko--><span data-bind="visible: currentActor2">, </span>
-                            <!--ko text: currentActor2-->
-                            <!--/ko--><span data-bind="visible: currentActor3">, </span>
-                            <!--ko text: currentActor3-->
-                            <!--/ko-->
-                        </p>
+                </div> -->
+                <div class="">
+                    <a data-bind="visible: posterSRC" href="#" class="thumbnail media-object poster-left">
+                        <img class="poster-overview" data-bind="attr: { src: posterSRC }">
+                    </a>
+                    <div class="overview-right">
+                        <div data-bind="foreach: currentFilmObj">
+                            <p><span class="film-info-header">Year: </span>
+                                <!--ko text: currentYear-->
+                                <!--/ko-->
+                            </p>
+                            <p><span class="film-info-header">Production Company: </span>
+                                <!--ko text: currentStudio-->
+                                <!--/ko-->
+                            </p>
+                            <p><span class="film-info-header">Director: </span>
+                                <!--ko text: currentDirector-->
+                                <!--/ko-->
+                                </span>
+                            </p>
+                            <p><span class="film-info-header">Writer: </span>
+                                <!--ko text: currentWriter-->
+                                <!--/ko-->
+                                </span>
+                            </p>
+                            <p>
+                                <span data-bind="visible: currentActor1" class="film-info-header">Actors: </span>
+                                <!--ko text: currentActor1-->
+                                <!--/ko--><span data-bind="visible: currentActor2">, </span>
+                                <!--ko text: currentActor2-->
+                                <!--/ko--><span data-bind="visible: currentActor3">, </span>
+                                <!--ko text: currentActor3-->
+                                <!--/ko-->
+                            </p>
+                        </div>
+                        <p class="overview" data-bind="visible: overview, text: overview"></p>
                     </div>
-                    <p class="overview" data-bind="visible: overview, text: overview"></p>
+<!--                     <p class="overview" data-bind="visible: overview, text: overview"></p> -->
                 </div>
             </div>
         </div>
