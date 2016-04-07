@@ -63,6 +63,8 @@ $(function() {
         }), false);
     }
 
+
+
     // Location construction
     var SceneFilmModel = Base.extend({
         constructor: function(director, studio, fullAddress, place, streetAddress, year, filmTitle, writer, actor1, actor2, actor3) {
@@ -116,7 +118,7 @@ $(function() {
         }
     }
 
-        // Returns info between parentheses, the street address and format Geolocation prefers
+    // Returns info between parentheses
     function escapeRegExp2(string) {
         var matches = /\(([^)]+)\)/.exec(string);
         return matches ? matches[1] : undefined;
@@ -154,12 +156,6 @@ $(function() {
                     return matches ? matches[0] : undefined;
                 }
 
-                // Returns info between parentheses, the street address and format Geolocation prefers
-                function escapeRegExp2(string) {
-                    var matches = /\(([^)]+)\)/.exec(string);
-                    return matches ? matches[1] : undefined;
-                }
-
                 $.each(my.filmData.data.Scenes, function(i, s) { //s stands for 'scene'
                     if (s.film_location !== undefined) { // create more false conditions
                         scenes.push(new SceneFilmModel(s.director, s.production_company, s.film_location, escapeRegExp(s.film_location), escapeRegExp2(s.film_location), s.release_year, s.film_title, s.writer, s.actor_1, s.actor_2, s.actor_3));
@@ -173,7 +169,7 @@ $(function() {
 
                 uniqueTitlesResults(uniqueTitles());
 
-                $('#autocomplete').autocomplete({
+            $('#autocomplete').autocomplete({
                     lookup: my.vm.uniqueTitlesResults(),
                     showNoSuggestionNotice: true,
                     noSuggestionNotice: 'Sorry, no matching results.',
@@ -331,12 +327,9 @@ $(function() {
                         map.setCenter(results[0].geometry.location);
 
                         var latLngString = escapeRegExp2(results[0].geometry.location);
-                        console.log("latLngString", latLngString);
 
-                         var streetViewImage = '<img class="streetView media-object" src="https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
+                         var streetViewImage = '<img class="streetview-image media-object" src="https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
                             latLngString + '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetview-image">';
-
-                        console.log("streetViewImage", streetViewImage);
 
 
                         if (place) {
@@ -444,7 +437,6 @@ $(function() {
                             };
 
                             masterGeocoder(geocodeOptions, place, geocoder);
-                            console.log("geocodeOptions", geocodeOptions, "place", place);
                         }
                     }
                     currentFilmObj({

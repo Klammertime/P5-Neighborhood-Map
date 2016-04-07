@@ -51,10 +51,6 @@ https://www.safaribooksonline.com/library/view/google-maps-javascript/9781849698
 
 https://developers.google.com/maps/documentation/javascript/examples/marker-remove
 
-* Autocomplete Form
-
-https://blogs.oracle.com/geertjan/entry/html5_datalist_with_knockout_js
-
 * Value vs. TextInput
 
 http://knockoutjs.com/documentation/textinput-binding.html
