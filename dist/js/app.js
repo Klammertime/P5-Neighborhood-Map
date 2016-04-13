@@ -63,8 +63,6 @@ $(function() {
         }), false);
     }
 
-
-
     // Location construction
     var SceneFilmModel = Base.extend({
         constructor: function(director, studio, fullAddress, place, streetAddress, year, filmTitle, writer, actor1, actor2, actor3) {
@@ -169,6 +167,7 @@ $(function() {
 
                 uniqueTitlesResults(uniqueTitles());
 
+
             $('#autocomplete').autocomplete({
                     lookup: my.vm.uniqueTitlesResults(),
                     showNoSuggestionNotice: true,
@@ -177,10 +176,12 @@ $(function() {
                         my.vm.requestedFilm(suggestion.value);
                     }
                 });
+
             },
 
             googleInit = function() {
                 googleSuccess();
+                my.vm.requestedFilm('Godzilla');
             },
 
             // The current item will be passed as the first parameter
@@ -549,6 +550,7 @@ $(function() {
 
     my.vm.loadSceneFM();
     ko.applyBindings(my.vm);
+
 
     my.vm.requestedFilm.subscribe(function(newValue) {
         my.vm.codeAddress(newValue);
