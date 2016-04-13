@@ -1,3 +1,5 @@
+/* This is from https://github.com/cavestri/themoviedb-javascript-library/wiki */
+
 var theMovieDb = {};
 
 theMovieDb.common = {
