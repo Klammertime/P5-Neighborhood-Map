@@ -81,7 +81,6 @@ $(function() {
     });
 
     function titleCheck(theData, resultsTitleProp, resultsDateProp, desiredTitle, desiredYear) {
-        console.log("theData", theData);
 
         function justYear(longDate) {
             var match = /[^-]*/.exec(longDate);
@@ -90,20 +89,17 @@ $(function() {
 
         for (var t = 0, u = theData.results.length; t < u; t++) {
             if (((theData.results[t][resultsTitleProp]) === desiredTitle) && (justYear(theData.results[t][resultsDateProp]) === desiredYear)) {
-                console.log("t", t);
                 return t;
             }
         }
     }
 
     function capitalizeName(name) {
-        var idx,
-            lastIdx,
+        var idx = name.indexOf(" "),
+            lastIdx = name.lastIndexOf(" "),
             first,
             last;
 
-        idx = name.indexOf(" ");
-        lastIdx = name.lastIndexOf(" ");
         if (idx === lastIdx) {
             name = name.toLowerCase();
             first = name.substring(0, idx);
@@ -116,7 +112,13 @@ $(function() {
         }
     }
 
-    // Returns info between parentheses
+    // Returns everything before first parentheses, which is the place
+    function escapeRegExp(string) {
+        var matches = /^.*?(?=\s\()/.exec(string);
+        return matches ? matches[0] : undefined;
+    }
+
+    // Returns info between parentheses, the street address and format Geolocation prefers
     function escapeRegExp2(string) {
         var matches = /\(([^)]+)\)/.exec(string);
         return matches ? matches[1] : undefined;
@@ -148,11 +150,6 @@ $(function() {
             filtered = ko.observableArray([]),
             favFilmMsg = ko.observable(),
             loadSceneFM = function() {
-                // Returns everything before first parentheses, which is the place
-                function escapeRegExp(string) {
-                    var matches = /^.*?(?=\s\()/.exec(string);
-                    return matches ? matches[0] : undefined;
-                }
 
                 $.each(my.filmData.data.Scenes, function(i, s) { //s stands for 'scene'
                     if (s.film_location !== undefined) { // create more false conditions
@@ -168,7 +165,7 @@ $(function() {
                 uniqueTitlesResults(uniqueTitles());
 
 
-            $('#autocomplete').autocomplete({
+                $('#autocomplete').autocomplete({
                     lookup: my.vm.uniqueTitlesResults(),
                     showNoSuggestionNotice: true,
                     noSuggestionNotice: 'Sorry, no matching results.',
@@ -181,7 +178,7 @@ $(function() {
 
             googleInit = function() {
                 googleSuccess();
-                my.vm.requestedFilm('Godzilla');
+                this.requestedFilm('Godzilla');
             },
 
             // The current item will be passed as the first parameter
@@ -207,7 +204,6 @@ $(function() {
 
             loadNYTData = function(encodedFilm, nonEncodedFilm, releaseYear) {
                 var index;
-
                 nytInfo(undefined);
 
                 function domain(fullUrl) {
@@ -224,17 +220,10 @@ $(function() {
                     beforeSend: function() {},
                     complete: function() {},
                     success: function(data) {
-                        console.log("data", data);
                         if ((data.results[0].display_title === nonEncodedFilm) || (data.results[0].display_title === 'The ' + nonEncodedFilm)) {
                             index = 0;
                         } else {
                             index = titleCheck(data, 'display_title', 'publication_date', nonEncodedFilm, releaseYear);
-                        }
-
-                        // Returns info between parentheses, the street address and format Geolocation prefers
-                        function escapeRegExp2(string) {
-                            var matches = /\(([^)]+)\)/.exec(string);
-                            return matches ? matches[1] : undefined;
                         }
 
                         nytInfo({
@@ -329,7 +318,7 @@ $(function() {
 
                         var latLngString = escapeRegExp2(results[0].geometry.location);
 
-                         var streetViewImage = '<img class="streetview-image media-object" src="https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
+                        var streetViewImage = '<img class="streetview-image media-object" src="https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
                             latLngString + '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetview-image">';
 
 
@@ -373,7 +362,6 @@ $(function() {
 
                             prev_infowindow = infowindow;
                             map.setZoom(14);
-                            // map.setCenter(marker.getPosition());
 
                             map.panTo(marker.getPosition());
                             infowindow.open(map, marker);
@@ -551,10 +539,18 @@ $(function() {
     my.vm.loadSceneFM();
     ko.applyBindings(my.vm);
 
-
+/**
+ * @description The subscribe function accepts three params:
+ * callback (here it's an anonymous function), target (optional) defining
+ * the value of this in the callback function (here it is my.vm),
+ * and event (optional; default is "change", which I'm using);
+ * Every time the autocomplete input is used, the new value is
+ * passed to the codeAddress function which is then called. This way
+ * I don't need a submit button.
+*/
     my.vm.requestedFilm.subscribe(function(newValue) {
-        my.vm.codeAddress(newValue);
-    });
+        this.codeAddress(newValue);
+    }, my.vm);
 
     ko.observable.fn.equalityComparer = function(a, b) {
         return a === b;

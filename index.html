@@ -2,7 +2,6 @@
 <html>
 
 <head>
-
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>SF Film Map</title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
@@ -23,7 +22,6 @@
             async: true
         });
     } catch (e) {}
-
     </script>
 </head>
 
@@ -45,8 +43,6 @@
                 <!-- Film Search -->
                 <form class="navbar-left navbar-form" role="search">
                     <div class="form-group">
-
-
                         <input type="search" class="form-control film-autocomplete" id="autocomplete" placeholder="Type a letter to see film options...">
                     </div>
                 </form>
@@ -223,7 +219,7 @@
         <!-- filmInfo template, shows info from SFData in data.js -->
         <div id="filmInfoTemplate" style="display: none">
             <div class="media" data-bind="with: my.vm">
-    <!--             <div class="media-left">
+                <!--             <div class="media-left">
                     <a data-bind="visible: posterSRC" href="#" class="thumbnail media-object">
                         <img class="poster-overview" data-bind="attr: { src: posterSRC }">
                     </a>
@@ -264,7 +260,7 @@
                         </div>
                         <p class="overview" data-bind="visible: overview, text: overview"></p>
                     </div>
-<!--                     <p class="overview" data-bind="visible: overview, text: overview"></p> -->
+                    <!--                     <p class="overview" data-bind="visible: overview, text: overview"></p> -->
                 </div>
             </div>
         </div>
