@@ -57,6 +57,7 @@ their API if my project required more general videos that merely
 required categories since their API is easy-to-use and well-documented.
 ```
 https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=Godzilla+Official+Extended+Trailer+(2014)&relevanceLanguage=en&type=video&videoEmbeddable=true&key={YOUR_API_KEY}
+```
 * Wikipedia does not provide the film images since they often
 use copyrighted images under a fair use law that I doubt my app 
 also falls under.
