@@ -14,8 +14,8 @@ Navigate to page hosted on github.com [here](http://klammertime.github.io/map/)
 
 ```
 node server.js
-
 ``` 
+
 3. Navigate to your local copy of index.html through your web browser  
 
 Work
@@ -108,16 +108,16 @@ Originally I had used the HTML5 data list tag, but it does not have good support
 
 * Online tutorials from: Udacity, Pluralsight, Treehouse, Lynda.com and safaribooksonline.com.
 
-*[Safari Books Online - KnockoutJS by Example](https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/)
+* [Safari Books Online - KnockoutJS by Example](https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/)
 
-*[Safari Books Online - Google Maps JavaScript API Cookbook]
+* [Safari Books Online - Google Maps JavaScript API Cookbook]
 (https://www.safaribooksonline.com/library/view/google-maps-javascript/9781849698825/)
 
-*[Safari Books Online - Building a Single Page Web Application with Knockout.js](https://www.safaribooksonline.com/library/view/building-a-single/9781783284054/)
+* [Safari Books Online - Building a Single Page Web Application with Knockout.js](https://www.safaribooksonline.com/library/view/building-a-single/9781783284054/)
 
-*Removing markers - [https://developers.google.com/maps/documentation/javascript/examples/marker-remove](https://developers.google.com/maps/documentation/javascript/examples/marker-remove)
+* Removing markers - [https://developers.google.com/maps/documentation/javascript/examples/marker-remove](https://developers.google.com/maps/documentation/javascript/examples/marker-remove)
 
-*[Google Maps JavaScript API](https://developers.google.com/maps/documentation/javascript/)
+* [Google Maps JavaScript API](https://developers.google.com/maps/documentation/javascript/)
 
 * [Pluralsight - Google Maps API: Get Started](https://app.pluralsight.com/library/courses/google-maps-api-get-started/table-of-contents)
 
@@ -127,13 +127,6 @@ for specific code but you can use this for general tips and advice as I
 did. He's a good teacher. 
 
 * [Treehouse - Adding a Dynamic Map by Andrew Chalkey](https://teamtreehouse.com/library/build-an-interactive-website/google-maps-integration/adding-a-dynamic-map-2)
-
-* This tutorial is also helpful but old.
-Video -  Adding a Dynamic Map:
-This showed me how to make the map responsive and move its center based on the window resize event. When the map is idle, the current center is stored.  
-
-JS Fiddle
-* http://jsfiddle.net/stesta/2T3Db/
 
 * stackoverflow
 
@@ -152,6 +145,8 @@ Specifically for navbar.
 * Favorite locations instead of just movies. Add this to content string on infowindows: <span data-bind="click: $parent.fav" class="glyphicon glyphicon-heart" aria-hidden="true"></span>
 
 * themoviedb.org: Take advantage of this more encompassing API call, the multi or append_to_response which allows you to make one call instead of several. Otherwise it only allows 40 calls/10 seconds. This is the perfect place to use localStorage or Firebase:
+
+```
  testDB = function() {
                 // http://api.themoviedb.org/3/search/multi
                 // https://api.themoviedb.org/3/movie/63?api_key=###&append_to_response=credits,images
@@ -161,26 +156,47 @@ Specifically for navbar.
 
                 theMovieDb.collections.getCollection({ "id": 10, "append_to_response": "trailers" }, successCB, errorCB);
 }
+```
 
-- Also add TV. There are at least 5 tv shows that come up with zero results: 
+Also add TV. There are at least 5 tv shows that come up with zero results: 
 Hemingway & Gelhorn, CSI, Alcatraz
+
 * "Plan My Route" button using Geolocation.
+
 * Slide out menu similar to that on Google Maps. Material design and Polymer. Drawer system. Polymer has a starter kit.
-* Spinner when film loads with either: a)that resembles countdown on older films b)http://msurguy.github.io/ladda-bootstrap/ c)http://chadkuehn.com/animated-font-spinners/
+
+* Spinner when film loads with either: 
+a)that resembles countdown on older films
+
+b)http://msurguy.github.io/ladda-bootstrap/
+
+c)http://chadkuehn.com/animated-font-spinners/
+
 * Map out blocks. The SF Data file provided it in an inconsistent format where it gives you 3 streets, but usually it will say, "between" or "from" between the streets.
+ 
 * History API for unique urls.
+ 
 * Add ability to zoom in on poster.
+ 
 * Click street view and go to street view on Google Maps.
+
 * LocalStorage, Firebase, web workers and IndexDB.
+
 * [Custom Controls](https://developers.google.com/maps/documentation/javascript/controls#CustomControls): 'Back to original position'. You can right click but that's not obvious to the user.
 
 ###Keyhole Markup Language (KML) Layer
-*[KML Layer Overview](https://developers.google.com/maps/documentation/javascript/kmllayer#overview)
-*[KML Docs](https://developers.google.com/kml/documentation/)
-*[KML Interactive Sampler](https://kml-samples.googlecode.com/svn/trunk/interactive/index.html) 
-*[SF Historic View](http://www.davidrumsey.com/blog/2014/11/7/georeferencer-added-to-online-library)
-*If only there were more resources like this one for [Lord of the Rings film location map] (https://www.google.com/maps/d/viewer?mid=zh4EujB5Riwo.kTrEeXC1k-lY&hl=en_US)
-To find KML data you search in Google like this: filetype: kml "Lord of the Rings"
+* [KML Layer Overview](https://developers.google.com/maps/documentation/javascript/kmllayer#overview)
+
+* [KML Docs](https://developers.google.com/kml/documentation/)
+
+* [KML Interactive Sampler](https://kml-samples.googlecode.com/svn/trunk/interactive/index.html) 
+
+* [SF Historic View](http://www.davidrumsey.com/blog/2014/11/7/georeferencer-added-to-online-library)
+
+* If only there were more resources like this one for [Lord of the Rings film location map] (https://www.google.com/maps/d/viewer?mid=zh4EujB5Riwo.kTrEeXC1k-lY&hl=en_US)
+
+* To find KML data search: filetype: kml "Lord of the Rings"
+
 * Heatmap Layer or Polyline (great for giving people a tour).
 
 ##Refactor Options
