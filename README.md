@@ -1,11 +1,7 @@
 # SF Film Map - Neighborhood Map Project
-
-##View it live here: 
-[http://klammertime.github.io/map/](http://klammertime.github.io/map/)
-
 Usage
 -----
-Navigate to page hosted on github.com [here](http://klammertime.github.io/map/)
+Navigate to page hosted on github.com here: [http://klammertime.github.io/map/](http://klammertime.github.io/map/)
 
 **OR**
 
@@ -47,9 +43,8 @@ I used [SF Open Data - Film Locations in San Francisco](https://data.sfgov.org/C
 address information. 
 
 ###Film Trailers, Images, and Reviews
-* TMDb API at themoviedb.org is free to use and very thorough. [https://www.themoviedb.org/documentation/api](https://www.themoviedb.org/documentation/api)I'm using this library created by Franco Cavestri: [https://github.com/cavestri/themoviedb-javascript-library/wiki](https://github.com/cavestri/themoviedb-javascript-library/wiki)
-
-* The [New York Times API - The Movie Reviews API](http://developer.nytimes.com/docs/movie_reviews_api/) is great and easy to use. I include their movie reviews.
+* [TMDb API](https://www.themoviedb.org/documentation/api) at themoviedb.org is free to use and very thorough. I'm using a library created by [Franco Cavestri](https://github.com/cavestri/themoviedb-javascript-library/wiki)
+* The [New York Times API - The Movie Reviews API](http://developer.nytimes.com/docs/movie_reviews_api/) is high quality and easy-to-use. I include their movie reviews.
 
 ####Other APIs I tried:
 * IMDB is not free anymore, sadly, as they provide the most comprehensive film information.
@@ -57,31 +52,23 @@ address information.
 * omdbapi.com is free but has very limited data.
 * [YouTube Data API](https://developers.google.com/youtube/v3/docs/videos/insert#parameters) has trailers but the results were often wrong even with 
 an exact match. It uses the same API
-as Google Maps consumed a large percentage of my API keys. I decided against
-using it for something so specific as a movie trailer, despite the
-fact that the API is easy-to-use and well-documented. I would use
+as Google Maps and consumed a large percentage of my API calls. I would use
 their API if my project required more general videos that merely
-required categories. 
+required categories since their API is easy-to-use and well-documented.
 ```
 https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=Godzilla+Official+Extended+Trailer+(2014)&relevanceLanguage=en&type=video&videoEmbeddable=true&key={YOUR_API_KEY}
-```
 * Wikipedia does not provide the film images since they often
 use copyrighted images under a fair use law that I doubt my app 
 also falls under.
-
-* Flickr provided inconsistent image results. However, I can have a list of frequently used locations like [http://www.filmsf.org/sf-locations](http://www.filmsf.org/sf-locations) has
-on their main site where they link to flickr: [https://www.flickr.com/search/?q=alamo+square](https://www.flickr.com/search/?q=alamo+square)
-
+* Flickr provided inconsistent image results. I like how the SF Film Office includes [frequently used locations](http://www.filmsf.org/sf-locations), for example [Alamo Square](https://www.flickr.com/search/?q=alamo+square)
 * Netflix no longer has a free API. 
-
-* [Trailer Addict API](http://www.traileraddict.com/trailerapi) is used by The NY Times for their trailers. You don't need a key but given how slow it is, I imagine the free and public version is why it's mainly used by publishers.  
+* [Trailer Addict API](http://www.traileraddict.com/trailerapi), used by The NY Times for their trailers, is slow. I imagine the free and public version is why it's mainly used by publishers as a paid service.  
 
 ####Other APIs I would like to try:
 
-* Yelp.
 * SendGrid - SendGrid is for transactional email and MailChimp is for marketing emails. A user sending themselves movie favorites in this app would be transactional.
-* Rotten Tomatos API.
-* Foursquare, Instagram, & Twitter.
+* Rotten Tomatos API since I have 6 months access now.
+* Yelp, Foursquare, Instagram, & Twitter.
 
 ####Knockout
 
@@ -90,24 +77,16 @@ We were required to use [Knockout.js](http://knockoutjs.com/) for our MVVM.
 ###Resources
 
 * Autocomplete provided by devbridge: [https://github.com/devbridge/jQuery-Autocomplete](https://github.com/devbridge/jQuery-Autocomplete)
-
 * Autocomplete with devbridge instructions:
 [http://designshack.net/articles/javascript/create-a-simple-autocomplete-with-html5-jquery/](http://designshack.net/articles/javascript/create-a-simple-autocomplete-with-html5-jquery/)
-
 * [Safari Books Online - KnockoutJS by Example](https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/)
-
 * [Safari Books Online - Google Maps JavaScript API Cookbook]
 (https://www.safaribooksonline.com/library/view/google-maps-javascript/9781849698825/)
-
 * [Safari Books Online - Building a Single Page Web Application with Knockout.js](https://www.safaribooksonline.com/library/view/building-a-single/9781783284054/)
-
 * [Google Maps JavaScript API](https://developers.google.com/maps/documentation/javascript/)
-
 * [Pluralsight - Google Maps API: Get Started](https://app.pluralsight.com/library/courses/google-maps-api-get-started/table-of-contents): While general instructions are all relevant, this is from 2014, therefore
 some of the Google Maps API code has changed.
-
 * [Treehouse - Adding a Dynamic Map by Andrew Chalkey](https://teamtreehouse.com/library/build-an-interactive-website/google-maps-integration/adding-a-dynamic-map-2)
-
 * stackoverflow
 
 ###Known Bugs and Issues
