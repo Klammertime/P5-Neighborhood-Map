@@ -4,9 +4,19 @@ $(function() {
         geocoder,
         map,
         infowindow;
-    // Don't make marker global or you'll break the panning essentially opening
-    // the infowindow on the current marker each time
+        // Don't make marker global or you'll break the panning essentially opening
+        // the infowindow on the current marker each time
 
+/**
+ * Template to use for other areas
+ * Google Maps gives you default controls, but if you disableDefaultUI, you can
+ * manually set them in mapOptions, giving each their own options.
+ *
+ * @constructor
+ * @param {number} x - Entity's x coordinate on canvas
+ * @param {number} y - Entity's y coordinate on canvas
+ * @param {string} sprite - Entity's sprite used to render entity on canvas
+*/
     function googleSuccess() {
         var center,
             myLatLng = new google.maps.LatLng(37.77493, -122.419416);

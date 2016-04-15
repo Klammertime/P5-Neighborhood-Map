@@ -1,12 +1,51 @@
+# SF Film Map - Neighborhood Map Project
+
 ##View it live here: 
 [http://klammertime.github.io/map/](http://klammertime.github.io/map/)
+
+Usage
+-----
+Navigate to page hosted on github.com [here](http://klammertime.github.io/map/)
+
+**OR**
+
+1. Clone this repository
+2. Run a local server using server.js. While in the root project directory, run: 
+
+```
+node server.js
+
+``` 
+3. Navigate to your local copy of index.html through your web browser  
+
+Work
+----
+After cloning the project, work in the files located in the src directory.
+
+Build
+-----
+1. Download and install npm by way of installing node.js (it comes packaged with it): [node.js](https://nodejs.org/en/) 
+2. While in the root project directory, run: 
+  
+```
+npm install
+```
+
+3. To build the dist folder, from the root project directory run the following:
+
+```
+gulp
+```
+##Assignment & Grading Rubric
+##Screen Shots
+##Technologies Used
 
 ##Challenges
 
 ####Film Location Data Quality
 I used [SF Open Data - Film Locations in San Francisco](https://data.sfgov.org/Culture-and-Recreation/Film-Locations-in-San-Francisco/yitu-d5am), provided by the San Francisco Film Commission. This data contained many misspellings and incomplete
 address information. I corrected the misspellings and tried to use the addresses to get as close to the correct location as the Google Geolocation API
-would allow. Because the movie titles and info will not change and the quality was so poor and needed a lot of manual editing, I downloaded it as a JSON file.If they add new movies, I can download those.
+would allow. Because the movie titles and info will not change and the quality was so poor and needed a lot of manual editing, I downloaded it as a JSON file. If they add new movies, I can download those.
 
 https://data.sfgov.org/Culture-and-Recreation/Film-Locations-in-San-Francisco/yitu-d5am
 
@@ -18,10 +57,9 @@ appears to be the most promising. I'm using this library created by Franco Caves
 * New York Times API is great and easy to use. I include their movie reviews.
 
 Other APIs I tried:
-* IMDB is not free anymore. They provide the most comprehensive film information,
-including film IDs which can then be used to get images etc. using x api.
+* IMDB is not free anymore, sadly, they provide the most comprehensive film information.
 
-* Rotten Tomatoes is free for 6 months but they approved my API too late to use for this project, will add it as a TODO item.
+* Rotten Tomatoes is free for 6 months but they approved my API too late to use for this project.
 
 * omdbapi.com is free but has very limited data.
 
@@ -39,16 +77,18 @@ also falls under.
 
 * Flickr provided inconsistent image results. If I was able to spend more time refining my query I might be able to get great results.
 
+* Netflix no longer has a free API. 
+
 Other APIs I would like to try:
 
 * Yelp, even though I've heard of people struggling with it, the data they provide is great.
-* Instagram - people say this is a great and easy-to-use API.
-* SendGrid - so a user can email themselves their favorites. From what I've read, SendGrid is for transactional email and MailChimp is for marketing emails. My guess is that the user sending themselves favorites is transactional.
+* SendGrid - SendGrid is for transactional email and MailChimp is for marketing emails. A user sending themselves movie favorites in this app would be transactional.
 * Rotten Tomatos API now that I have access for 6 months. I'd use ratings, reviews, actor images, and more.
+* Other APIs Udacity says are great: Foursquare, Instagram, & Twitter.
 
 ####Knockout
 
-We were required to use Knockout and most of the resources I found were 3 years old. I think this project shows that I can learn a framework in 1 week even with limited current resources and follow directions :) Below I've listed the resources I used to learn how
+We were required to use [Knockout.js](http://knockoutjs.com/) for our MVVM since Udacity said "Angular was too magical". Most of the resources I found were 3 years old. I think this project shows that I can learn a framework in 1 week even with limited current resources and follow directions :) Below I've listed the resources I used to learn how
 to use Knockout and the Google Maps JavaScript API.
 
 ###Resources
@@ -129,7 +169,9 @@ Hemingway & Gelhorn, CSI, Alcatraz
 * Click street view and go to street view on Google Maps
 * LocalStorage, Firebase, web workers and IndexDB are all options to save time
 * Back to original position button. You can right click but that's not obvious to the user.
-* KML Data for SF Historic View. If only there were more resources like this 
+* [KML Data](https://developers.google.com/maps/documentation/javascript/kmllayer#overview) for SF Historic View. If only there were more resources like this one for ['Lord of the Rings' scenes] (https://www.google.com/maps/d/viewer?mid=zh4EujB5Riwo.kTrEeXC1k-lY&hl=en_US)
+To find KML data you search in Google like this: filetype: kml "Lord of the Rings"
+* Heatmap Layer or Polyline (great for giving people a tour).
 
 ##Refactor Options
 * Take advantage of underscore.string library: http://gabceb.github.io/underscore.string.site/#capitalize
