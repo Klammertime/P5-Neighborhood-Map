@@ -13,11 +13,9 @@ Navigate to page hosted on github.com here: [http://klammertime.github.io/map/](
 
 1. Clone this repository
 2. Run a local server using server.js. While in the root project directory, run: 
-
 ```
 node server.js
 ``` 
-
 3. Navigate to your local copy of index.html through your web browser  
 
 Work
@@ -28,11 +26,9 @@ Build
 -----
 1. Download and install npm by way of installing node.js (it comes packaged with it): [node.js](https://nodejs.org/en/) 
 2. While in the root project directory, run: 
-  
 ```
 npm install
 ```
-
 3. To build the dist folder, from the root project directory run the following:
 ```
 gulp
