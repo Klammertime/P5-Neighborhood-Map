@@ -30,17 +30,12 @@ Build
 ##Screen Shots
 TODO: add screenshots or take off
 
-##Challenges
-
-####Film Location Data Quality
-I used [SF Open Data - Film Locations in San Francisco](https://data.sfgov.org/Culture-and-Recreation/Film-Locations-in-San-Francisco/yitu-d5am), provided by the [San Francisco Film Office](http://filmsf.org/sf-locations). This data contained many misspellings and incomplete
-address information. 
-
 ##Technologies Used
 
 Knockoutjs, AJAX, Bootstrap, jQuery, HTML5, Google Maps, Typekit
 
 ##APIs Used
+* [**SF Open Data API**](https://data.sfgov.org/Culture-and-Recreation/Film-Locations-in-San-Francisco/yitu-d5am) - Film Locations in San Francisco, provided by the [San Francisco Film Office](http://filmsf.org/sf-locations)
 * [**Google Maps JavaScript API**](https://developers.google.com/maps/documentation/javascript/)
 * [**Google Street View Image API**](https://developers.google.com/maps/documentation/streetview/)
 * [**TMDb API**](https://www.themoviedb.org/documentation/api) at themoviedb.org is free to use and very thorough. I'm using an add-on library, [**themoviedb JavaScript Library**](https://github.com/cavestri/themoviedb-javascript-library/wiki/Collections) created by Franco Cavestri.
@@ -58,12 +53,18 @@ required categories since their API is easy-to-use and well-documented.
 ```
 https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=Godzilla+Official+Extended+Trailer+(2014)&relevanceLanguage=en&type=video&videoEmbeddable=true&key={YOUR_API_KEY}
 ```
-* [** MediaWiki action API used by Wikipedia**](https://www.mediawiki.org/wiki/API:Main_page) does not provide the film images since they often
+* [**MediaWiki action API used by Wikipedia**](https://www.mediawiki.org/wiki/API:Main_page) does not provide the film images since they often
 use copyrighted images under a fair use law that I doubt my app 
 also falls under.
 * [**Flickr API**](https://www.flickr.com/services/api/) provided inconsistent image results. I like how the SF Film Office includes [frequently used locations](http://www.filmsf.org/sf-locations), for example [Alamo Square](https://www.flickr.com/search/?q=alamo+square)
 * [**Netflix**](https://www.reddit.com/r/programming/comments/2mdo7y/netflix_is_shutting_down_its_public_api_today/) no longer offers a free API. 
 * [**Trailer Addict API**](http://www.traileraddict.com/trailerapi), used by The New York Times and other major publishers for their trailers, offers a free version that is very slow. 
+
+##Challenges
+
+####Film Location Data Quality
+I used [SF Open Data - Film Locations in San Francisco](https://data.sfgov.org/Culture-and-Recreation/Film-Locations-in-San-Francisco/yitu-d5am), provided by the [San Francisco Film Office](http://filmsf.org/sf-locations). This data contained many misspellings and incomplete
+address information. 
 
 ##Possible APIs To Add:
 
@@ -91,29 +92,36 @@ The project requirements specified that we use [Knockout.js](http://knockoutjs.c
 * **jQuery Autocomplete** provided by devbridge: [https://github.com/devbridge/jQuery-Autocomplete](https://github.com/devbridge/jQuery-Autocomplete) & [Instructions on designshack](http://designshack.net/articles/javascript/create-a-simple-autocomplete-with-html5-jquery/)
  
 ##Known Bugs and Issues
-* At least 5 TV shows come up with zero results because I am using a movie call, but I can use a `/tv/id` [**call**](http://docs.themoviedb.apiary.io/#reference/tv) to get the primary information about a TV series by id.
+* At least 5 TV shows come up with zero results because I am using a movie call, but I can use the [**TV ID call**](http://docs.themoviedb.apiary.io/#reference/tv) to get the primary information about a TV series by id.
 Examples of TV shows: Hemingway & Gelhorn, CSI, Alcatraz. 
-* Several blocks are included in the locations list and they fail to map correctly, since they are not formatted to be geocoded, for example:  `"film_location": "Van Ness Ave between Fell and Lombard"` or `"film_location": "Howard St from Embarcadero to 11 St"`. Since it usually uses the words 'between' and 'from', this can be used to isolate the blocks and create a set of two intersections to then map using either **waypoints in directions** as shown on [Google's docs](https://developers.google.com/maps/documentation/javascript/examples/directions-waypoints) or **driving directions** as shown on this [gist by trtg](https://gist.github.com/trtg/3950475).
+* Several blocks are included in the locations list and they fail to map correctly, since they are not formatted to be geocoded, for example:  
+`"film_location": "Van Ness Ave between Fell and Lombard"` 
+
+**OR**
+
+`"film_location": "Howard St from Embarcadero to 11 St"`. 
+
+Since it usually uses the words 'between' and 'from', this can be used to isolate the blocks and create a set of two intersections to then map using either **waypoints in directions** as shown on [Google's docs](https://developers.google.com/maps/documentation/javascript/examples/directions-waypoints) or **driving directions** as shown on this [gist by trtg](https://gist.github.com/trtg/3950475).
 
 ##Potential New Features:
 
 * [Real-Time Geolocation Service with Node.js](http://tympanus.net/codrops/2012/10/11/real-time-geolocation-service-with-node-js/)
-* [Google Maps Custom Controls](https://developers.google.com/maps/documentation/javascript/controls#CustomControls): Specifically so that the user can click a button to return the map.setCenter to the original center. Currently, the user can right-click only, which is not obvious to user.
-* Take advantage of the 'multi' or 'append_to_response' themoviedb API call, which allows you to make one call instead of several. Otherwise, the API only allows 40 calls/10 seconds. For example, `// http://api.themoviedb.org/3/search/multi` or `https://api.themoviedb.org/3/movie/63?api_key=###&append_to_response=credits,images`
+* Use [Google Maps Custom Controls](https://developers.google.com/maps/documentation/javascript/controls#CustomControls): so user can click a button to return the map.setCenter to the original center. Currently, the user can right-click only.
+* Take advantage of the 'multi' or 'append_to_response' themoviedb API call, which allows you to make one call instead of several. Otherwise, the API only allows 40 calls/10 seconds. For example, `http://api.themoviedb.org/3/search/multi` or `https://api.themoviedb.org/3/movie/63?api_key=###&append_to_response=credits,images`
 * Use the [getCollection(options, parameter1, parameter2)](https://github.com/cavestri/themoviedb-javascript-library/wiki/Collections) and [getCollectionImages(options, parameter1, parameter2)](https://github.com/cavestri/themoviedb-javascript-library/wiki/Collections) calls provided by [themoviedb JavaScript Library](https://github.com/cavestri/themoviedb-javascript-library/wiki/Collections)
 * Use the [HTML5 Geolocation API](Geolocation using device GPS) to get the user's current location and allow them to get directions to locations. 
 * Use the [HTML5 History API](https://developer.mozilla.org/en-US/docs/Web/API/History_API) so the user can move back and forth through their browsing history
-* IndexDB and service worker for offline access: [Udacity - Offline Web Applications](https://www.udacity.com/course/offline-web-applications--ud899)
-* Use of [underscore.string library.](http://gabceb.github.io/underscore.string.site/#capitalize) for title and address modifications
+* IndexDB and service worker for offline access: [Udacity Offline Web Applications](https://www.udacity.com/course/offline-web-applications--ud899)
+* Use of [underscore.string library](http://gabceb.github.io/underscore.string.site/#capitalize) for title and address modifications
 * Add ability to favorite locations
 * Add spinner when film and other items load
 * Use Material design and Polymer.js: [Pluralsight Material design and Polymer.js](https://app.pluralsight.com/library/courses/building-web-application-polymer-material-design/table-of-contents)
- * Rewrite in Angular, Backbone or Ember: [Udacity Front End Frameworks Backbone, Angular, Ember](https://www.udacity.com/course/front-end-frameworks--ud894)
+* Rewrite in Angular, Backbone or Ember: [Udacity Front End Frameworks Backbone, Angular, Ember](https://www.udacity.com/course/front-end-frameworks--ud894)
 
 ####Keyhole Markup Language (KML) Layer
 > The Google Maps JavaScript API supports the KML and GeoRSS data formats for displaying geographic information. These data formats are displayed on a map using a KmlLayer object, whose constructor takes the URL of a publicly accessible KML or GeoRSS file.
 > 
-> --[KML Layer Overview on developers.google.com](https://developers.google.com/maps/documentation/javascript/kmllayer#overview)
+> -[KML Layer Overview on developers.google.com](https://developers.google.com/maps/documentation/javascript/kmllayer#overview)
 
 * [**KML Interactive Sampler**](https://kml-samples.googlecode.com/svn/trunk/interactive/index.html) 
 * [**SF Historic View**](http://www.davidrumsey.com/blog/2014/11/7/georeferencer-added-to-online-library)
