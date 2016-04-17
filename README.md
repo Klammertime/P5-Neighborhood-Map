@@ -89,22 +89,22 @@ We were required to use [Knockout.js](http://knockoutjs.com/) for our organizati
 * Dependency Tracking: Create a relationship between parts of the Model.
 
 ###Resources
-* Udacity Supporting Courses:[JavaScript Design Patterns](https://classroom.udacity.com/courses/ud989/lessons/3417188540/concepts/33740985840923), [Intro to AJAX](https://classroom.udacity.com/nanodegrees/nd001/parts/00113454014/modules/271165859175460/lessons/3174548544/concepts/31591285700923)
+* Udacity Supporting Courses: [JavaScript Design Patterns](https://classroom.udacity.com/courses/ud989/lessons/3417188540/concepts/33740985840923), [Intro to AJAX](https://classroom.udacity.com/nanodegrees/nd001/parts/00113454014/modules/271165859175460/lessons/3174548544/concepts/31591285700923)
 * Pluralsight: [Building HTML5 and JavaScript Apps with MVVM and Knockout](https://app.pluralsight.com/library/courses/knockout-mvvm/table-of-contents), [Google Maps API: Get Started](https://app.pluralsight.com/library/courses/google-maps-api-get-started/table-of-contents)
 * Safari Books Online: [KnockoutJS by Example](https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/), [Google Maps JavaScript API Cookbook](https://www.safaribooksonline.com/library/view/google-maps-javascript/9781849698825/), [Building a Single Page Web Application with Knockout.js](https://www.safaribooksonline.com/library/view/building-a-single/9781783284054/)
+* Treehouse: [Adding a Dynamic Map by Andrew Chalkey](https://teamtreehouse.com/library/build-an-interactive-website/google-maps-integration/adding-a-dynamic-map-2)
 * [Google Maps JavaScript API](https://developers.google.com/maps/documentation/javascript/)
-* Treehouse[Adding a Dynamic Map by Andrew Chalkey](https://teamtreehouse.com/library/build-an-interactive-website/google-maps-integration/adding-a-dynamic-map-2)
 * Autocomplete provided by devbridge: [https://github.com/devbridge/jQuery-Autocomplete](https://github.com/devbridge/jQuery-Autocomplete) & [Autocomplete with devbridge instructions on designshack](http://designshack.net/articles/javascript/create-a-simple-autocomplete-with-html5-jquery/)
-* 
+ 
 ###Known Bugs and Issues
-*There are at least 5 TV shows that come up with zero results: 
+* There are at least 5 TV shows that come up with zero results: 
 Hemingway & Gelhorn, CSI, Alcatraz. Use themoviedb API call for TV
 * Blocks fail to map. The SF Data file sometimes gives you 3 streets to show a scene on a block. Usually it will say, "between" or "from" between the streets which can be used to create a start and end location
 
 ###Potential New Features:
 * Real-Time Geolocation Service with Node.js
 [http://tympanus.net/codrops/2012/10/11/real-time-geolocation-service-with-node-js/](http://tympanus.net/codrops/2012/10/11/real-time-geolocation-service-with-node-js/)
-* Favorite locations
+* Ability to favorite locations
 * themoviedb.org: Take advantage of this more encompassing API call, the multi or append_to_response which allows you to make one call instead of several Otherwise it only allows 40 calls/10 seconds:
 ```
  testDB = function() {
