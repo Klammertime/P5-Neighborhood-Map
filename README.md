@@ -25,10 +25,10 @@ After cloning the project, work in the files located in the src directory.
 Build
 -----
 1. Download and install npm by way of installing node.js (it comes packaged with it): [node.js](https://nodejs.org/en/) 
-2. While in the root project directory, run: 
+2. While in the root project directory, run:
 ```
 npm install
-```
+``` 
 3. To build the dist folder, from the root project directory run the following:
 ```
 gulp
