@@ -1,6 +1,6 @@
-#Project 5: Neighborhood Map (40 hrs)
+Neighborhood Map
 
-[Udacity Front End Web Developer Nanodegree Program](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001)
+Project 5:  Neighborhood Map (40 hrs)[Udacity Front End Web Developer Nanodegree Program](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001)
 
 **Directions**: You will develop a single-page application featuring a map of your neighborhood or a neighborhood you would like to visit. You will then add additional functionality to this application, including: map markers to identify popular locations or places you’d like to visit, a search function to easily discover these locations, and a listview to support simple browsing of all locations. You will then research and implement third-party APIs that provide additional information about each of these locations (such as StreetView images, Wikipedia articles, Yelp reviews, etc).
 
@@ -35,7 +35,6 @@ TODO: add screenshots or take off
 Knockoutjs, AJAX, Bootstrap, jQuery, HTML5, Google Maps, Typekit
 
 ####Knockout
-TODO: examples of each??
 The project requirements specified that we use [Knockout.js](http://knockoutjs.com/) for our organizational library, a MVVM. It provides:
 * **ViewModel**: Knockout's ViewModel separates the Model and the View. 
 * **Declarative Bindings**: Allows you to connect View and Model in direct and simple way.
@@ -88,6 +87,7 @@ also falls under.
 Examples of TV shows: Hemingway & Gelhorn, CSI, Alcatraz. 
 * Several blocks are included in the locations list and they fail to map correctly, since they are not formatted to be geocoded, for example:  
 `"film_location": "Van Ness Ave between Fell and Lombard"` or
+
 `"film_location": "Howard St from Embarcadero to 11 St"`
 Since it usually uses the words 'between' and 'from', this can be used to isolate the blocks and create a set of two intersections to then map using either **waypoints in directions** as shown on [Google's docs](https://developers.google.com/maps/documentation/javascript/examples/directions-waypoints) or **driving directions** as shown on this [gist by trtg](https://gist.github.com/trtg/3950475).
 
