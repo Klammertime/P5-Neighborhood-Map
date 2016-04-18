@@ -1,6 +1,6 @@
-#Neighborhood Map
+#Project 5: Neighborhood Map (40 hrs)
 
-**Project 5 (40 hrs)**: [Udacity Front End Web Developer Nanodegree Program](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001)
+[Udacity Front End Web Developer Nanodegree Program](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001)
 
 **Directions**: You will develop a single-page application featuring a map of your neighborhood or a neighborhood you would like to visit. You will then add additional functionality to this application, including: map markers to identify popular locations or places you’d like to visit, a search function to easily discover these locations, and a listview to support simple browsing of all locations. You will then research and implement third-party APIs that provide additional information about each of these locations (such as StreetView images, Wikipedia articles, Yelp reviews, etc).
 
@@ -34,14 +34,28 @@ TODO: add screenshots or take off
 
 Knockoutjs, AJAX, Bootstrap, jQuery, HTML5, Google Maps, Typekit
 
-##APIs Used
+####Knockout
+TODO: examples of each??
+The project requirements specified that we use [Knockout.js](http://knockoutjs.com/) for our organizational library, a MVVM. It provides:
+* **ViewModel**: Knockout's ViewModel separates the Model and the View. 
+* **Declarative Bindings**: Allows you to connect View and Model in direct and simple way.
+* **Automatic UI Refresh**: Updates View when Model changes, and with declarative bindings, Knockout updates the Model when View changes.
+* **Dependency Tracking**: Create a relationship between parts of the Model.
+
+####APIs Used
 * [**SF Open Data API**](https://data.sfgov.org/Culture-and-Recreation/Film-Locations-in-San-Francisco/yitu-d5am) - Film Locations in San Francisco, provided by the [San Francisco Film Office](http://filmsf.org/sf-locations)
 * [**Google Maps JavaScript API**](https://developers.google.com/maps/documentation/javascript/)
 * [**Google Street View Image API**](https://developers.google.com/maps/documentation/streetview/)
 * [**TMDb API**](https://www.themoviedb.org/documentation/api) at themoviedb.org is free to use and very thorough. I'm using an add-on library, [**themoviedb JavaScript Library**](https://github.com/cavestri/themoviedb-javascript-library/wiki/Collections) created by Franco Cavestri.
 * [**The New York Times API - Movie Reviews API**](http://developer.nytimes.com/docs/movie_reviews_api/) is high quality and easy-to-use. I include their movie reviews.
 
-##Other APIs I tried:
+##Challenges
+
+####Film Location Data Quality
+I used [SF Open Data - Film Locations in San Francisco](https://data.sfgov.org/Culture-and-Recreation/Film-Locations-in-San-Francisco/yitu-d5am), provided by the [San Francisco Film Office](http://filmsf.org/sf-locations). This data contained many misspellings and incomplete
+address information.
+
+####API Trial and Error:
 * [**IMDB**](http://www.imdb.com/help/show_leaf?usedatasoftware) has a limited free version. I found conflicting information online which led me to believe it was not free, but recently found posts like [this](https://www.quora.com/Any-one-knows-about-reliable-IMDB-free-paid-API) that say its possible to get the information for free. Maybe I will use it in the future.
 * [**Rotten Tomatoes API**](http://developer.rottentomatoes.com/) is free for 6 months but they approved my API too late to use for this project.
 * [**The Open Movie Database**](http://www.omdbapi.com/) is free but has limited and/or illegally obtained data. I want to use data legally.
@@ -58,29 +72,7 @@ use copyrighted images under a fair use law that I doubt my app
 also falls under.
 * [**Flickr API**](https://www.flickr.com/services/api/) provided inconsistent image results. I like how the SF Film Office includes [frequently used locations](http://www.filmsf.org/sf-locations), for example [Alamo Square](https://www.flickr.com/search/?q=alamo+square)
 * [**Netflix**](https://www.reddit.com/r/programming/comments/2mdo7y/netflix_is_shutting_down_its_public_api_today/) no longer offers a free API. 
-* [**Trailer Addict API**](http://www.traileraddict.com/trailerapi), used by The New York Times and other major publishers for their trailers, offers a free version that is very slow. 
-
-##Challenges
-
-####Film Location Data Quality
-I used [SF Open Data - Film Locations in San Francisco](https://data.sfgov.org/Culture-and-Recreation/Film-Locations-in-San-Francisco/yitu-d5am), provided by the [San Francisco Film Office](http://filmsf.org/sf-locations). This data contained many misspellings and incomplete
-address information. 
-
-##Possible APIs To Add:
-
-* [**Firebase**](https://www.firebase.com/) to store geocoded locations. Here's a good resource:  [Pluralsight Firebase Fundamentals](https://app.pluralsight.com/library/courses/firebase-fundamentals/table-of-contents)
-* [**SendGrid**](https://sendgrid.com/docs/API_Reference/index.html) - SendGrid is for transactional email and MailChimp is for marketing emails. A user sending themselves movie favorites in this app would be transactional.
-* [**Rotten Tomatos API**](http://developer.rottentomatoes.com/) since I have 6 months access now. [Example using the API w/ Knockoutjs](http://www.webdesignermag.co.uk/create-data-driven-interfaces-with-knockoutjs/)
-* **Yelp, Foursquare, Instagram, Facebook, Meetup & Twitter**.
-* A user could plan a route of locations and films and share their plans on Facebook or Meetup. Then update Instagram, Facebook, and Twitter with pictures.
-
-##Knockout
-TODO: examples of each??
-The project requirements specified that we use [Knockout.js](http://knockoutjs.com/) for our organizational library, a MVVM. It provides:
-* **ViewModel**: Knockout's ViewModel separates the Model and the View. 
-* **Declarative Bindings**: Allows you to connect View and Model in direct and simple way.
-* **Automatic UI Refresh**: Updates View when Model changes, and with declarative bindings, Knockout updates the Model when View changes.
-* **Dependency Tracking**: Create a relationship between parts of the Model.
+* [**Trailer Addict API**](http://www.traileraddict.com/trailerapi), used by The New York Times and other major publishers for their trailers, offers a free version that is very slow.  
 
 ##Resources
 * **Udacity Supporting Courses**: [JavaScript Design Patterns](https://classroom.udacity.com/courses/ud989/lessons/3417188540/concepts/33740985840923), [Intro to AJAX](https://classroom.udacity.com/nanodegrees/nd001/parts/00113454014/modules/271165859175460/lessons/3174548544/concepts/31591285700923)
@@ -95,16 +87,20 @@ The project requirements specified that we use [Knockout.js](http://knockoutjs.c
 * At least 5 TV shows come up with zero results because I am using a movie call, but I can use the [**TV ID call**](http://docs.themoviedb.apiary.io/#reference/tv) to get the primary information about a TV series by id.
 Examples of TV shows: Hemingway & Gelhorn, CSI, Alcatraz. 
 * Several blocks are included in the locations list and they fail to map correctly, since they are not formatted to be geocoded, for example:  
-`"film_location": "Van Ness Ave between Fell and Lombard"` 
-
-**OR**
-
-`"film_location": "Howard St from Embarcadero to 11 St"`. 
-
+`"film_location": "Van Ness Ave between Fell and Lombard"` or
+`"film_location": "Howard St from Embarcadero to 11 St"`
 Since it usually uses the words 'between' and 'from', this can be used to isolate the blocks and create a set of two intersections to then map using either **waypoints in directions** as shown on [Google's docs](https://developers.google.com/maps/documentation/javascript/examples/directions-waypoints) or **driving directions** as shown on this [gist by trtg](https://gist.github.com/trtg/3950475).
 
 ##Potential New Features:
 
+####Possible APIs To Add:
+* [**Firebase**](https://www.firebase.com/) to store geocoded locations. Here's a good resource:  [Pluralsight Firebase Fundamentals](https://app.pluralsight.com/library/courses/firebase-fundamentals/table-of-contents)
+* [**SendGrid**](https://sendgrid.com/docs/API_Reference/index.html) - SendGrid is for transactional email and MailChimp is for marketing emails. A user sending themselves movie favorites in this app would be transactional.
+* [**Rotten Tomatos API**](http://developer.rottentomatoes.com/) since I have 6 months access now. [Example using the API w/ Knockoutjs](http://www.webdesignermag.co.uk/create-data-driven-interfaces-with-knockoutjs/)
+* **Yelp, Foursquare, Instagram, Facebook, Meetup & Twitter**.
+* A user could plan a route of locations and films and share their plans on Facebook or Meetup. Then update Instagram, Facebook, and Twitter with pictures.
+
+####Technologies To Use:
 * [Real-Time Geolocation Service with Node.js](http://tympanus.net/codrops/2012/10/11/real-time-geolocation-service-with-node-js/)
 * Use [Google Maps Custom Controls](https://developers.google.com/maps/documentation/javascript/controls#CustomControls): so user can click a button to return the map.setCenter to the original center. Currently, the user can right-click only.
 * Take advantage of the 'multi' or 'append_to_response' themoviedb API call, which allows you to make one call instead of several. Otherwise, the API only allows 40 calls/10 seconds. For example, `http://api.themoviedb.org/3/search/multi` or `https://api.themoviedb.org/3/movie/63?api_key=###&append_to_response=credits,images`
