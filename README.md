@@ -35,11 +35,10 @@ TODO: add screenshots or take off
 Knockoutjs, AJAX, Bootstrap, jQuery, HTML5, Google Maps, Typekit
 
 ####Knockout
-The project requirements specified that we use [Knockout.js](http://knockoutjs.com/) for our organizational library, a MVVM. It provides:
-* **ViewModel**: Knockout's ViewModel separates the Model and the View. 
-* **Declarative Bindings**: Allows you to connect View and Model in direct and simple way.
-* **Automatic UI Refresh**: Updates View when Model changes, and with declarative bindings, Knockout updates the Model when View changes.
-* **Dependency Tracking**: Create a relationship between parts of the Model.
+The project requirements specified that we use [Knockout.js](http://knockoutjs.com/) for our organizational library. 
+> Knockout is a JavaScript MVVM (a modern variant of MVC) library that makes it easier to create rich, desktop-like user interfaces with JavaScript and HTML. It uses observers to make your UI automatically stay in sync with an underlying data model, along with a powerful and extensible set of declarative bindings to enable productive development.
+> 
+> -[Knockout on Github](https://github.com/Klammertime/knockout)
 
 ####APIs Used
 * [**SF Open Data API**](https://data.sfgov.org/Culture-and-Recreation/Film-Locations-in-San-Francisco/yitu-d5am) - Film Locations in San Francisco, provided by the [San Francisco Film Office](http://filmsf.org/sf-locations)

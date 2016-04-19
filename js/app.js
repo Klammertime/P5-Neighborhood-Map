@@ -73,7 +73,11 @@ $(function() {
         }), false);
     }
 
-    // Location construction
+/**
+ * Represents a scene, or location and accompanying movie info
+ * @constructor
+ */
+
     var SceneFilmModel = Base.extend({
         constructor: function(director, studio, fullAddress, place, streetAddress, year, filmTitle, writer, actor1, actor2, actor3) {
             this.director = ko.observable(director);
@@ -122,18 +126,25 @@ $(function() {
         }
     }
 
-    // Returns everything before first parentheses, which is the place
+    /**
+     * Isolates everything before first parentheses. Used to find place in location
+     */
     function escapeRegExp(string) {
         var matches = /^.*?(?=\s\()/.exec(string);
         return matches ? matches[0] : undefined;
     }
 
-    // Returns info between parentheses, the street address and format Geolocation prefers
+    /**
+     * Isolates everything between parentheses. Used to find street address.
+     */
     function escapeRegExp2(string) {
         var matches = /\(([^)]+)\)/.exec(string);
         return matches ? matches[1] : undefined;
     }
 
+    /**
+     * Main view model
+     */
     my.vm = function() {
         var scenes = ko.observableArray([]),
             uniqueTitlesResults = ko.observable(),
@@ -161,6 +172,18 @@ $(function() {
             favFilmMsg = ko.observable(),
             loadSceneFM = function() {
 
+                /**
+                 * Each film_title is pushed into allTitles so that we may get the unique titles
+                 * using the ko.computed method. While there are over 1K total titles, there are
+                 * only around 200 unique titles. This is then passed to the uniqueTitlesResults
+                 * observable array, which is then used for the autocomplete input.
+                 *
+                 * @param {array} my.filmData.data.Scenes - Array from external file data.js
+                 * @param {number} i - Iterator
+                 * @param {string} s - Each scene in the array. The properties are mapped to the correct
+                 * properties in the newly instantiated SceneFilmModel, which is then pushed into the
+                 * scenes observableArray.
+                */
                 $.each(my.filmData.data.Scenes, function(i, s) { //s stands for 'scene'
                     if (s.film_location !== undefined) { // create more false conditions
                         scenes.push(new SceneFilmModel(s.director, s.production_company, s.film_location, escapeRegExp(s.film_location), escapeRegExp2(s.film_location), s.release_year, s.film_title, s.writer, s.actor_1, s.actor_2, s.actor_3));
@@ -186,6 +209,9 @@ $(function() {
 
             },
 
+            /**
+             * Async callback function for google maps. Loads 'Godzilla' as default movie
+             */
             googleInit = function() {
                 googleSuccess();
                 this.requestedFilm('Godzilla');
@@ -202,7 +228,7 @@ $(function() {
                 map.setZoom(13);
                 map.setCenter(clickedLocation.marker.getPosition());
                 map.panTo(clickedLocation.marker.getPosition());
-                // Bounce once or twice
+                // Bounce less than twice
                 clickedLocation.marker.setAnimation(google.maps.Animation.BOUNCE);
 
                 setTimeout(function() {
@@ -550,13 +576,14 @@ $(function() {
     ko.applyBindings(my.vm);
 
 /**
- * @description The subscribe function accepts three params:
- * callback (here it's an anonymous function), target (optional) defining
- * the value of this in the callback function (here it is my.vm),
- * and event (optional; default is "change", which I'm using);
  * Every time the autocomplete input is used, the new value is
- * passed to the codeAddress function which is then called. This way
- * I don't need a submit button.
+ * passed to the codeAddress function which is then called. Then
+ * submit button is not needed.
+ * @param {callback function} - Entity's x coordinate on canvas
+ * @param {string} my.vm - Target (optional) defining
+ * the value of 'this' in the callback function.
+ * @param {string} sprite - Entity's sprite used to render entity on canvas.
+ * @param {string} change - default event.
 */
     my.vm.requestedFilm.subscribe(function(newValue) {
         this.codeAddress(newValue);
