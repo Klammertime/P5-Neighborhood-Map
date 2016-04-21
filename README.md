@@ -38,7 +38,9 @@ Knockoutjs, AJAX, Bootstrap, jQuery, HTML5, Google Maps, Typekit
 The project requirements specified that we use [Knockout.js](http://knockoutjs.com/) for our organizational library. 
 > Knockout is a JavaScript MVVM (a modern variant of MVC) library that makes it easier to create rich, desktop-like user interfaces with JavaScript and HTML. It uses observers to make your UI automatically stay in sync with an underlying data model, along with a powerful and extensible set of declarative bindings to enable productive development.
 > 
-> -[Knockout on Github](https://github.com/Klammertime/knockout)
+> -[Knockout on Github](https://github.com/knockout/knockout)
+
+According to Udacity, while there are a lot of organizational libraries out there, they are all solving the same problems in fundamentally similar ways. After we understand the basics of separation of concerns, we can understand other organizational libraries.
 
 ####APIs Used
 * [**SF Open Data API**](https://data.sfgov.org/Culture-and-Recreation/Film-Locations-in-San-Francisco/yitu-d5am) - Film Locations in San Francisco, provided by the [San Francisco Film Office](http://filmsf.org/sf-locations)
@@ -80,6 +82,7 @@ also falls under.
 * **Code School**: [JavaScript Best Practices](https://www.codeschool.com/courses/javascript-best-practices)
 * [**Google Maps JavaScript API Docs**](https://developers.google.com/maps/documentation/javascript/)
 * **jQuery Autocomplete** provided by devbridge: [https://github.com/devbridge/jQuery-Autocomplete](https://github.com/devbridge/jQuery-Autocomplete) & [Instructions on designshack](http://designshack.net/articles/javascript/create-a-simple-autocomplete-with-html5-jquery/)
+* **SF vector icon logo**: Free vector design by [Vecteezy](http://www.vecteezy.com/vector-art/65953-landmark-vectors) with several edits made to color and graphic in Illustrator.
  
 ##Known Bugs and Issues
 * At least 5 TV shows come up with zero results because I am using a movie call, but I can use the [**TV ID call**](http://docs.themoviedb.apiary.io/#reference/tv) to get the primary information about a TV series by id.

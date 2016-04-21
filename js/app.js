@@ -143,7 +143,9 @@ $(function() {
     }
 
     /**
-     * Main view model
+     * Module export pattern used for main view model so that we keep our variables
+     * from polluting the global namespace but also share specific info with
+     * different parts of the app.
      */
     my.vm = function() {
         var scenes = ko.observableArray([]),
