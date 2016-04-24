@@ -1,9 +1,9 @@
 $(function() {
     'use strict';
-    var previousInfowindow = false,
-        geocoder,
+    var geocoder,
         map,
-        infowindow;
+        infowindow,
+        previousInfowindow = false;
     // Don't make marker global or you'll break the panning essentially opening
     // the infowindow on the current marker each time
 
@@ -107,23 +107,6 @@ $(function() {
         }
     }
 
-    function capitalizeName(name) {
-        var idx = name.indexOf(" "),
-            lastIdx = name.lastIndexOf(" "),
-            first,
-            last;
-
-        if (idx === lastIdx) {
-            name = name.toLowerCase();
-            first = name.substring(0, idx);
-            last = name.substring(idx + 1);
-            first = first[0].toUpperCase() + first.substring(1);
-            last = last[0].toUpperCase() + last.substring(1);
-            return first + " " + last;
-        } else {
-            return name;
-        }
-    }
 
     /**
      * Important to find place in location for Google Maps JSAPI
@@ -147,6 +130,36 @@ $(function() {
      */
     function replaceSpace(str) {
         return str.replace(/ /g, '+');
+    }
+
+   /**
+     * Important to format NY Times movie review URL to format that is less error-prone
+     */
+    function domain(fullUrl) {
+        var match = /\.(.*)$/.exec(fullUrl);
+        return 'http://www.' + match[1];
+    }
+
+    /**
+     * Important to format NY Times movie review bylines consistently
+     */
+
+    function capitalizeName(name) {
+        var idx = name.indexOf(" "),
+            lastIdx = name.lastIndexOf(" "),
+            first,
+            last;
+
+        if (idx === lastIdx) {
+            name = name.toLowerCase();
+            first = name.substring(0, idx);
+            last = name.substring(idx + 1);
+            first = first[0].toUpperCase() + first.substring(1);
+            last = last[0].toUpperCase() + last.substring(1);
+            return first + " " + last;
+        } else {
+            return name;
+        }
     }
 
     /**
@@ -193,6 +206,9 @@ $(function() {
                  * properties in the newly instantiated SceneFilmModel, which is then pushed into the
                  * scenes observableArray.
                  */
+
+                var uniqueTitles;
+
                 $.each(my.filmData.data.Scenes, function(i, s) { //s stands for 'scene'
                     if (s.film_location !== undefined) { // create more false conditions
                         scenes.push(new SceneFilmModel(s.director, s.production_company, s.film_location, stringBeforeParens(s.film_location), stringBetweenParens(s.film_location), s.release_year, s.film_title, s.writer, s.actor_1, s.actor_2, s.actor_3));
@@ -200,7 +216,7 @@ $(function() {
                     }
                 });
 
-                var uniqueTitles = ko.computed(function() {
+                uniqueTitles = ko.computed(function() {
                     return ko.utils.arrayGetDistinctValues(allTitles().sort());
                 });
 
@@ -248,11 +264,6 @@ $(function() {
             loadNYTData = function(encodedFilm, nonEncodedFilm, releaseYear) {
                 var index;
                 nytInfo(undefined);
-
-                function domain(fullUrl) {
-                    var match = /\.(.*)$/.exec(fullUrl);
-                    return 'http://www.' + match[1];
-                }
 
                 $.ajax({
                     type: "GET",
@@ -322,7 +333,7 @@ $(function() {
                     console.log("Sorry, MovieDb did not return any results.");
                 }
 
-                theMovieDb.search.getMovie({ "query": encodedFilm }, successCB, errorCB);
+                theMovieDb.search.getMovie({"query": encodedFilm}, successCB, errorCB);
             },
 
             getTagline = function(foundfilmID) {
@@ -334,7 +345,7 @@ $(function() {
                 function errorCB() {
                     console.log("Sorry, MovieDb did not return any tagline results.");
                 }
-                theMovieDb.movies.getById({ "id": foundfilmID }, successCB, errorCB);
+                theMovieDb.movies.getById({"id": foundfilmID}, successCB, errorCB);
             },
 
             getTrailer = function(foundfilmID2) {
@@ -347,27 +358,29 @@ $(function() {
                     console.log("Sorry, MovieDb did not return any results.");
                 }
 
-                theMovieDb.movies.getTrailers({ "id": foundfilmID2 }, successCB, errorCB);
+                theMovieDb.movies.getTrailers({"id": foundfilmID2}, successCB, errorCB);
             },
 
             masterGeocoder = function(myGeocodeOptions, place, geocoder) {
-                var contentString,
-                    marker;
-
                 geocoder.geocode(myGeocodeOptions, function(results, status) {
+                    var newMarkerTitle,
+                        infowindow,
+                        contentString,
+                        marker;
+
                     if (status == google.maps.GeocoderStatus.OK) {
 
                         map.setCenter(results[0].geometry.location);
 
-                        var newMarkerTitle = place ? place + ", " + myGeocodeOptions.address : myGeocodeOptions.address;
+                        newMarkerTitle = place ? place + ", " + myGeocodeOptions.address : myGeocodeOptions.address;
 
-                        contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
-                                        '<img class="streetview-image media-object" ' +
+                        contentString = '<div class="contentString"><div class="content-left"><img class="streetview-image" ' +
                                         'src="https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
                                         stringBetweenParens(results[0].geometry.location) +
-                                        '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetview-image">' +
-                                        '</a></div><div class="content-body">' + (place ? '<p class="content-heading">' + place + '</p><p>' +
-                                        results[0].formatted_address + '</p>' : '<p>' + results[0].formatted_address + '</p>') + '</div></div>';
+                                        '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetview-image"></div>' +
+                                        '<div class="content-body">' + (place ? '<p class="content-heading">' + place +
+                                        '</p><p>' + results[0].formatted_address + '</p>' : '<p>' +
+                                        results[0].formatted_address + '</p>') + '</div></div>';
 
                         marker = new google.maps.Marker({
                             map: map,
@@ -378,7 +391,7 @@ $(function() {
                         markerTitles.push({ value: newMarkerTitle });
 
 
-                        var infowindow = new google.maps.InfoWindow({
+                        infowindow = new google.maps.InfoWindow({
                             content: contentString
                         });
 
@@ -388,13 +401,13 @@ $(function() {
                             }
 
                             previousInfowindow = infowindow;
-                            map.setZoom(14);
+                            map.setZoom(13);
 
                             map.panTo(marker.getPosition());
                             infowindow.open(map, marker);
                         });
 
-                        markers.push({ marker: marker, infowindow: infowindow });
+                        markers.push({marker: marker, infowindow: infowindow});
 
                     } else {
                         console.log("Geocode was not successful for the following reason: " + status);
@@ -427,7 +440,8 @@ $(function() {
                 if (this.checkReset()) {
                     for (var j = 0, s = this.scenes().length; j < s; j++) {
                         if (requestedFilm().toLowerCase().trim() === this.scenes()[j].filmTitle().toLowerCase().trim()) {
-                            var geocoder = new google.maps.Geocoder();
+                            var geocodeOptions,
+                                geocoder = new google.maps.Geocoder();
 
                             matchedScene = this.scenes()[j];
                             matchedTitle = this.scenes()[j].filmTitle();
@@ -441,7 +455,7 @@ $(function() {
                                 place = null;
                             }
 
-                            var geocodeOptions = {
+                            geocodeOptions = {
                                 address: address + ', San Francisco, CA',
                                 componentRestrictions: {
                                     country: 'US'

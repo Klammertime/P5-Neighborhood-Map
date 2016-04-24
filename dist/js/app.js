@@ -1,22 +1,22 @@
 $(function() {
     'use strict';
-    var prev_infowindow = false,
-        geocoder,
+    var geocoder,
         map,
-        infowindow;
-        // Don't make marker global or you'll break the panning essentially opening
-        // the infowindow on the current marker each time
+        infowindow,
+        previousInfowindow = false;
+    // Don't make marker global or you'll break the panning essentially opening
+    // the infowindow on the current marker each time
 
-/**
- * Template to use for other areas
- * Google Maps gives you default controls, but if you disableDefaultUI, you can
- * manually set them in mapOptions, giving each their own options.
- *
- * @constructor
- * @param {number} x - Entity's x coordinate on canvas
- * @param {number} y - Entity's y coordinate on canvas
- * @param {string} sprite - Entity's sprite used to render entity on canvas
-*/
+    /**
+     * Template to use for other areas
+     * Google Maps gives you default controls, but if you disableDefaultUI, you can
+     * manually set them in mapOptions, giving each their own options.
+     *
+     * @constructor
+     * @param {number} x - Entity's x coordinate on canvas
+     * @param {number} y - Entity's y coordinate on canvas
+     * @param {string} sprite - Entity's sprite used to render entity on canvas
+     */
     function googleSuccess() {
         var center,
             myLatLng = new google.maps.LatLng(37.77493, -122.419416);
@@ -73,10 +73,10 @@ $(function() {
         }), false);
     }
 
-/**
- * Represents a scene, or location and accompanying movie info
- * @constructor
- */
+    /**
+     * Represents a scene, or location and accompanying movie info
+     * @constructor
+     */
 
     var SceneFilmModel = Base.extend({
         constructor: function(director, studio, fullAddress, place, streetAddress, year, filmTitle, writer, actor1, actor2, actor3) {
@@ -95,7 +95,6 @@ $(function() {
     });
 
     function titleCheck(theData, resultsTitleProp, resultsDateProp, desiredTitle, desiredYear) {
-
         function justYear(longDate) {
             var match = /[^-]*/.exec(longDate);
             return match[0];
@@ -107,6 +106,43 @@ $(function() {
             }
         }
     }
+
+
+    /**
+     * Important to find place in location for Google Maps JSAPI
+     */
+
+    function stringBeforeParens(string) {
+        var matches = /^.*?(?=\s\()/.exec(string);
+        return matches ? matches[0] : undefined;
+    }
+
+    /**
+     * Important to find street address, Google Maps JSAPI geocoding preferred format
+     */
+    function stringBetweenParens(string) {
+        var matches = /\(([^)]+)\)/.exec(string);
+        return matches ? matches[1] : undefined;
+    }
+
+    /**
+     * Important to format several-word movie titles for NY Times Movie API
+     */
+    function replaceSpace(str) {
+        return str.replace(/ /g, '+');
+    }
+
+   /**
+     * Important to format NY Times movie review URL to format that is less error-prone
+     */
+    function domain(fullUrl) {
+        var match = /\.(.*)$/.exec(fullUrl);
+        return 'http://www.' + match[1];
+    }
+
+    /**
+     * Important to format NY Times movie review bylines consistently
+     */
 
     function capitalizeName(name) {
         var idx = name.indexOf(" "),
@@ -127,23 +163,9 @@ $(function() {
     }
 
     /**
-     * Isolates everything before first parentheses. Used to find place in location
-     */
-    function escapeRegExp(string) {
-        var matches = /^.*?(?=\s\()/.exec(string);
-        return matches ? matches[0] : undefined;
-    }
-
-    /**
-     * Isolates everything between parentheses. Used to find street address.
-     */
-    function escapeRegExp2(string) {
-        var matches = /\(([^)]+)\)/.exec(string);
-        return matches ? matches[1] : undefined;
-    }
-
-    /**
-     * Main view model
+     * Module export pattern used for main view model so that we keep our variables
+     * from polluting the global namespace but also share specific info with
+     * different parts of the app.
      */
     my.vm = function() {
         var scenes = ko.observableArray([]),
@@ -183,20 +205,22 @@ $(function() {
                  * @param {string} s - Each scene in the array. The properties are mapped to the correct
                  * properties in the newly instantiated SceneFilmModel, which is then pushed into the
                  * scenes observableArray.
-                */
+                 */
+
+                var uniqueTitles;
+
                 $.each(my.filmData.data.Scenes, function(i, s) { //s stands for 'scene'
                     if (s.film_location !== undefined) { // create more false conditions
-                        scenes.push(new SceneFilmModel(s.director, s.production_company, s.film_location, escapeRegExp(s.film_location), escapeRegExp2(s.film_location), s.release_year, s.film_title, s.writer, s.actor_1, s.actor_2, s.actor_3));
+                        scenes.push(new SceneFilmModel(s.director, s.production_company, s.film_location, stringBeforeParens(s.film_location), stringBetweenParens(s.film_location), s.release_year, s.film_title, s.writer, s.actor_1, s.actor_2, s.actor_3));
                         allTitles.push(s.film_title);
                     }
                 });
 
-                var uniqueTitles = ko.computed(function() {
+                uniqueTitles = ko.computed(function() {
                     return ko.utils.arrayGetDistinctValues(allTitles().sort());
                 });
 
                 uniqueTitlesResults(uniqueTitles());
-
 
                 $('#autocomplete').autocomplete({
                     lookup: my.vm.uniqueTitlesResults(),
@@ -206,7 +230,6 @@ $(function() {
                         my.vm.requestedFilm(suggestion.value);
                     }
                 });
-
             },
 
             /**
@@ -220,11 +243,11 @@ $(function() {
             // The current item will be passed as the first parameter
             panToMarker = function(clickedLocation) {
                 // When click on item in list of locations takes you to marker and opens infowindow
-                if (prev_infowindow) {
-                    prev_infowindow.close();
+                if (previousInfowindow) {
+                    previousInfowindow.close();
                 }
 
-                prev_infowindow = clickedLocation.infowindow;
+                previousInfowindow = clickedLocation.infowindow;
                 map.setZoom(13);
                 map.setCenter(clickedLocation.marker.getPosition());
                 map.panTo(clickedLocation.marker.getPosition());
@@ -241,11 +264,6 @@ $(function() {
             loadNYTData = function(encodedFilm, nonEncodedFilm, releaseYear) {
                 var index;
                 nytInfo(undefined);
-
-                function domain(fullUrl) {
-                    var match = /\.(.*)$/.exec(fullUrl);
-                    return 'http://www.' + match[1];
-                }
 
                 $.ajax({
                     type: "GET",
@@ -315,7 +333,7 @@ $(function() {
                     console.log("Sorry, MovieDb did not return any results.");
                 }
 
-                theMovieDb.search.getMovie({ "query": encodedFilm }, successCB, errorCB);
+                theMovieDb.search.getMovie({"query": encodedFilm}, successCB, errorCB);
             },
 
             getTagline = function(foundfilmID) {
@@ -327,7 +345,7 @@ $(function() {
                 function errorCB() {
                     console.log("Sorry, MovieDb did not return any tagline results.");
                 }
-                theMovieDb.movies.getById({ "id": foundfilmID }, successCB, errorCB);
+                theMovieDb.movies.getById({"id": foundfilmID}, successCB, errorCB);
             },
 
             getTrailer = function(foundfilmID2) {
@@ -340,70 +358,56 @@ $(function() {
                     console.log("Sorry, MovieDb did not return any results.");
                 }
 
-                theMovieDb.movies.getTrailers({ "id": foundfilmID2 }, successCB, errorCB);
+                theMovieDb.movies.getTrailers({"id": foundfilmID2}, successCB, errorCB);
             },
 
             masterGeocoder = function(myGeocodeOptions, place, geocoder) {
-                var contentString,
-                    marker;
-
                 geocoder.geocode(myGeocodeOptions, function(results, status) {
+                    var newMarkerTitle,
+                        infowindow,
+                        contentString,
+                        marker;
+
                     if (status == google.maps.GeocoderStatus.OK) {
 
                         map.setCenter(results[0].geometry.location);
 
-                        var latLngString = escapeRegExp2(results[0].geometry.location);
+                        newMarkerTitle = place ? place + ", " + myGeocodeOptions.address : myGeocodeOptions.address;
 
-                        var streetViewImage = '<img class="streetview-image media-object" src="https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
-                            latLngString + '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetview-image">';
+                        contentString = '<div class="contentString"><div class="content-left"><img class="streetview-image" ' +
+                                        'src="https://maps.googleapis.com/maps/api/streetview?size=300x300&location=' +
+                                        stringBetweenParens(results[0].geometry.location) +
+                                        '&key=AIzaSyCPGiVjhVmpWaeyw_8Y7CCG8SbnPwwE2lE" alt="streetview-image"></div>' +
+                                        '<div class="content-body">' + (place ? '<p class="content-heading">' + place +
+                                        '</p><p>' + results[0].formatted_address + '</p>' : '<p>' +
+                                        results[0].formatted_address + '</p>') + '</div></div>';
+
+                        marker = new google.maps.Marker({
+                            map: map,
+                            position: results[0].geometry.location,
+                            title: newMarkerTitle, // intended address
+                            animation: google.maps.Animation.DROP
+                        });
+                        markerTitles.push({ value: newMarkerTitle });
 
 
-                        if (place) {
-                            contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
-                                streetViewImage + '</a></div><div class="content-body"><p class="content-heading">' + place +
-                                '</p><p>' + results[0].formatted_address + '</p></div></div>';
-
-                            marker = new google.maps.Marker({
-                                map: map,
-                                position: results[0].geometry.location,
-                                title: place + ", " + myGeocodeOptions.address, // intended address
-                                animation: google.maps.Animation.DROP,
-                                optimized: false
-                            });
-                            markerTitles.push({ value: place + ", " + myGeocodeOptions.address });
-
-                        } else {
-                            contentString = '<div class="media contentString"><div class="content-left"><a href="#">' +
-                                streetViewImage + '</a></div><div class="content-body"><p>' +
-                                results[0].formatted_address + '</p></div></div>';
-
-                            marker = new google.maps.Marker({
-                                map: map,
-                                position: results[0].geometry.location,
-                                title: myGeocodeOptions.address, // intended address
-                                animation: google.maps.Animation.DROP,
-
-                            });
-                            markerTitles.push({ value: myGeocodeOptions.address });
-                        }
-
-                        var infowindow = new google.maps.InfoWindow({
+                        infowindow = new google.maps.InfoWindow({
                             content: contentString
                         });
 
                         marker.addListener('click', function() {
-                            if (prev_infowindow) {
-                                prev_infowindow.close();
+                            if (previousInfowindow) {
+                                previousInfowindow.close();
                             }
 
-                            prev_infowindow = infowindow;
-                            map.setZoom(14);
+                            previousInfowindow = infowindow;
+                            map.setZoom(13);
 
                             map.panTo(marker.getPosition());
                             infowindow.open(map, marker);
                         });
 
-                        markers.push({ marker: marker, infowindow: infowindow });
+                        markers.push({marker: marker, infowindow: infowindow});
 
                     } else {
                         console.log("Geocode was not successful for the following reason: " + status);
@@ -433,18 +437,15 @@ $(function() {
                     matchedTitle,
                     matchedYear;
 
-                function replaceSpace(str) {
-                    var replaced = str.replace(/ /g, '+');
-                    return replaced;
-                }
-
                 if (this.checkReset()) {
                     for (var j = 0, s = this.scenes().length; j < s; j++) {
                         if (requestedFilm().toLowerCase().trim() === this.scenes()[j].filmTitle().toLowerCase().trim()) {
+                            var geocodeOptions,
+                                geocoder = new google.maps.Geocoder();
+
                             matchedScene = this.scenes()[j];
                             matchedTitle = this.scenes()[j].filmTitle();
                             matchedYear = this.scenes()[j].year();
-                            var geocoder = new google.maps.Geocoder();
 
                             if (this.scenes()[j].place()) {
                                 address = this.scenes()[j].streetAddress();
@@ -454,7 +455,7 @@ $(function() {
                                 place = null;
                             }
 
-                            var geocodeOptions = {
+                            geocodeOptions = {
                                 address: address + ', San Francisco, CA',
                                 componentRestrictions: {
                                     country: 'US'
@@ -483,6 +484,7 @@ $(function() {
                 }
             },
 
+            //TODO: clean up with switch statement?
             fav = function(value) {
                 var canFavorite = true;
                 if (this.favFilms().length === 0) {
@@ -495,7 +497,6 @@ $(function() {
                         } else {
                             canFavorite = false;
                             this.favFilmMsg("This film is already in your favorites list.");
-                            return canFavorite;
                         }
                     }
                     if (canFavorite) {
@@ -523,7 +524,7 @@ $(function() {
                     my.vm.query(null);
                 }
             },
-
+            //TODO: use forEach below and elsewhere?
             filterReset = function() {
                 if (!my.vm.query()) {
                     this.markers(this.markerStore());
@@ -575,16 +576,16 @@ $(function() {
     my.vm.loadSceneFM();
     ko.applyBindings(my.vm);
 
-/**
- * Every time the autocomplete input is used, the new value is
- * passed to the codeAddress function which is then called. Then
- * submit button is not needed.
- * @param {callback function} - Entity's x coordinate on canvas
- * @param {string} my.vm - Target (optional) defining
- * the value of 'this' in the callback function.
- * @param {string} sprite - Entity's sprite used to render entity on canvas.
- * @param {string} change - default event.
-*/
+    /**
+     * Every time the autocomplete input is used, the new value is
+     * passed to the codeAddress function which is then called. Then
+     * submit button is not needed.
+     * @param {callback function} - Entity's x coordinate on canvas
+     * @param {string} my.vm - Target (optional) defining
+     * the value of 'this' in the callback function.
+     * @param {string} sprite - Entity's sprite used to render entity on canvas.
+     * @param {string} change - default event.
+     */
     my.vm.requestedFilm.subscribe(function(newValue) {
         this.codeAddress(newValue);
     }, my.vm);
