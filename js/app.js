@@ -1,6 +1,6 @@
 $(function() {
     'use strict';
-    var prev_infowindow = false,
+    var previousInfowindow = false,
         geocoder,
         map,
         infowindow;
@@ -126,7 +126,7 @@ $(function() {
     }
 
     /**
-     * Important to find place in location
+     * Important to find place in location for Google Maps JSAPI
      */
 
     function stringBeforeParens(string) {
@@ -135,11 +135,18 @@ $(function() {
     }
 
     /**
-     * Important to find street address, Google JSAPI geocoding preferred format
+     * Important to find street address, Google Maps JSAPI geocoding preferred format
      */
     function stringBetweenParens(string) {
         var matches = /\(([^)]+)\)/.exec(string);
         return matches ? matches[1] : undefined;
+    }
+
+    /**
+     * Important to format several-word movie titles for NY Times Movie API
+     */
+    function replaceSpace(str) {
+        return str.replace(/ /g, '+');
     }
 
     /**
@@ -220,11 +227,11 @@ $(function() {
             // The current item will be passed as the first parameter
             panToMarker = function(clickedLocation) {
                 // When click on item in list of locations takes you to marker and opens infowindow
-                if (prev_infowindow) {
-                    prev_infowindow.close();
+                if (previousInfowindow) {
+                    previousInfowindow.close();
                 }
 
-                prev_infowindow = clickedLocation.infowindow;
+                previousInfowindow = clickedLocation.infowindow;
                 map.setZoom(13);
                 map.setCenter(clickedLocation.marker.getPosition());
                 map.panTo(clickedLocation.marker.getPosition());
@@ -376,11 +383,11 @@ $(function() {
                         });
 
                         marker.addListener('click', function() {
-                            if (prev_infowindow) {
-                                prev_infowindow.close();
+                            if (previousInfowindow) {
+                                previousInfowindow.close();
                             }
 
-                            prev_infowindow = infowindow;
+                            previousInfowindow = infowindow;
                             map.setZoom(14);
 
                             map.panTo(marker.getPosition());
@@ -417,17 +424,14 @@ $(function() {
                     matchedTitle,
                     matchedYear;
 
-                function replaceSpace(str) {
-                    return str.replace(/ /g, '+');
-                }
-
                 if (this.checkReset()) {
                     for (var j = 0, s = this.scenes().length; j < s; j++) {
                         if (requestedFilm().toLowerCase().trim() === this.scenes()[j].filmTitle().toLowerCase().trim()) {
+                            var geocoder = new google.maps.Geocoder();
+
                             matchedScene = this.scenes()[j];
                             matchedTitle = this.scenes()[j].filmTitle();
                             matchedYear = this.scenes()[j].year();
-                            var geocoder = new google.maps.Geocoder();
 
                             if (this.scenes()[j].place()) {
                                 address = this.scenes()[j].streetAddress();
