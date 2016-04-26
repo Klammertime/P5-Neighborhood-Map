@@ -1,6 +1,6 @@
 #Neighborhood Map
 
-**Project 5:  Neighborhood Map (40 hrs)** ~ [Udacity Front End Web Developer Nanodegree Program](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001)
+**Project 5: Neighborhood Map (70 hrs)** ~ [Udacity Front End Web Developer Nanodegree Program](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001)
 
 **Directions**: You will develop a single-page application featuring a map of your neighborhood or a neighborhood you would like to visit. You will then add additional functionality to this application, including: map markers to identify popular locations or places you’d like to visit, a search function to easily discover these locations, and a listview to support simple browsing of all locations. You will then research and implement third-party APIs that provide additional information about each of these locations (such as StreetView images, Wikipedia articles, Yelp reviews, etc).
 
@@ -31,7 +31,6 @@ Build
 TODO: add screenshots or take off
 
 ##Technologies Used
-
 Knockoutjs, AJAX, Bootstrap, jQuery, HTML5, Google Maps, Typekit
 
 ####Knockout
@@ -76,11 +75,11 @@ also falls under.
 
 ##Resources
 * **Udacity Supporting Courses**: [JavaScript Design Patterns](https://classroom.udacity.com/courses/ud989/lessons/3417188540/concepts/33740985840923), [Intro to AJAX](https://classroom.udacity.com/nanodegrees/nd001/parts/00113454014/modules/271165859175460/lessons/3174548544/concepts/31591285700923)
-* **Pluralsight**: [Building HTML5 and JavaScript Apps with MVVM and Knockout](https://app.pluralsight.com/library/courses/knockout-mvvm/table-of-contents), [Google Maps API: Get Started](https://app.pluralsight.com/library/courses/google-maps-api-get-started/table-of-contents), (https://app.pluralsight.com/library/courses/javascript-practical-design-patterns/table-of-contents)
-* **Safari Books Online**: [KnockoutJS by Example](https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/), [Google Maps JavaScript API Cookbook](https://www.safaribooksonline.com/library/view/google-maps-javascript/9781849698825/), [Building a Single Page Web Application with Knockout.js], [Practical Design Patterns in JavaScript](https://www.safaribooksonline.com/library/view/building-a-single/9781783284054/)
+* **Pluralsight**: [Building HTML5 and JavaScript Apps with MVVM and Knockout](https://app.pluralsight.com/library/courses/knockout-mvvm/table-of-contents), [Google Maps API: Get Started](https://app.pluralsight.com/library/courses/google-maps-api-get-started/table-of-contents), [Practical Design Patterns in JavaScript](https://app.pluralsight.com/library/courses/javascript-practical-design-patterns/table-of-contents)
+* **Safari Books Online**: [KnockoutJS by Example](https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/), [Google Maps JavaScript API Cookbook](https://www.safaribooksonline.com/library/view/google-maps-javascript/9781849698825/), [Building a Single Page Web Application with Knockout.js](https://www.safaribooksonline.com/library/view/building-a-single/9781783284054/)
 * **Treehouse**: [Adding a Dynamic Map by Andrew Chalkey](https://teamtreehouse.com/library/build-an-interactive-website/google-maps-integration/adding-a-dynamic-map-2)
 * **Code School**: [JavaScript Best Practices](https://www.codeschool.com/courses/javascript-best-practices)
-* [**Google Maps JavaScript API Docs**](https://developers.google.com/maps/documentation/javascript/)
+* [Google Maps JavaScript API Docs](https://developers.google.com/maps/documentation/javascript/)
 * **jQuery Autocomplete** provided by devbridge: [https://github.com/devbridge/jQuery-Autocomplete](https://github.com/devbridge/jQuery-Autocomplete) & [Instructions on designshack](http://designshack.net/articles/javascript/create-a-simple-autocomplete-with-html5-jquery/)
 * **SF vector icon logo**: Free vector design by [Vecteezy](http://www.vecteezy.com/vector-art/65953-landmark-vectors) with several edits made to color and graphic in Illustrator.
  
@@ -88,9 +87,7 @@ also falls under.
 * At least 5 TV shows come up with zero results because I am using a movie call, but I can use the [**TV ID call**](http://docs.themoviedb.apiary.io/#reference/tv) to get the primary information about a TV series by id.
 Examples of TV shows: Hemingway & Gelhorn, CSI, Alcatraz. 
 * Several blocks are included in the locations list and they fail to map correctly, since they are not formatted to be geocoded, for example:  
-`"film_location": "Van Ness Ave between Fell and Lombard"` or
-
-`"film_location": "Howard St from Embarcadero to 11 St"`
+`"film_location": "Van Ness Ave between Fell and Lombard"`
 Since it usually uses the words 'between' and 'from', this can be used to isolate the blocks and create a set of two intersections to then map using either **waypoints in directions** as shown on [Google's docs](https://developers.google.com/maps/documentation/javascript/examples/directions-waypoints) or **driving directions** as shown on this [gist by trtg](https://gist.github.com/trtg/3950475).
 
 ##Potential New Features:
