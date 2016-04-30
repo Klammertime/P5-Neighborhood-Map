@@ -6,7 +6,7 @@ I developed a single-page application featuring a map of SF. I then added additi
 
 The original project requirements specified using at least 10 addresses, but this app uses over 2K. 
 
-###[**~VIEW SF FILM MAP ONLINE HERE~**](http://klammertime.github.io/P5-Neighborhood-Map/)
+###[**~VIEW SF FILM MAP HERE~**](http://klammertime.github.io/P5-Neighborhood-Map/)
 
 Usage
 -----
