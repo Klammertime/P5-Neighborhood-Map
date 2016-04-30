@@ -2,17 +2,14 @@
 
 **Project 5: Neighborhood Map (70 hrs)** ~ [Udacity Front End Web Developer Nanodegree Program](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001)
 
-**Directions**: You will develop a single-page application featuring a map of your neighborhood or a neighborhood you would like to visit. You will then add additional functionality to this application, including: map markers to identify popular locations or places you’d like to visit, a search function to easily discover these locations, and a listview to support simple browsing of all locations. You will then research and implement third-party APIs that provide additional information about each of these locations (such as StreetView images, Wikipedia articles, Yelp reviews, etc).
+I developed a single-page application featuring a map of SF. I then added additional functionality, including: map markers to identify movie scene locations, an autocomplete search function to easily discover over 700 films, and a search function to filter by street. I then researched and implemented several third-party APIs to provide additional information about each  location (StreetView images using Google Maps Image API) and film (movie reviews using NY Times API, movie poster and more using TMDb API).
 
-###SF Film Map
-TODO: write paragraph about how you decided to make it unique using film data
+The original project requirements specified using at least 10 addresses, but this app uses over 2K. 
+
+###[**~VIEW SF FILM MAP ONLINE HERE~**](http://klammertime.github.io/P5-Neighborhood-Map/)
 
 Usage
 -----
-Navigate to project hosted on github.com [**here**](http://klammertime.github.io/P5-Neighborhood-Map/)
-
-**OR**
-
 1. Clone this repository
 2. Run a local server using server.js: while in the root project directory, run `node server.js`. 
 3. Navigate to your local copy of index.html through your web browser  
@@ -27,11 +24,11 @@ Build
 2. While in the root project directory, run: `npm install`.
 3. To build the dist folder, from the root project directory run the following: `gulp`.
 
-##Screen Shots
-TODO: add screenshots or take off
-
 ##Technologies Used
 Knockoutjs, AJAX, Bootstrap, jQuery, HTML5, Google Maps, Typekit
+
+##Style Guide Used
+[Udacity Front-End Style Guide](http://udacity.github.io/frontend-nanodegree-styleguide/)
 
 ####Knockout
 The project requirements specified that we use [Knockout.js](http://knockoutjs.com/) for our organizational library. 
