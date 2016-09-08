@@ -1,6 +1,6 @@
 var my = { }; //my namespace
 my.filmData = (function (my) {
-    "use strict";
+    'use strict';
     var data = { Scenes: [
   {
     "actor_1": "Siddarth",

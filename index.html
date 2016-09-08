@@ -1,14 +1,15 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>SF Film Map</title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/main.css">
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <script src="js/jquery.autocomplete.min.js"></script>
-    <script src="js/knockout-3.4.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
     <!-- change to minified for production -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <script src="js/data.js"></script>
@@ -43,7 +44,7 @@
                 <!-- Film Search -->
                 <form class="navbar-left navbar-form" role="search">
                     <div class="form-group">
-                        <input type="search" class="form-control film-autocomplete" id="autocomplete" placeholder="Type a letter to see film options...">
+                        <input type="text" class="form-control film-autocomplete" id="autocomplete" placeholder="Type a letter to see film options...">
                     </div>
                 </form>
                 <!-- Film Search End-->
