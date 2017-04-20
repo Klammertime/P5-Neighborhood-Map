@@ -1,4 +1,4 @@
-#Neighborhood Map
+# Neighborhood Map
 
 **Project 5: Neighborhood Map (70 hrs)** ~ [Udacity Front End Web Developer Nanodegree Program](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001)
 
@@ -6,7 +6,7 @@ I developed a single-page application featuring a map of SF. I then added additi
 
 The original project requirements specified using at least 10 addresses, but this app uses over 2K. 
 
-###[**~VIEW SF FILM MAP HERE~**](http://klammertime.github.io/P5-Neighborhood-Map/)
+### [**VIEW SF FILM MAP HERE**](http://klammertime.github.io/P5-Neighborhood-Map/)
 
 Usage
 -----
@@ -24,13 +24,13 @@ Build
 2. While in the root project directory, run: `npm install`.
 3. To build the dist folder, from the root project directory run the following: `gulp`.
 
-##Technologies Used
+## Technologies Used
 Knockoutjs, AJAX, Bootstrap, jQuery, HTML5, Google Maps, Typekit
 
-##Style Guide Used
+## Style Guide Used
 [Udacity Front-End Style Guide](http://udacity.github.io/frontend-nanodegree-styleguide/)
 
-####Knockout
+#### Knockout
 The project requirements specified that we use [Knockout.js](http://knockoutjs.com/) for our organizational library. 
 > Knockout is a JavaScript MVVM (a modern variant of MVC) library that makes it easier to create rich, desktop-like user interfaces with JavaScript and HTML. It uses observers to make your UI automatically stay in sync with an underlying data model, along with a powerful and extensible set of declarative bindings to enable productive development.
 > 
@@ -38,20 +38,20 @@ The project requirements specified that we use [Knockout.js](http://knockoutjs.c
 
 According to Udacity, while there are a lot of organizational libraries out there, they are all solving the same problems in fundamentally similar ways. After we understand the basics of separation of concerns, we can understand other organizational libraries.
 
-####APIs Used
+#### APIs Used
 * [**SF Open Data API**](https://data.sfgov.org/Culture-and-Recreation/Film-Locations-in-San-Francisco/yitu-d5am) - Film Locations in San Francisco, provided by the [San Francisco Film Office](http://filmsf.org/sf-locations)
 * [**Google Maps JavaScript API**](https://developers.google.com/maps/documentation/javascript/)
 * [**Google Street View Image API**](https://developers.google.com/maps/documentation/streetview/)
 * [**TMDb API**](https://www.themoviedb.org/documentation/api) at themoviedb.org is free to use and very thorough. I'm using an add-on library, [**themoviedb JavaScript Library**](https://github.com/cavestri/themoviedb-javascript-library/wiki/Collections) created by Franco Cavestri.
 * [**The New York Times API - Movie Reviews API**](http://developer.nytimes.com/docs/movie_reviews_api/) is high quality and easy-to-use. I include their movie reviews.
 
-##Challenges
+## Challenges
 
-####Film Location Data Quality
+#### Film Location Data Quality
 I used [SF Open Data - Film Locations in San Francisco](https://data.sfgov.org/Culture-and-Recreation/Film-Locations-in-San-Francisco/yitu-d5am), provided by the [San Francisco Film Office](http://filmsf.org/sf-locations). This data contained many misspellings and incomplete
 address information.
 
-####API Trial and Error:
+#### API Trial and Error:
 * [**IMDB**](http://www.imdb.com/help/show_leaf?usedatasoftware) has a limited free version. I found conflicting information online which led me to believe it was not free, but recently found posts like [this](https://www.quora.com/Any-one-knows-about-reliable-IMDB-free-paid-API) that say its possible to get the information for free. Maybe I will use it in the future.
 * [**Rotten Tomatoes API**](http://developer.rottentomatoes.com/) is free for 6 months but they approved my API too late to use for this project.
 * [**The Open Movie Database**](http://www.omdbapi.com/) is free but has limited and/or illegally obtained data. I want to use data legally.
@@ -70,7 +70,7 @@ also falls under.
 * [**Netflix**](https://www.reddit.com/r/programming/comments/2mdo7y/netflix_is_shutting_down_its_public_api_today/) no longer offers a free API. 
 * [**Trailer Addict API**](http://www.traileraddict.com/trailerapi), used by The New York Times and other major publishers for their trailers, offers a free version that is very slow.  
 
-##Resources
+## Resources
 * **Udacity Supporting Courses**: [JavaScript Design Patterns](https://classroom.udacity.com/courses/ud989/lessons/3417188540/concepts/33740985840923), [Intro to AJAX](https://classroom.udacity.com/nanodegrees/nd001/parts/00113454014/modules/271165859175460/lessons/3174548544/concepts/31591285700923)
 * **Pluralsight**: [Building HTML5 and JavaScript Apps with MVVM and Knockout](https://app.pluralsight.com/library/courses/knockout-mvvm/table-of-contents), [Google Maps API: Get Started](https://app.pluralsight.com/library/courses/google-maps-api-get-started/table-of-contents), [Practical Design Patterns in JavaScript](https://app.pluralsight.com/library/courses/javascript-practical-design-patterns/table-of-contents)
 * **Safari Books Online**: [KnockoutJS by Example](https://www.safaribooksonline.com/library/view/knockoutjs-by-example/9781785288548/), [Google Maps JavaScript API Cookbook](https://www.safaribooksonline.com/library/view/google-maps-javascript/9781849698825/), [Building a Single Page Web Application with Knockout.js](https://www.safaribooksonline.com/library/view/building-a-single/9781783284054/)
@@ -80,23 +80,23 @@ also falls under.
 * **jQuery Autocomplete** provided by devbridge: [https://github.com/devbridge/jQuery-Autocomplete](https://github.com/devbridge/jQuery-Autocomplete) & [Instructions on designshack](http://designshack.net/articles/javascript/create-a-simple-autocomplete-with-html5-jquery/)
 * **SF vector icon logo**: Free vector design by [Vecteezy](http://www.vecteezy.com/vector-art/65953-landmark-vectors) with several edits made to color and graphic in Illustrator.
  
-##Known Bugs and Issues
+## Known Bugs and Issues
 * At least 5 TV shows come up with zero results because I am using a movie call, but I can use the [**TV ID call**](http://docs.themoviedb.apiary.io/#reference/tv) to get the primary information about a TV series by id.
 Examples of TV shows: Hemingway & Gelhorn, CSI, Alcatraz. 
 * Several blocks are included in the locations list and they fail to map correctly, since they are not formatted to be geocoded, for example:  
 `"film_location": "Van Ness Ave between Fell and Lombard"`
 Since it usually uses the words 'between' and 'from', this can be used to isolate the blocks and create a set of two intersections to then map using either **waypoints in directions** as shown on [Google's docs](https://developers.google.com/maps/documentation/javascript/examples/directions-waypoints) or **driving directions** as shown on this [gist by trtg](https://gist.github.com/trtg/3950475).
 
-##Potential New Features:
+## Potential New Features:
 
-####Possible APIs To Add:
+#### Possible APIs To Add:
 * [**Firebase**](https://www.firebase.com/) to store geocoded locations. Here's a good resource:  [Pluralsight Firebase Fundamentals](https://app.pluralsight.com/library/courses/firebase-fundamentals/table-of-contents)
 * [**SendGrid**](https://sendgrid.com/docs/API_Reference/index.html) - SendGrid is for transactional email and MailChimp is for marketing emails. A user sending themselves movie favorites in this app would be transactional.
 * [**Rotten Tomatos API**](http://developer.rottentomatoes.com/) since I have 6 months access now. [Example using the API w/ Knockoutjs](http://www.webdesignermag.co.uk/create-data-driven-interfaces-with-knockoutjs/)
 * **Yelp, Foursquare, Instagram, Facebook, Meetup & Twitter**.
 * A user could plan a route of locations and films and share their plans on Facebook or Meetup. Then update Instagram, Facebook, and Twitter with pictures.
 
-####Technologies To Use:
+#### Technologies To Use:
 * [Real-Time Geolocation Service with Node.js](http://tympanus.net/codrops/2012/10/11/real-time-geolocation-service-with-node-js/)
 * Use [Google Maps Custom Controls](https://developers.google.com/maps/documentation/javascript/controls#CustomControls): so user can click a button to return the map.setCenter to the original center. Currently, the user can right-click only.
 * Take advantage of the 'multi' or 'append_to_response' themoviedb API call, which allows you to make one call instead of several. Otherwise, the API only allows 40 calls/10 seconds. For example, `http://api.themoviedb.org/3/search/multi` or `https://api.themoviedb.org/3/movie/63?api_key=###&append_to_response=credits,images`
@@ -110,7 +110,7 @@ Since it usually uses the words 'between' and 'from', this can be used to isolat
 * Use Material design and Polymer.js: [Pluralsight Material design and Polymer.js](https://app.pluralsight.com/library/courses/building-web-application-polymer-material-design/table-of-contents)
 * Rewrite in Angular, Backbone or Ember: [Udacity Front End Frameworks Backbone, Angular, Ember](https://www.udacity.com/course/front-end-frameworks--ud894)
 
-####Keyhole Markup Language (KML) Layer
+#### Keyhole Markup Language (KML) Layer
 > The Google Maps JavaScript API supports the KML and GeoRSS data formats for displaying geographic information. These data formats are displayed on a map using a KmlLayer object, whose constructor takes the URL of a publicly accessible KML or GeoRSS file.
 > 
 > -[KML Layer Overview on developers.google.com](https://developers.google.com/maps/documentation/javascript/kmllayer#overview)
